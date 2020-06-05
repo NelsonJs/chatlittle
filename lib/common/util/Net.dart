@@ -84,6 +84,22 @@ class Net {
         return ActiveBean.fromJson(r.data);
     }
 
+    void publishDynamic(List<String> paths,Map<String,dynamic> params) async {
+        if (paths == null || paths.length == 0){
+
+        }
+        params.forEach((key, value) {
+
+        });
+        List<MultipartFile> data = [];
+        for (var i = 0; i < paths.length; i++) {
+            data.add(await MultipartFile.fromFile(paths[i]));
+        }
+        params["files"] = data;
+        var formData = FormData.fromMap(params);
+        await dio.post("path",data: formData);
+    }
+
     void uploadImg(List<String> paths) async {
         if (paths == null || paths.length == 0){
 
@@ -93,7 +109,7 @@ class Net {
             data.add(await MultipartFile.fromFile(paths[i]));
         }
         var formData = FormData.fromMap({
-            "name":"upload_img",
+            "name":"upload",
             "files":data
         });
         await dio.post("path",data: formData);
