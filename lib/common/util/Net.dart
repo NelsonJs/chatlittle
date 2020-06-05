@@ -84,5 +84,20 @@ class Net {
         return ActiveBean.fromJson(r.data);
     }
 
+    void uploadImg(List<String> paths) async {
+        if (paths == null || paths.length == 0){
+
+        }
+        List<MultipartFile> data = [];
+        for (var i = 0; i < paths.length; i++) {
+            data.add(await MultipartFile.fromFile(paths[i]));
+        }
+        var formData = FormData.fromMap({
+            "name":"upload_img",
+            "files":data
+        });
+        await dio.post("path",data: formData);
+    }
+
 
 }
