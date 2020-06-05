@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:littelchat/bean/AccountBea.dart';
 import 'package:littelchat/bean/ChatRecordBean.dart';
 import 'package:littelchat/bean/ConversationBean.dart';
+import 'package:littelchat/bean/active_bean.dart';
 import 'package:littelchat/bean/near_nynamic.dart';
 import 'package:littelchat/common/Global.dart';
 import 'package:littelchat/common/util/SpUtils.dart';
@@ -76,6 +77,11 @@ class Net {
     Future<NearDynamic> nearDynamicList() async {
         Response r = await dio.get("index/neardynamic");
         return NearDynamic.fromJson(r.data);
+    }
+
+    Future<ActiveBean> activeList() async {
+        Response r = await dio.get("index/neardynamic");
+        return ActiveBean.fromJson(r.data);
     }
 
 
