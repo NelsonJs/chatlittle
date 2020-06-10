@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:littelchat/account_page/Login.dart';
 import 'package:littelchat/bean/MessageBean.dart';
 import 'package:littelchat/common/Global.dart';
@@ -31,6 +32,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Colors.blueGrey,
       ),
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate
+      ],
+      supportedLocales: [
+        const Locale('en', 'US'), // English
+      ],
       home: HomePage(),
     );
   }

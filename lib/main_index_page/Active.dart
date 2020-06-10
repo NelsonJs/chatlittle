@@ -62,7 +62,8 @@ class ActivePage extends State<Active> with SingleTickerProviderStateMixin {
           return CupertinoActivityIndicator();
         }
       }),
-      floatingActionButton: FloatingActionButton(onPressed: (){
+      floatingActionButton: FloatingActionButton(
+        onPressed: (){
         Navigator.push(context, MaterialPageRoute(builder: (context)=>PublishActive()));
       },child: Icon(Icons.add),),
     );

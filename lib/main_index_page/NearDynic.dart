@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:littelchat/active_page/PublishActive.dart';
+import 'package:littelchat/active_page/publish_dynamic.dart';
 import 'package:littelchat/bean/near_nynamic.dart';
 import 'package:littelchat/common/util/Net.dart';
 
@@ -18,7 +20,7 @@ class NearDynicPage extends State<NearDynic> {
           builder: (context,snapshot){
             if (snapshot.connectionState == ConnectionState.done){
                 if (snapshot.hasError){
-                  return Text('data');
+                  return Text('遇到错误');
                 } else {
                   if (snapshot.data.data != null) {
                     mData.clear();
@@ -91,10 +93,15 @@ class NearDynicPage extends State<NearDynic> {
                   );
                 }
             } else {
-              return CupertinoActivityIndicator();
+              return Center(child: CupertinoActivityIndicator(radius: 15,),);
             }
           }
-      )
+      ),floatingActionButton: FloatingActionButton(
+        onPressed: (){
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>PublishDynamic()));
+        },
+      child: Icon(Icons.add),
+        ),
     );
   }
 
