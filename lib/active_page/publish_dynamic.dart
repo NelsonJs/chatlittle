@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 
 class PublishDynamic extends StatefulWidget {
   @override
@@ -8,63 +9,79 @@ class PublishDynamic extends StatefulWidget {
 }
 
 class DynamicState extends State<PublishDynamic> {
-  int crossCount = 1,itemCount = 1;
-  List<String> imgs = [];
+  List<Asset> images = List<Asset>();
+  String _error = 'No Error Dectected';
 
   @override
   void initState() {
-    imgs.add("images/addimg.png");
     super.initState();
+  }
+
+  Widget buildGridView() {
+    return GridView.count(
+      crossAxisCount: 3,
+      children: List.generate(images.length, (index) {
+        Asset asset = images[index];
+        return AssetThumb(
+          asset: asset,
+          width: 300,
+          height: 300,
+        );
+      }),
+    );
+  }
+
+  Future<void> loadAssets() async {
+    List<Asset> resultList = List<Asset>();
+    String error = 'No Error Dectected';
+
+    try {
+      resultList = await MultiImagePicker.pickImages(
+        maxImages: 300,
+        enableCamera: true,
+        selectedAssets: images,
+        cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
+        materialOptions: MaterialOptions(
+          actionBarColor: "#abcdef",
+          actionBarTitle: "Example App",
+          allViewTitle: "All Photos",
+          useDetailsView: false,
+          selectCircleStrokeColor: "#000000",
+        ),
+      );
+    } on Exception catch (e) {
+      error = e.toString();
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    setState(() {
+      images = resultList;
+      _error = error;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        actions: <Widget>[
-          Center(
-            child: FlatButton(
-                onPressed: null,
-                child: Text('发表')),
-          )
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-          child: Column(
-            children: <Widget>[
-              TextField(
-                decoration: InputDecoration(
-                    hintText: "这一刻的想法...",
-                    contentPadding: EdgeInsets.fromLTRB(10, 5, 10, 10)
-                ),
-              ),
-              GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: crossCount,
-                      crossAxisSpacing: 2,
-                      mainAxisSpacing: 2,
-                      childAspectRatio: 0.69
-                  ),
-                  itemCount: itemCount,
-                  itemBuilder: (context,index){
-                    String path;
-                    if (index == imgs.length-1){
-                        path = imgs[index];
-                    }
-                    return Container(
-                      color: Colors.white,
-                      margin: EdgeInsets.only(top: 10),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(4)),
-                        child:path == "images/addimg.png" ? Image(image: AssetImage(path)):Image.file(File(path)),
-                      ),
-                    );
-                  }
-              )
-            ],
-          ),
+    return new MaterialApp(
+      home: new Scaffold(
+        appBar: new AppBar(
+          title: const Text('Plugin example app'),
+        ),
+        body: Column(
+          children: <Widget>[
+            Center(child: Text('Error: $_error')),
+            RaisedButton(
+              child: Text("Pick images"),
+              onPressed: loadAssets,
+            ),
+            Expanded(
+              child: buildGridView(),
+            )
+          ],
         ),
       ),
     );

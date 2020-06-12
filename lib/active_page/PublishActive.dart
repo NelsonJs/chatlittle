@@ -1,10 +1,9 @@
 
-import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:littelchat/common/widgets/loading.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 
 class PublishActive extends StatefulWidget{
   @override
@@ -15,13 +14,19 @@ class _PublishStateActive extends State<PublishActive> {
   bool btnVisible = false;
   bool imgVisible = true;
   String txt = "点击上传封面";
-  File _image;
-  final picker = ImagePicker();
+  List<Asset> images = [];
 
   Future getImage() async {
-    final pickFile = await picker.getImage(source: ImageSource.gallery);
+    try{
+      images = await MultiImagePicker.pickImages(maxImages: 1);
+    } on Exception catch (e) {
+      print(e.toString());
+    }
+    if (!mounted) {
+      return;
+    }
+
     setState(() {
-      _image = File(pickFile.path);
       txt = "点击更换封面";
     });
   }
@@ -61,8 +66,8 @@ class _PublishStateActive extends State<PublishActive> {
                   )
                 ),
                 Offstage(
-                  offstage: _image == null ? true : false,
-                  child:  _image == null ? Placeholder():Image.file(_image,fit: BoxFit.contain,height: 300,width: 300),
+                  offstage: images == null ? true : false,
+                  child:  images == null ? Placeholder():AssetThumb(asset: images[0], width: 300, height: 300),
                 ),
                 Row(
                   children: <Widget>[

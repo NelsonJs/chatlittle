@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:littelchat/active_page/PublishActive.dart';
 import 'package:littelchat/active_page/publish_dynamic.dart';
 import 'package:littelchat/bean/near_nynamic.dart';
 import 'package:littelchat/common/util/Net.dart';
