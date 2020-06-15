@@ -66,6 +66,7 @@ flutter:
     - images/active.png
     - images/likeme.png
     - images/smile.png
+    - images/add_img.png
     - images/2.0x/
     - images/3.0x/
   # An image asset can refer to one or more resolution-specific "variants", see

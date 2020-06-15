@@ -115,5 +115,17 @@ class Net {
         await dio.post("path",data: formData);
     }
 
+    Future<List<int>> uploadImgWithByte(List<List<int>> bytes) async {
+        for (var i = 0; i < bytes.length; i++) {
+            await uploadImgMethod(Stream.fromIterable(bytes[i].map((e) => (e)=>[e])));
+        }
+
+    }
+
+    void uploadImgMethod(dynamic bytes) async {
+        await dio.post("resource/uploadimg",data: dynamic);
+
+    }
+
 
 }
