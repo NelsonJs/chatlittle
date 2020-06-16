@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
 import 'package:littelchat/bean/AccountBea.dart';
@@ -5,6 +7,7 @@ import 'package:littelchat/bean/ChatRecordBean.dart';
 import 'package:littelchat/bean/ConversationBean.dart';
 import 'package:littelchat/bean/active_bean.dart';
 import 'package:littelchat/bean/near_nynamic.dart';
+import 'package:littelchat/bean/resource_bean.dart';
 import 'package:littelchat/common/Global.dart';
 import 'package:littelchat/common/util/SpUtils.dart';
 
@@ -76,6 +79,7 @@ class Net {
 
     Future<NearDynamic> nearDynamicList() async {
         Response r = await dio.get("index/neardynamic");
+        print(r.data.toString());
         return NearDynamic.fromJson(r.data);
     }
 
@@ -84,21 +88,7 @@ class Net {
         return ActiveBean.fromJson(r.data);
     }
 
-    void publishDynamic(List<String> paths,Map<String,dynamic> params) async {
-        if (paths == null || paths.length == 0){
 
-        }
-        params.forEach((key, value) {
-
-        });
-        List<MultipartFile> data = [];
-        for (var i = 0; i < paths.length; i++) {
-            data.add(await MultipartFile.fromFile(paths[i]));
-        }
-        params["files"] = data;
-        var formData = FormData.fromMap(params);
-        await dio.post("path",data: formData);
-    }
 
     void uploadImg(List<String> paths) async {
         if (paths == null || paths.length == 0){
@@ -115,17 +105,29 @@ class Net {
         await dio.post("path",data: formData);
     }
 
-    Future<List<int>> uploadImgWithByte(List<List<int>> bytes) async {
-        for (var i = 0; i < bytes.length; i++) {
-            await uploadImgMethod(Stream.fromIterable(bytes[i].map((e) => (e)=>[e])));
-        }
-
+    Future<ResourceBean> uploadImgWithByte(List<List<int>> bytes) async {
+        print("图片个数:${bytes.length}");
+        var formData = FormData();
+       for (var i=0; i<bytes.length;i++) {
+           formData.files.add(MapEntry("upload", MultipartFile.fromBytes(bytes[i],filename: "$i.jpg")));
+       }
+        var res = await dio.post("resource/uploadimg",data: formData);
+        print(res.data.toString());
+        return ResourceBean.fromJson(res.data);
     }
 
-    void uploadImgMethod(dynamic bytes) async {
-        await dio.post("resource/uploadimg",data: dynamic);
-
+    Future<ResourceBean> publishDynamic(List<int> ids,String title) async {
+        var map = Map<String,dynamic>();
+        SpUtils().getInt(SpUtils.uid).then((value) {
+           map["uid"] = value.toString();
+           map["title"] = title;
+           map["ids"] = ids;
+        });
+        var res = await dio.post("index/dynamic",data: map);
+        print("提交数据->${res.data.toString()}");
+        return ResourceBean.fromJson(res.data);
     }
+
 
 
 }

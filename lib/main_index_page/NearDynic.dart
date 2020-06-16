@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:littelchat/active_page/publish_dynamic.dart';
 import 'package:littelchat/bean/near_nynamic.dart';
 import 'package:littelchat/common/util/Net.dart';
+import 'package:littelchat/common/widgets/ImageWidget.dart';
 
 class NearDynic extends StatefulWidget {
   @override
@@ -29,13 +30,13 @@ class NearDynicPage extends State<NearDynic> {
                       itemCount: mData.length,
                       itemBuilder: (context,index) {
                         Widget w;
-                        if (index %2== 0){
-                          w = oneImg();
+                        if (mData[index].resImg.length > 0){
+                          w = img(mData[index].resImg);
                         } else {
                           w = empty();
                         }
                         return Container(
-                          padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
+                          padding: EdgeInsets.fromLTRB(16, 20, 10, 0),
                           child:Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
@@ -67,14 +68,20 @@ class NearDynicPage extends State<NearDynic> {
                                   )
                                 ],
                               ),
-                              Text(mData[index].title),
+                              Container(
+                                margin: EdgeInsets.only(top: 10),
+                                child: Text(mData[index].title),
+                              ),
                               Text(mData[index].desc),
                               Container(
                                 child: w,
                               ),
                               Row(
                                 children: <Widget>[
-                                  Text('18小时前·4.15km·软件园二期·546播放')
+                                  Container(
+                                    margin: EdgeInsets.only(top: 25),
+                                    child: Text('18小时前·4.15km·软件园二期·546播放'),
+                                  )
                                 ],
                               ),
                               Row(
@@ -104,12 +111,10 @@ class NearDynicPage extends State<NearDynic> {
     );
   }
 
-  Widget oneImg(){
+  Widget img(List<String> images){
     return ClipRRect(
       borderRadius: BorderRadius.all(Radius.circular(5)),
-      child: Image.asset(
-          'images/q1.jpg'
-      ),
+      child: ImageWidget(url: images[0]),
     );
   }
 

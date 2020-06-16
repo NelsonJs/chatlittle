@@ -40,6 +40,8 @@ class Data {
   int like;
   int commentnum;
   int commentid;
+  List<String> resImg;
+
 
   Data(
       {this.id,
@@ -56,7 +58,8 @@ class Data {
         this.peopletotalnum,
         this.like,
         this.commentnum,
-        this.commentid});
+        this.commentid,
+        this.resImg});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -74,6 +77,10 @@ class Data {
     like = json['like'];
     commentnum = json['commentnum'];
     commentid = json['commentid'];
+    if (json['res_img'] != null) {
+      resImg = json['res_img'].cast<String>();
+    }
+
   }
 
   Map<String, dynamic> toJson() {
@@ -93,6 +100,7 @@ class Data {
     data['like'] = this.like;
     data['commentnum'] = this.commentnum;
     data['commentid'] = this.commentid;
+    data['res_img'] = this.resImg;
     return data;
   }
 }
