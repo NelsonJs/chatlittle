@@ -128,6 +128,15 @@ class Net {
         return ResourceBean.fromJson(res.data);
     }
 
+    avatar(List<int> avatar,String uid) async {
+        var formData = FormData();
+        formData.files.add(MapEntry("upload", MultipartFile.fromBytes(avatar,filename: "0.jpg")));
+        var res = await dio.post("resource/uploadimg?uid=$uid",data: formData);
+        print(res.data.toString());
+        Map<String,dynamic> result = json.decode(res.toString());
+
+    }
+
 
 
 }

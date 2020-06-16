@@ -7,7 +7,9 @@ import 'package:littelchat/account_page/Login.dart';
 import 'package:littelchat/bean/AccountBea.dart';
 import 'package:littelchat/common/Global.dart';
 import 'package:littelchat/common/util/LoginModel.dart';
+import 'package:littelchat/common/util/Net.dart';
 import 'package:littelchat/common/util/SpUtils.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:provider/provider.dart';
 
 class Mine extends StatefulWidget {
@@ -19,7 +21,32 @@ class Mine extends StatefulWidget {
 
 class MinePage extends State<Mine> {
   String name = "未登录";
+  List<Asset> resultList = List<Asset>();
+  Future<void> loadAssets() async {
+    try {
+      resultList = await MultiImagePicker.pickImages(
+        maxImages: 1,
+        enableCamera: true,
+        selectedAssets: resultList,
+        cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
+      );
+    } on Exception catch (e) {
+    }
 
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    SpUtils().getString(SpUtils.uid).then((value) {
+      commit(value.toString());
+    });
+  }
+
+  commit(String uid) async {
+    var byteData = await resultList[0].getByteData();
+    Net().avatar(byteData.buffer.asUint8List(),uid);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +69,14 @@ class MinePage extends State<Mine> {
                 behavior: HitTestBehavior.opaque,
                 child: Row(
                   children: <Widget>[
-                    CircleAvatar(
-                      backgroundImage: AssetImage('images/p1.jpg'),
-                      radius: 30,
+                    GestureDetector(
+                      child: CircleAvatar(
+                        backgroundImage: AssetImage('images/p1.jpg'),
+                        radius: 30,
+                      ),
+                      onTap: (){
+
+                      },
                     ),
                     Expanded(
                         flex: 1,
