@@ -66,7 +66,7 @@ class ItemSelfText extends StatelessWidget {
                       radius: 20,
                     ),
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>PersonDetail()));
+                     // Navigator.push(context, MaterialPageRoute(builder: (context)=>PersonDetail()));
                     },
                 )
               ],

@@ -4,7 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:littelchat/account_page/Login.dart';
+import 'package:littelchat/account_page/modify_self_info.dart';
 import 'package:littelchat/bean/AccountBea.dart';
+import 'package:littelchat/chat/PersonDetail.dart';
 import 'package:littelchat/common/Global.dart';
 import 'package:littelchat/common/util/LoginModel.dart';
 import 'package:littelchat/common/util/Net.dart';
@@ -22,7 +24,11 @@ class Mine extends StatefulWidget {
 class MinePage extends State<Mine> {
   String name = "未登录";
   List<Asset> resultList = List<Asset>();
+  var uint8list;
+
+
   Future<void> loadAssets() async {
+    resultList.clear();
     try {
       resultList = await MultiImagePicker.pickImages(
         maxImages: 1,
@@ -38,23 +44,34 @@ class MinePage extends State<Mine> {
     // setState to update our non-existent appearance.
     if (!mounted) return;
 
-    SpUtils().getString(SpUtils.uid).then((value) {
+    SpUtils().getInt(SpUtils.uid).then((value) {
       commit(value.toString());
     });
   }
 
   commit(String uid) async {
     var byteData = await resultList[0].getByteData();
-    Net().avatar(byteData.buffer.asUint8List(),uid);
+    uint8list = byteData.buffer.asUint8List();
+    Net().avatar(uint8list,uid).then((value){
+        if (value.code > 0) {
+          setState(() {
+          });
+        }
+    });
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
     SpUtils().getString(SpUtils.userName).then((value){
       setState(() {
         name = value;
       });
     });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('我的'),
@@ -70,12 +87,11 @@ class MinePage extends State<Mine> {
                 child: Row(
                   children: <Widget>[
                     GestureDetector(
-                      child: CircleAvatar(
-                        backgroundImage: AssetImage('images/p1.jpg'),
-                        radius: 30,
+                      child: ClipOval(
+                        child: resultList.length == 0 ? Image.asset('images/p1.jpg',width: 30,height: 30,fit: BoxFit.cover) : Image.memory(uint8list,width: 30,height: 30,fit: BoxFit.cover)
                       ),
                       onTap: (){
-
+                        loadAssets();
                       },
                     ),
                     Expanded(
@@ -99,16 +115,17 @@ class MinePage extends State<Mine> {
                   ],
                 ),
                 onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>Login()));
+                  SpUtils().getInt(SpUtils.uid).then((value) {
+                    if (value != null || value > 0) {
+                      //Navigator.push(context, MaterialPageRoute(builder: (context)=>PersonDetail(value)));
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>ModifyInfoPage()));
+                    } else {
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>Login()));
+                    }
+                  });
                 },
               )
           ),
-          Divider(height: 1,color: Colors.grey[350]),
-          Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 10),child: Row(
-            children: <Widget>[
-              Image.asset("images/2.0x/addimg.png",width: 40,height: 40,)
-            ],
-          )),
           Divider(height: 1,color: Colors.grey[350]),
           Padding(padding:  EdgeInsets.fromLTRB(0, 10, 0, 10),
                   child: Row(

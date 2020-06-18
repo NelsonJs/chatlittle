@@ -8,6 +8,7 @@ import 'package:littelchat/bean/ConversationBean.dart';
 import 'package:littelchat/bean/active_bean.dart';
 import 'package:littelchat/bean/near_nynamic.dart';
 import 'package:littelchat/bean/resource_bean.dart';
+import 'package:littelchat/bean/respont_parent.dart';
 import 'package:littelchat/common/Global.dart';
 import 'package:littelchat/common/util/SpUtils.dart';
 
@@ -128,13 +129,26 @@ class Net {
         return ResourceBean.fromJson(res.data);
     }
 
-    avatar(List<int> avatar,String uid) async {
+    Future<ResourceBean> avatar(List<int> avatar,String uid) async {
         var formData = FormData();
         formData.files.add(MapEntry("upload", MultipartFile.fromBytes(avatar,filename: "0.jpg")));
-        var res = await dio.post("resource/uploadimg?uid=$uid",data: formData);
+        var res = await dio.post("user/avatar?uid=$uid",data: formData);
         print(res.data.toString());
-        Map<String,dynamic> result = json.decode(res.toString());
+        return ResourceBean.fromJson(res.data);
+    }
 
+    Future<ResponseParent> updateUserInfo(String uid,String nickName,String phone,String gender) async {
+        var map = Map<String,dynamic>();
+        print("uid----->$uid");
+        if (uid == null){
+            return ResponseParent(code: -1,msg: "uid为空");
+        }
+        map["nick_name"] = nickName;
+        map["phone"] = phone;
+        map["gender"] = gender;
+        var res = await dio.post("user/modify",data: map);
+        print(res.data.toString());
+        return ResponseParent.fromJson(res.data);
     }
 
 
