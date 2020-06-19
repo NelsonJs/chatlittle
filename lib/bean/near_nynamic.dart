@@ -40,8 +40,17 @@ class Data {
   int like;
   int commentnum;
   int commentid;
+  int time;
   List<String> resImg;
-
+  String nickname;
+  String phone;
+  String pwd;
+  String avatar;
+  int createTime;
+  int loginTime;
+  int logoutTime;
+  int status;
+  int yearOld;
 
   Data(
       {this.id,
@@ -59,7 +68,17 @@ class Data {
         this.like,
         this.commentnum,
         this.commentid,
-        this.resImg});
+        this.time,
+        this.resImg,
+        this.nickname,
+        this.phone,
+        this.pwd,
+        this.avatar,
+        this.createTime,
+        this.loginTime,
+        this.logoutTime,
+        this.status,
+        this.yearOld});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -77,10 +96,17 @@ class Data {
     like = json['like'];
     commentnum = json['commentnum'];
     commentid = json['commentid'];
-    if (json['res_img'] != null) {
-      resImg = json['res_img'].cast<String>();
-    }
-
+    time = json['time'];
+    resImg = json['res_img'].cast<String>();
+    nickname = json['nickname'];
+    phone = json['phone'];
+    pwd = json['pwd'];
+    avatar = json['avatar'];
+    createTime = json['createTime'];
+    loginTime = json['loginTime'];
+    logoutTime = json['logout_time'];
+    status = json['status'];
+    yearOld = json['year_old'];
   }
 
   Map<String, dynamic> toJson() {
@@ -100,7 +126,17 @@ class Data {
     data['like'] = this.like;
     data['commentnum'] = this.commentnum;
     data['commentid'] = this.commentid;
+    data['time'] = this.time;
     data['res_img'] = this.resImg;
+    data['nickname'] = this.nickname;
+    data['phone'] = this.phone;
+    data['pwd'] = this.pwd;
+    data['avatar'] = this.avatar;
+    data['createTime'] = this.createTime;
+    data['loginTime'] = this.loginTime;
+    data['logout_time'] = this.logoutTime;
+    data['status'] = this.status;
+    data['year_old'] = this.yearOld;
     return data;
   }
 }

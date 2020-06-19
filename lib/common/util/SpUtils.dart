@@ -4,6 +4,7 @@ class SpUtils {
   static String userName = "username";
   static String uid = "uid";
   static String phone = "phone";
+
   Future<SharedPreferences> _sp = SharedPreferences.getInstance();
 
   Future<bool> saveString(String key,String value) async {

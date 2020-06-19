@@ -42,14 +42,13 @@ class NearDynicPage extends State<NearDynic> {
                             children: <Widget>[
                               Row(
                                 children: <Widget>[
-                                  CircleAvatar(
-                                    backgroundImage: AssetImage('images/p1.jpg'),
-                                    radius: 25,
+                                  ClipOval(
+                                    child: Image.network(mData[index].avatar,width: 40,height: 40,fit: BoxFit.cover),
                                   ),
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
-                                      Padding(padding: EdgeInsets.fromLTRB(10, 0, 0, 0),child: Text('三胖',style: TextStyle(fontSize: 15,color: Colors.red))),
+                                      Padding(padding: EdgeInsets.fromLTRB(10, 0, 0, 0),child: Text(mData[index].nickname == null ? "加载中.." : mData[index].nickname,style: TextStyle(fontSize: 15,color: Colors.red))),
                                       Padding(padding: EdgeInsets.fromLTRB(10, 3, 0, 0),
                                           child: Column(
                                             children: <Widget>[

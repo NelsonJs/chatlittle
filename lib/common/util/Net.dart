@@ -143,7 +143,8 @@ class Net {
         if (uid == null){
             return ResponseParent(code: -1,msg: "uid为空");
         }
-        map["nick_name"] = nickName;
+        map["uid"] = uid;
+        map["nickname"] = nickName;
         map["phone"] = phone;
         map["gender"] = gender;
         var res = await dio.post("user/modify",data: map);
