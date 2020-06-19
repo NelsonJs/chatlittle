@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:littelchat/common/util/Net.dart';
 import 'package:littelchat/common/widgets/SnackBackUtil.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 
@@ -36,6 +37,11 @@ class SatePublishLove extends State<PublishLovePage> {
 
   var _scaffoldkey = GlobalKey<ScaffoldState>();//把Scaffold的key自己保存
 
+  commit() async {
+    var byteData = await images[0].getByteData();
+   // Net().publishLoveIntro(byteData.buffer.asUint8List(), uid)
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,6 +72,8 @@ class SatePublishLove extends State<PublishLovePage> {
                 } else if (name.isEmpty || gender.isEmpty || yearsOld.isEmpty || shenGao.isEmpty || tiZhong.isEmpty
                     || habit.isEmpty || xueLi.isEmpty || job.isEmpty || curLoc.isEmpty || jiGuan.isEmpty || loveWord.isEmpty) {
                   _scaffoldkey.currentState.showSnackBar(SnackBar(content: Text('资料未填写完整'),duration: Duration(seconds: 1)));
+                } else {
+                  commit();
                 }
               },
             ),
