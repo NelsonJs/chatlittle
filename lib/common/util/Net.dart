@@ -117,6 +117,16 @@ class Net {
         return ResourceBean.fromJson(res.data);
     }
 
+    Future<ResourceBean> publishLoveIntro(List<int> bytes,String uid) async {
+        var formData = FormData();
+        formData.files.add(MapEntry("upload", MultipartFile.fromBytes(bytes,filename: "0.jpg")));
+        var params = Map<String,dynamic>();
+        params["uid"] = uid;
+        var res = await dio.post("resource/uploadimg",data: formData,queryParameters: params);
+        print(res.data.toString());
+        return ResourceBean.fromJson(res.data);
+    }
+
     Future<ResourceBean> publishDynamic(List<int> ids,String title) async {
         var map = Map<String,dynamic>();
         SpUtils().getInt(SpUtils.uid).then((value) {
