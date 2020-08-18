@@ -8,6 +8,7 @@ import 'package:littelchat/account_page/modify_self_info.dart';
 import 'package:littelchat/bean/AccountBea.dart';
 import 'package:littelchat/chat/PersonDetail.dart';
 import 'package:littelchat/common/Global.dart';
+import 'package:littelchat/common/setting.dart';
 import 'package:littelchat/common/util/LoginModel.dart';
 import 'package:littelchat/common/util/Net.dart';
 import 'package:littelchat/common/util/SpUtils.dart';
@@ -81,7 +82,7 @@ class MinePage extends State<Mine> {
       child: Column(
         children: <Widget>[
           Container(
-            margin: EdgeInsets.fromLTRB(0, 5, 0, 15),
+            margin: EdgeInsets.fromLTRB(0, 5, 13, 15),
               child: GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 child: Row(
@@ -127,7 +128,7 @@ class MinePage extends State<Mine> {
               )
           ),
           Divider(height: 1,color: Colors.grey[350]),
-          Padding(padding:  EdgeInsets.fromLTRB(0, 10, 0, 10),
+          Padding(padding:  EdgeInsets.fromLTRB(0, 10, 16, 10),
                   child: Row(
                     children: <Widget>[
                       Expanded(child: Row(
@@ -145,7 +146,7 @@ class MinePage extends State<Mine> {
                     ],
                   )),
           Divider(height: 1,color: Colors.grey[350]),
-          Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+          Padding(padding: EdgeInsets.fromLTRB(0, 10, 16, 10),
                   child: Row(
                     children: <Widget>[
                       Expanded(child: Row(
@@ -163,7 +164,7 @@ class MinePage extends State<Mine> {
                     ],
                   )),
           Divider(height: 1,color: Colors.grey[350]),
-          Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+          Padding(padding: EdgeInsets.fromLTRB(0, 10, 16, 10),
             child: Row(
             children: <Widget>[
               Expanded(child: Row(
@@ -181,7 +182,7 @@ class MinePage extends State<Mine> {
             ],
           ),),
           Divider(height: 1,color: Colors.grey[350]),
-          Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+          Padding(padding: EdgeInsets.fromLTRB(0, 10, 16, 10),
             child: Row(
               children: <Widget>[
                 Expanded(child: Row(
@@ -199,22 +200,28 @@ class MinePage extends State<Mine> {
               ],
             ),),
           Divider(height: 1,color: Colors.grey[350]),
-          Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-            child: Row(
-              children: <Widget>[
-                Expanded(child: Row(
-                  children: <Widget>[
-                    Image.asset('images/setting.png',width: 30,height: 30),
-                    Padding(padding: EdgeInsets.only(left: 8),child: Text('设置'),)
-                  ],
-                )),
-                Row(
-                  children: <Widget>[
-                    Padding(padding: EdgeInsets.only(left: 8),child:Image.asset('images/next.png'))
-                  ],
-                )
-              ],
-            ),),
+          Padding(padding: EdgeInsets.fromLTRB(0, 10, 16, 10),
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: (){
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SettingPage()));
+              },
+              child: Row(
+                children: <Widget>[
+                  Expanded(child: Row(
+                    children: <Widget>[
+                      Image.asset('images/setting.png',width: 30,height: 30),
+                      Padding(padding: EdgeInsets.only(left: 8),child: Text('设置'),)
+                    ],
+                  )),
+                  Row(
+                    children: <Widget>[
+                      Padding(padding: EdgeInsets.only(left: 8),child:Image.asset('images/next.png'))
+                    ],
+                  )
+                ],
+              ),
+            )),
           Divider(height: 1,color: Colors.grey[350]),
         ],
       )

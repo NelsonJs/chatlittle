@@ -6,6 +6,7 @@ import 'package:littelchat/bean/AccountBea.dart';
 import 'package:littelchat/bean/ChatRecordBean.dart';
 import 'package:littelchat/bean/ConversationBean.dart';
 import 'package:littelchat/bean/active_bean.dart';
+import 'package:littelchat/bean/love_intro.dart';
 import 'package:littelchat/bean/near_nynamic.dart';
 import 'package:littelchat/bean/resource_bean.dart';
 import 'package:littelchat/bean/respont_parent.dart';
@@ -89,6 +90,10 @@ class Net {
         return ActiveBean.fromJson(r.data);
     }
 
+    Future<LoveIntro> loveIntroList() async {
+        Response r = await dio.get("index/loveintrolist?t=0&limit=10");
+        return LoveIntro.fromJson(r.data);
+    }
 
 
     void uploadImg(List<String> paths) async {
@@ -122,8 +127,25 @@ class Net {
         formData.files.add(MapEntry("upload", MultipartFile.fromBytes(bytes,filename: "0.jpg")));
         var params = Map<String,dynamic>();
         params["uid"] = uid;
+        params["nickname"] = uid;
+        params["yearsOld"] = uid;
+        params["shenGao"] = uid;
+        params["tiZhong"] = uid;
+        params["habit"] = uid;
+        params["xueLi"] = uid;
+        params["job"] = uid;
+        params["curLoc"] = uid;
+        params["jiGuan"] = uid;
+        params["loveWord"] = uid;
         var res = await dio.post("resource/uploadimg",data: formData,queryParameters: params);
         print(res.data.toString());
+        Map<String,dynamic> map = json.decode(res.data.toString());
+        if (map["data"] != null) {
+            List<int> list = map["data"];
+            if (list.length > 0) {
+                res = await dio.post("index/loveintro",data: formData,queryParameters: params);
+            }
+        }
         return ResourceBean.fromJson(res.data);
     }
 
@@ -158,6 +180,22 @@ class Net {
         map["phone"] = phone;
         map["gender"] = gender;
         var res = await dio.post("user/modify",data: map);
+        print(res.data.toString());
+        return ResponseParent.fromJson(res.data);
+    }
+
+    Future<ResponseParent> addLike(int uid,int dynamicId) async {
+        var map = Map<String,dynamic>();
+        print("uid----->$uid");
+        if (uid == null){
+            return ResponseParent(code: -1,msg: "uid为空");
+        }
+        if (dynamicId == null){
+            return ResponseParent(code: -1,msg: "dynamicId为空");
+        }
+        map["d_id"] = dynamicId;
+        map["uid"] = uid;
+        var res = await dio.post("index/likedynamic",data: map);
         print(res.data.toString());
         return ResponseParent.fromJson(res.data);
     }

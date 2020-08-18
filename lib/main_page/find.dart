@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:littelchat/active_page/publish_love.dart';
 import 'package:littelchat/bean/active_bean.dart';
+import 'package:littelchat/bean/love_intro.dart';
 import 'package:littelchat/common/util/Net.dart';
+import 'package:littelchat/common/widgets/ImageWidget.dart';
 
 class Find extends StatefulWidget {
   @override
@@ -10,6 +12,7 @@ class Find extends StatefulWidget {
 }
 
 class FindPage extends State<Find> with SingleTickerProviderStateMixin{
+  List<LoveIntroData> mData = [];
 
   @override
   void initState() {
@@ -42,47 +45,55 @@ class FindPage extends State<Find> with SingleTickerProviderStateMixin{
       ),
       body:
       Scaffold(
-        body:FutureBuilder<ActiveBean>(
-            future: Net().activeList(),
-            builder: (context,snapshot){
-              if (snapshot.connectionState == ConnectionState.done) {
-                if (snapshot.hasError){
-                  return Text('data');
-                } else {
-                  if (snapshot.data.data != null) {
-                   // mData.clear();
-                    //mData.addAll(snapshot.data.data);
-                  }
-                  return  ListView.builder(
-                    //  itemCount: mData.length,
-                      itemBuilder: (context,index){
-                        return Card(
-                          child: Padding(
-                              padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
-                              child:Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                //  Text(mData[index].title),
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                                    child: Image.asset(
-                                        'images/q1.jpg'
-                                    ),
+        body:RefreshIndicator(
+            child: FutureBuilder<LoveIntro>(
+                future: Net().loveIntroList(),
+                builder: (context,snapshot){
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.hasError){
+                      return Text('${snapshot.error.toString()}');
+                    } else {
+                      if (snapshot.data.data != null) {
+                        mData.clear();
+                        mData.addAll(snapshot.data.data);
+                      }
+                      return  ListView.builder(
+                          itemCount: mData.length,
+                          itemBuilder: (context,index){
+                            return Card(
+                              child: Padding(
+                                  padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
+                                  child:Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      //  Text(mData[index].title),
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                                        child: ImageWidget(url: mData[index].img),
+                                      ),
+                                      Padding(padding: EdgeInsets.fromLTRB(10, 10, 10, 10),child: Text('姓名：${mData[index].nickname}')),
+                                      Padding(padding: EdgeInsets.fromLTRB(10, 10, 10, 10),child: Text('性别：${mData[index].gender == 1 ? "男" : "女"}')),
+                                      Padding(padding: EdgeInsets.fromLTRB(10, 10, 10, 10),child: Text('爱好：${mData[index].habit}')),
+                                      Padding(padding: EdgeInsets.fromLTRB(10, 10, 10, 10),child: Text('当前位置：${mData[index].curLocal}')),
+                                    ],
                                   )
-                                ],
-                              )
-                          ),
-                        );
-                      });
-                }
-              } else {
-                return CupertinoActivityIndicator();
-              }
-            }),
+                              ),
+                            );
+                          });
+                    }
+                  } else {
+                    return CupertinoActivityIndicator();
+                  }
+                }),
+            onRefresh: _refresh),
       )
 
 
     );
+  }
+
+  Future<Null> _refresh() async {
+   Net().activeList();
   }
 
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:littelchat/common/util/Net.dart';
+import 'package:littelchat/common/util/SpUtils.dart';
 import 'package:littelchat/common/widgets/SnackBackUtil.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 
@@ -12,6 +13,7 @@ class SatePublishLove extends State<PublishLovePage> {
   bool hideAddImg = false;
   bool hidePersonImg = true;
   List<Asset> images = [];
+  int uid = 0;
   TextEditingController nameC = TextEditingController(),
       yearsOldC = TextEditingController(),genderC = TextEditingController(),
       shenGaoC = TextEditingController(),tiZhongC = TextEditingController(),
@@ -39,7 +41,7 @@ class SatePublishLove extends State<PublishLovePage> {
 
   commit() async {
     var byteData = await images[0].getByteData();
-   // Net().publishLoveIntro(byteData.buffer.asUint8List(), uid)
+    Net().publishLoveIntro(byteData.buffer.asUint8List(), uid.toString());
   }
 
   @override
@@ -56,25 +58,33 @@ class SatePublishLove extends State<PublishLovePage> {
                 child: Text('发布'),
               ),
               onTap: () {
-                var name = nameC.text.toString();
-                var gender = genderC.text.toString();
-                var yearsOld = yearsOldC.text.toString();
-                var shenGao = shenGaoC.text.toString();
-                var tiZhong = tiZhongC.text.toString();
-                var habit = habitC.text.toString();
-                var xueLi = xueLiC.text.toString();
-                var job = jobc.text.toString();
-                var curLoc = curLocC.text.toString();
-                var jiGuan = jiGuanC.text.toString();
-                var loveWord = loveWordC.text.toString();
-                if (images.length == 0){
-                  _scaffoldkey.currentState.showSnackBar(SnackBar(content: Text('未选择照片'),duration: Duration(seconds: 1)));
-                } else if (name.isEmpty || gender.isEmpty || yearsOld.isEmpty || shenGao.isEmpty || tiZhong.isEmpty
-                    || habit.isEmpty || xueLi.isEmpty || job.isEmpty || curLoc.isEmpty || jiGuan.isEmpty || loveWord.isEmpty) {
-                  _scaffoldkey.currentState.showSnackBar(SnackBar(content: Text('资料未填写完整'),duration: Duration(seconds: 1)));
-                } else {
-                  commit();
+                SpUtils().getInt(SpUtils.uid).then((value) {
+                  if (value == null) {
+                    _scaffoldkey.currentState.showSnackBar(SnackBar(content: Text('未登录'),duration: Duration(seconds: 1)));
+                  } else {
+                    uid = value;
+                    var name = nameC.text.toString();
+                    var gender = genderC.text.toString();
+                    var yearsOld = yearsOldC.text.toString();
+                    var shenGao = shenGaoC.text.toString();
+                    var tiZhong = tiZhongC.text.toString();
+                    var habit = habitC.text.toString();
+                    var xueLi = xueLiC.text.toString();
+                    var job = jobc.text.toString();
+                    var curLoc = curLocC.text.toString();
+                    var jiGuan = jiGuanC.text.toString();
+                    var loveWord = loveWordC.text.toString();
+                    if (images.length == 0){
+                      _scaffoldkey.currentState.showSnackBar(SnackBar(content: Text('未选择照片'),duration: Duration(seconds: 1)));
+                    } else if (name.isEmpty || gender.isEmpty || yearsOld.isEmpty || shenGao.isEmpty || tiZhong.isEmpty
+                        || habit.isEmpty || xueLi.isEmpty || job.isEmpty || curLoc.isEmpty || jiGuan.isEmpty || loveWord.isEmpty) {
+                      _scaffoldkey.currentState.showSnackBar(SnackBar(content: Text('资料未填写完整'),duration: Duration(seconds: 1)));
+                    } else {
+                      commit();
+                    }
                 }
+                });
+
               },
             ),
           )

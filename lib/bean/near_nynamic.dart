@@ -51,6 +51,7 @@ class Data {
   int logoutTime;
   int status;
   int yearOld;
+  bool liked;
 
   Data(
       {this.id,
@@ -78,7 +79,8 @@ class Data {
         this.loginTime,
         this.logoutTime,
         this.status,
-        this.yearOld});
+        this.yearOld,
+        this.liked});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -107,6 +109,7 @@ class Data {
     logoutTime = json['logout_time'];
     status = json['status'];
     yearOld = json['year_old'];
+    liked = json['liked'];
   }
 
   Map<String, dynamic> toJson() {
@@ -137,6 +140,7 @@ class Data {
     data['logout_time'] = this.logoutTime;
     data['status'] = this.status;
     data['year_old'] = this.yearOld;
+    data['liked'] = this.liked;
     return data;
   }
 }

@@ -33,4 +33,12 @@ class SpUtils {
     return sp.getInt(key);
   }
 
+  Future clear() async {
+    bool one = await saveString(userName, null);
+    bool two = await saveString(phone, null);
+
+    bool three = await saveInt(uid, null);
+    return one && two && three;
+  }
+
 }
