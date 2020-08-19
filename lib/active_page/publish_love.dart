@@ -43,7 +43,7 @@ class SatePublishLove extends State<PublishLovePage> {
     var byteData = await images[0].getByteData();
     Net().publishLoveIntro(byteData.buffer.asUint8List(), uid.toString(),params).then((value) {
       if (value.code > 0) {
-        Navigator.of(context).pop();
+        Navigator.pop(context);
       }
     });
   }

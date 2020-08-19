@@ -93,7 +93,7 @@ class FindPage extends State<Find> with SingleTickerProviderStateMixin{
   }
 
   Future<Null> _refresh() async {
-   Net().activeList();
+   Net().loveIntroList();
   }
 
 
