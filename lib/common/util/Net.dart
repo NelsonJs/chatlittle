@@ -8,6 +8,7 @@ import 'package:littelchat/bean/ConversationBean.dart';
 import 'package:littelchat/bean/active_bean.dart';
 import 'package:littelchat/bean/love_intro.dart';
 import 'package:littelchat/bean/near_nynamic.dart';
+import 'package:littelchat/bean/recoment_users.dart';
 import 'package:littelchat/bean/resource_bean.dart';
 import 'package:littelchat/bean/respont_parent.dart';
 import 'package:littelchat/common/Global.dart';
@@ -23,7 +24,8 @@ class Net {
 
     static Dio dio = Dio(BaseOptions(
       baseUrl: 'http://192.168.1.6:8080/',
-        connectTimeout: 5000
+        connectTimeout: 5000,
+        responseType: ResponseType.json
     ));
 
     static void init() {
@@ -122,30 +124,29 @@ class Net {
         return ResourceBean.fromJson(res.data);
     }
 
-    Future<ResourceBean> publishLoveIntro(List<int> bytes,String uid) async {
+    Future<ResourceBean> publishLoveIntro(List<int> bytes,String uid,Map<String,dynamic> paramMap) async {
         var formData = FormData();
         formData.files.add(MapEntry("upload", MultipartFile.fromBytes(bytes,filename: "0.jpg")));
         var params = Map<String,dynamic>();
-        params["uid"] = uid;
-        params["nickname"] = uid;
-        params["yearsOld"] = uid;
-        params["shenGao"] = uid;
-        params["tiZhong"] = uid;
-        params["habit"] = uid;
-        params["xueLi"] = uid;
-        params["job"] = uid;
-        params["curLoc"] = uid;
-        params["jiGuan"] = uid;
-        params["loveWord"] = uid;
+       /* params["uid"] = uid;
+        dio.options.responseType =  ResponseType.plain;
         var res = await dio.post("resource/uploadimg",data: formData,queryParameters: params);
         print(res.data.toString());
         Map<String,dynamic> map = json.decode(res.data.toString());
         if (map["data"] != null) {
-            List<int> list = map["data"];
+            List<dynamic> list = map["data"];
             if (list.length > 0) {
-                res = await dio.post("index/loveintro",data: formData,queryParameters: params);
+                dio.options.responseType =  ResponseType.json;
+                res = await dio.post("index/loveintro",data: formData,queryParameters: paramMap);
             }
-        }
+        }*/
+        List<MapEntry<String,String>> list = [];
+        paramMap.forEach((key, value) {
+            list.add(MapEntry(key, '$value'));
+        });
+        formData.fields.addAll(list);
+        var res = await dio.post("index/loveintro",data: formData);
+        print(res.data.toString());
         return ResourceBean.fromJson(res.data);
     }
 
@@ -200,6 +201,10 @@ class Net {
         return ResponseParent.fromJson(res.data);
     }
 
+    Future<RecomentBean> getRecomentUsers() async {
+        var res = await dio.get("index/userwithlogin");
+        return RecomentBean.fromJson(res.data);
+    }
 
 
 }

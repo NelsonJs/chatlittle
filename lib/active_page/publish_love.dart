@@ -39,9 +39,13 @@ class SatePublishLove extends State<PublishLovePage> {
 
   var _scaffoldkey = GlobalKey<ScaffoldState>();//把Scaffold的key自己保存
 
-  commit() async {
+  commit(Map<String,dynamic> params) async {
     var byteData = await images[0].getByteData();
-    Net().publishLoveIntro(byteData.buffer.asUint8List(), uid.toString());
+    Net().publishLoveIntro(byteData.buffer.asUint8List(), uid.toString(),params).then((value) {
+      if (value.code > 0) {
+        Navigator.of(context).pop();
+      }
+    });
   }
 
   @override
@@ -80,7 +84,19 @@ class SatePublishLove extends State<PublishLovePage> {
                         || habit.isEmpty || xueLi.isEmpty || job.isEmpty || curLoc.isEmpty || jiGuan.isEmpty || loveWord.isEmpty) {
                       _scaffoldkey.currentState.showSnackBar(SnackBar(content: Text('资料未填写完整'),duration: Duration(seconds: 1)));
                     } else {
-                      commit();
+                      var params = Map<String,dynamic>();
+                      params["uid"] = uid;
+                      params["nickname"] = name;
+                      params["yearsOld"] = yearsOld;
+                      params["shenGao"] = shenGao;
+                      params["tiZhong"] = tiZhong;
+                      params["habit"] = habit;
+                      params["xueLi"] = xueLi;
+                      params["job"] = job;
+                      params["curLoc"] = curLoc;
+                      params["jiGuan"] = jiGuan;
+                      params["loveWord"] = loveWord;
+                      commit(params);
                     }
                 }
                 });
