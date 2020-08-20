@@ -1,22 +1,28 @@
 class LoveIntro {
+  String code;
   List<LoveIntroData> data;
+  String msg;
 
-  LoveIntro({this.data});
+  LoveIntro({this.code, this.data, this.msg});
 
   LoveIntro.fromJson(Map<String, dynamic> json) {
+    code = json['code'];
     if (json['data'] != null) {
       data = new List<LoveIntroData>();
       json['data'].forEach((v) {
         data.add(new LoveIntroData.fromJson(v));
       });
     }
+    msg = json['msg'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['code'] = this.code;
     if (this.data != null) {
       data['data'] = this.data.map((v) => v.toJson()).toList();
     }
+    data['msg'] = this.msg;
     return data;
   }
 }
