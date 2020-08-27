@@ -31,7 +31,8 @@ dependencies:
   provider: ^4.1.2
   shared_preferences: ^0.5.7+3
   multi_image_picker: ^4.6.7
-  flutter_allroundrefresh: ^2.0.2
+  zeking_refresh: ^0.0.8
+  flutter_staggered_grid_view: ^0.3.2
 
 module:
   androidX: true
@@ -68,6 +69,7 @@ flutter:
     - images/likeme.png
     - images/smile.png
     - images/add_img.png
+    - images/weChat.png
     - images/2.0x/
     - images/3.0x/
   # An image asset can refer to one or more resolution-specific "variants", see

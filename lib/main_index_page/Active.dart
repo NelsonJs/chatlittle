@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:littelchat/active_page/PublishActive.dart';
 import 'package:littelchat/bean/active_bean.dart';
 import 'package:littelchat/common/util/Net.dart';
@@ -26,33 +27,47 @@ class ActivePage extends State<Active> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-        child: GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 2,
-                mainAxisSpacing: 2,
-                childAspectRatio: 0.69
+        color: Color(0xf2f2f2),
+        margin: EdgeInsets.fromLTRB(4, 0, 4, 0),
+        child: StaggeredGridView.countBuilder(
+            crossAxisCount: 4,
+            itemCount: 8,
+            itemBuilder: (context,index) => Container(
+              padding: EdgeInsets.only(top: 4),
+              margin: EdgeInsets.only(bottom: 4),
+              child: ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(4)),
+                child:Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    Expanded(child: Image.network("https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3792581192,4167354173&fm=26&gp=0.jpg",
+                        loadingBuilder: (c,w,e){
+                          if (e == null) {
+                            return w;
+                          } else {
+                            return CupertinoActivityIndicator(radius:15);
+                          }
+                        },fit: BoxFit.cover)),
+                    Container(
+                      color: Colors.white,
+                      child: Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.all(10),
+                            child: Text('晚上打球！',style: TextStyle(fontSize: 12,color: Colors.black87)),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                )
+              ),
             ),
-            itemCount: 12,
-            itemBuilder: (context,index) {
-              return Container(
-                color: Colors.white,
-                margin: EdgeInsets.only(top: 10),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(4)),
-                  child:Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      ImageWidget.create("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1590383366560&di=3064d0bd25e51cc02e1171258de246a4&imgtype=0&src=http%3A%2F%2Fimg1.qunarzz.com%2Ftravel%2Fd3%2F1610%2Fa6%2F407fe6dec93202b5.jpg_r_720x480x95_8f1d73d7.jpg"),
-                      Text('标注：吃顿饭就好了~'),
-                      Text('升高：156  体重：45kg',style: TextStyle(fontSize: 12,color: Colors.grey[400])), Text('位置：重庆',style: TextStyle(fontSize: 12,color: Colors.grey[400]))
-                    ],
-                  ),
-                ),
-              );
-            }
-        ),
+            staggeredTileBuilder: (index) =>
+                StaggeredTile.count(
+                    2, index == 0 ? 2.5 : 3),
+            crossAxisSpacing: 4,
+        )
       );
   }
 

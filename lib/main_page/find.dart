@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_allroundrefresh/future_refresh.dart';
 import 'package:littelchat/active_page/publish_love.dart';
 import 'package:littelchat/bean/active_bean.dart';
 import 'package:littelchat/bean/love_intro.dart';
 import 'package:littelchat/common/util/Net.dart';
 import 'package:littelchat/common/widgets/ImageWidget.dart';
+import 'package:zeking_refresh/zeking_refresh.dart';
 
 class Find extends StatefulWidget {
   @override
@@ -15,11 +15,13 @@ class Find extends StatefulWidget {
 class FindPage extends State<Find> with SingleTickerProviderStateMixin{
   List<LoveIntroData> mData = [];
   int t = 0;
+  ZekingRefreshController _refreshController;
 
   @override
   void initState() {
+    _refreshController = ZekingRefreshController();
     super.initState();
-    AFutureWidget.init();
+    _refreshController.refreshingWithLoadingView();
   }
 
   @override
@@ -46,27 +48,47 @@ class FindPage extends State<Find> with SingleTickerProviderStateMixin{
           )
         ],
       ),
-        body:AFutureWidget(
-          childWidget: _contentWidget(),
-          fRefresh: Net().loveIntroList(t),
-          onRefreshCallback: (){
-            t = 0;
-            mData.clear();
-            setState(() {});
-          },
-          fLoading: Net().loveIntroList(t),
-          onLoadingCallback: (){
-            t = mData.length > 0 ? mData[0].createTime : 0;
-            setState(() {});
-          },
-          dataCallback: (dynamic intro){
-            mData.addAll(LoveIntro.fromJson(intro).data);
-            print("datacallback--->${mData.length}");
-            setState(() {});
-          },
+        body:ZekingRefresh(
+            controller: _refreshController,
+            onRefresh: _refresh,
+          onLoading: _loadMore,
+          canLoadMore: true,
+          child: _contentWidget(),
         )
     );
   }
+
+   void _refresh() {
+    t = 0;
+    Net().loveIntroList(t).then((value){
+      if (value != null && value.data.length > 0) {
+        mData.clear();
+        mData.addAll(value.data);
+        setState(() {});
+        _refreshController.refreshSuccess();
+      } else {
+        _refreshController.refreshFaild();
+      }
+    });
+  }
+
+  void _loadMore() {
+    if (mData.length > 0) {
+      t = mData[mData.length-1].createTime;
+    } else {
+      t = 0;
+    }
+    Net().loveIntroList(t).then((value){
+      if (value != null && value.data.length > 0) {
+        mData.addAll(value.data);
+        setState(() {});
+        _refreshController.loadMoreSuccess();
+      } else {
+        _refreshController.loadMoreFailed();
+      }
+    });
+  }
+
 
   Widget _contentWidget() {
     return  ListView.builder(
@@ -132,19 +154,19 @@ class FindPage extends State<Find> with SingleTickerProviderStateMixin{
                     return CupertinoActivityIndicator();
                   }
                 })*/
-  Future<Null> _refresh() async {
-   /*Net().loveIntroList().then((value) {
+ /* Future<Null> _refresh() async {
+   *//*Net().loveIntroList().then((value) {
      if (value != null && value.data != null) {
        setState(() {
          mData.clear();
          mData.addAll(value.data);
        });
      }
-   });*/
+   });*//*
     setState(() {
       Net().loveIntroList(0);
     });
-  }
+  }*/
 
 
 //  buildTabBar() {

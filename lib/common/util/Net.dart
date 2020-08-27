@@ -92,10 +92,11 @@ class Net {
         return ActiveBean.fromJson(r.data);
     }
 
-    Future<dynamic> loveIntroList(int time) async {
+    Future<LoveIntro> loveIntroList(int time) async {
         Response r = await dio.get("index/loveintrolist?t=time&limit=4");
         print("-------------->"+r.data.toString());
-        return r.data;
+        var l = LoveIntro.fromJson(r.data);
+        return l;
     }
 
 

@@ -5,6 +5,7 @@ import 'package:littelchat/bean/near_nynamic.dart';
 import 'package:littelchat/common/util/Net.dart';
 import 'package:littelchat/common/util/SpUtils.dart';
 import 'package:littelchat/common/widgets/ImageWidget.dart';
+import 'package:littelchat/common/widgets/icon_widget.dart';
 
 class NearDynic extends StatefulWidget {
   @override
@@ -14,6 +15,7 @@ class NearDynic extends StatefulWidget {
 class NearDynicPage extends State<NearDynic> {
   List<Data> mData = [];
   bool hideLoading = true;
+  var iconKeys = <int,GlobalKey<StateIconWidget>>{};
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,6 +42,9 @@ class NearDynicPage extends State<NearDynic> {
                               w = img(mData[index].resImg);
                             } else {
                               w = empty();
+                            }
+                            if (!iconKeys.containsKey(index)) {
+                              iconKeys[index] = GlobalKey();
                             }
                             return Container(
                               padding: EdgeInsets.fromLTRB(16, 20, 10, 0),
@@ -92,7 +97,7 @@ class NearDynicPage extends State<NearDynic> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: <Widget>[
-                                      FlatButton.icon(onPressed: (){
+                                      /*FlatButton.icon(onPressed: (){
                                         SpUtils().getInt(SpUtils.uid).then((value){
                                           Net().addLike(value, mData[index].id).then((value){
                                             setState(() {
@@ -107,7 +112,16 @@ class NearDynicPage extends State<NearDynic> {
                                           });
                                         });
 
-                                      }, icon: Icon(mData[index].liked ? Icons.favorite : Icons.favorite_border), label: Text(mData[index].like.toString()))
+                                      }, icon: Icon(mData[index].liked ? Icons.favorite : Icons.favorite_border), label: Text(mData[index].like.toString()))*/
+                                      Container(
+                                        child: GestureDetector(
+                                          child: IconWidget(iconKeys[index],mData[index].liked ? Icons.favorite : Icons.favorite_border,mData[index].like.toString()),
+                                          onTap: (){
+                                            iconKeys[index].currentState.setIconTxt(Icons.favorite, "52");
+                                          },
+                                        ),
+                                        margin: EdgeInsets.only(right: 30,bottom: 10),
+                                      ),
                                     ],
                                   ),
                                   Divider(height: 1,color: Colors.grey[300],)

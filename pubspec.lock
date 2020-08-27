@@ -134,34 +134,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.14.12"
-  connectivity:
-    dependency: transitive
-    description:
-      name: connectivity
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.4.9"
-  connectivity_for_web:
-    dependency: transitive
-    description:
-      name: connectivity_for_web
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.3.1"
-  connectivity_macos:
-    dependency: transitive
-    description:
-      name: connectivity_macos
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.1.0+3"
-  connectivity_platform_interface:
-    dependency: transitive
-    description:
-      name: connectivity_platform_interface
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "1.0.6"
   convert:
     dependency: transitive
     description:
@@ -223,18 +195,18 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_allroundrefresh:
-    dependency: "direct main"
-    description:
-      name: flutter_allroundrefresh
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "2.0.2"
   flutter_localizations:
     dependency: "direct main"
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_staggered_grid_view:
+    dependency: "direct main"
+    description:
+      name: flutter_staggered_grid_view
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.3.2"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -642,6 +614,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.2.1"
+  zeking_refresh:
+    dependency: "direct main"
+    description:
+      name: zeking_refresh
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.0.11"
 sdks:
   dart: ">=2.7.0 <3.0.0"
-  flutter: ">=1.16.0 <2.0.0"
+  flutter: ">=1.17.0 <2.0.0"
