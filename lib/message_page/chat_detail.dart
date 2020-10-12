@@ -72,7 +72,8 @@ class ChatDetailPage extends State<ChatDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(otherName),
+        title: Text(otherName,style: TextStyle(color: Colors.black87,fontSize: 16)),
+        elevation: 1
       ),
       body: Padding(
           padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
