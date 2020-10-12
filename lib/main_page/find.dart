@@ -33,7 +33,8 @@ class FindPage extends State<Find> with SingleTickerProviderStateMixin{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('个人推荐',style: TextStyle(fontSize: 18,fontWeight: FontWeight.normal)),
+        title: Text('老乡',style: TextStyle(color: Colors.black87,fontSize: 16)),
+        elevation: 1,
         actions: <Widget>[
           Center(
             child: GestureDetector(

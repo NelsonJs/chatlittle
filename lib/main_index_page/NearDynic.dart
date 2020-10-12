@@ -19,6 +19,10 @@ class NearDynicPage extends State<NearDynic> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('老乡',style: TextStyle(color: Colors.black87,fontSize: 16)),
+        elevation: 1,
+      ),
       body: FutureBuilder<NearDynamic>(
           future: Net().nearDynamicList(),
           builder: (context,snapshot){
@@ -47,6 +51,7 @@ class NearDynicPage extends State<NearDynic> {
                               iconKeys[index] = GlobalKey();
                             }
                             return Container(
+                              color: Colors.white,
                               padding: EdgeInsets.fromLTRB(16, 20, 10, 0),
                               child:Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,7 +59,10 @@ class NearDynicPage extends State<NearDynic> {
                                   Row(
                                     children: <Widget>[
                                       ClipOval(
-                                        child: Image.network(mData[index].avatar,width: 40,height: 40,fit: BoxFit.cover),
+                                        child: Image.network(mData[index].avatar,width: 40,height: 40,fit: BoxFit.cover,errorBuilder: (context,obj,trace){
+                                          print("头像获取失败：${mData[index].gender}");
+                                            return Image.asset((mData[index].gender == 1 ? "images/boy.png":"images/girl.png"),width: 40,height: 40);
+                                        }),
                                       ),
                                       Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,22 +105,6 @@ class NearDynicPage extends State<NearDynic> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: <Widget>[
-                                      /*FlatButton.icon(onPressed: (){
-                                        SpUtils().getInt(SpUtils.uid).then((value){
-                                          Net().addLike(value, mData[index].id).then((value){
-                                            setState(() {
-                                              hideLoading = false;
-                                              if (value.code > 0) {
-                                                mData[index].liked = true;
-                                                mData[index].like++;
-                                              } else {
-                                                mData[index].liked = false;
-                                              }
-                                            });
-                                          });
-                                        });
-
-                                      }, icon: Icon(mData[index].liked ? Icons.favorite : Icons.favorite_border), label: Text(mData[index].like.toString()))*/
                                       Container(
                                         child: GestureDetector(
                                           child: IconWidget(iconKeys[index],mData[index].liked ? Icons.favorite : Icons.favorite_border,mData[index].like.toString()),
@@ -124,7 +116,20 @@ class NearDynicPage extends State<NearDynic> {
                                       ),
                                     ],
                                   ),
-                                  Divider(height: 1,color: Colors.grey[300],)
+                                  Divider(height: 1,color: Colors.grey[300]),
+                                  /*ListView.builder(
+                                      itemCount: 6,
+                                      itemBuilder: (context,index){
+                                          if (index == 0) {
+                                            return Text('彭恰恰：很有意思的一个活动');
+                                          } else {
+                                            return Padding(
+                                                padding: EdgeInsets.only(left: 10),
+                                                child: Text('王美丽：你想去玩吗'),
+                                            );
+                                          }
+                                      }
+                                  )*/
                                 ],
                               ),
                             );

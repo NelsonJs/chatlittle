@@ -75,7 +75,8 @@ class MinePage extends State<Mine> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('我的'),
+        title: Text('老乡',style: TextStyle(color: Colors.black87,fontSize: 16)),
+        elevation: 1,
       ),
     body: Container(
       padding: EdgeInsets.fromLTRB(10, 15, 0, 10),

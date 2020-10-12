@@ -1,15 +1,15 @@
-class ChatRecordBean {
+class ConversationList {
   int code;
-  List<Data> data;
+  List<CLData> data;
 
-  ChatRecordBean({this.code, this.data});
+  ConversationList({this.code, this.data});
 
-  ChatRecordBean.fromJson(Map<String, dynamic> json) {
+  ConversationList.fromJson(Map<String, dynamic> json) {
     code = json['code'];
     if (json['data'] != null) {
-      data = new List<Data>();
+      data = new List<CLData>();
       json['data'].forEach((v) {
-        data.add(new Data.fromJson(v));
+        data.add(new CLData.fromJson(v));
       });
     }
   }
@@ -24,7 +24,7 @@ class ChatRecordBean {
   }
 }
 
-class Data {
+class CLData {
   String msgId;
   String uid;
   String peerid;
@@ -35,7 +35,7 @@ class Data {
   int status;
   int createTime;
 
-  Data(
+  CLData(
       {this.msgId,
         this.uid,
         this.peerid,
@@ -46,7 +46,7 @@ class Data {
         this.status,
         this.createTime});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  CLData.fromJson(Map<String, dynamic> json) {
     msgId = json['msg_id'];
     uid = json['uid'];
     peerid = json['peerid'];
@@ -72,5 +72,3 @@ class Data {
     return data;
   }
 }
-
-

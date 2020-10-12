@@ -6,6 +6,7 @@ import 'package:littelchat/bean/AccountBea.dart';
 import 'package:littelchat/bean/ChatRecordBean.dart';
 import 'package:littelchat/bean/ConversationBean.dart';
 import 'package:littelchat/bean/active_bean.dart';
+import 'package:littelchat/bean/conversation-list.dart';
 import 'package:littelchat/bean/love_intro.dart';
 import 'package:littelchat/bean/near_nynamic.dart';
 import 'package:littelchat/bean/recoment_users.dart';
@@ -23,7 +24,7 @@ class Net {
     Options _options;
 
     static Dio dio = Dio(BaseOptions(
-      baseUrl: 'http://192.168.1.6:8080/',
+      baseUrl: 'http://192.168.1.5:5874/',
         connectTimeout: 5000,
         responseType: ResponseType.json
     ));
@@ -72,11 +73,12 @@ class Net {
         return conversationBean;
     }
 
-    Future<ChatRecordBean> recordList(String uid,String otherId) async {
+    Future<ChatRecordBean> recordList(String uid,String otherId,String ctype) async {
         var map = Map<String,dynamic>();
-        map["selfId"] = uid;
-        map["otherId"] = otherId;
-        Response r = await dio.get("user/record",queryParameters: map);
+        map["uid"] = uid;
+        map["peerId"] = otherId;
+        map["ctype"] = ctype;
+        Response r = await dio.get("conversation/record",queryParameters: map);
         ChatRecordBean bean = ChatRecordBean.fromJson(r.data);
         return bean;
     }
@@ -206,6 +208,14 @@ class Net {
     Future<RecomentBean> getRecomentUsers() async {
         var res = await dio.get("index/userwithlogin");
         return RecomentBean.fromJson(res.data);
+    }
+
+    Future<ConversationList> getConversations(String uid) async {
+        var map = Map<String,dynamic>();
+        map["uid"] = 100;
+        var res = await dio.get("conversation/list",queryParameters: map);
+        print(res.data.toString());
+        return ConversationList.fromJson(res.data);
     }
 
 

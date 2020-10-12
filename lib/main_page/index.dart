@@ -28,7 +28,8 @@ class IndexPage extends State<Index> with SingleTickerProviderStateMixin,Automat
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: buildTabBar(),
+       // title: buildTabBar(),
+        title: Text('Test'),
       ),
 
       body: TabBarView(
