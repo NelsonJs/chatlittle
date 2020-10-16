@@ -27,6 +27,7 @@ class ConversationList {
 class CLData {
   String msgId;
   String uid;
+  String nickname;
   String peerid;
   String ctype;
   String content;
@@ -38,6 +39,7 @@ class CLData {
   CLData(
       {this.msgId,
         this.uid,
+        this.nickname,
         this.peerid,
         this.ctype,
         this.content,
@@ -49,6 +51,7 @@ class CLData {
   CLData.fromJson(Map<String, dynamic> json) {
     msgId = json['msg_id'];
     uid = json['uid'];
+    nickname = json['nickname'];
     peerid = json['peerid'];
     ctype = json['ctype'];
     content = json['content'];
@@ -62,6 +65,7 @@ class CLData {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['msg_id'] = this.msgId;
     data['uid'] = this.uid;
+    data['nickname'] = this.nickname;
     data['peerid'] = this.peerid;
     data['ctype'] = this.ctype;
     data['content'] = this.content;

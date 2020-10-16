@@ -26,7 +26,7 @@ class ActiveBean {
 
 class Data {
   int id;
-  int uid;
+  String uid;
   String title;
   String desc;
   String img;
@@ -39,7 +39,7 @@ class Data {
   int peopletotalnum;
   int like;
   int commentnum;
-  int commentid;
+  String commentid;
 
   Data(
       {this.id,

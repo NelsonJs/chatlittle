@@ -25,122 +25,127 @@ class NearDynamic {
 }
 
 class Data {
-  int id;
-  int uid;
-  String title;
-  String desc;
-  String img;
-  int gender;
-  String begin;
-  String location;
-  int lng;
-  int lat;
-  int peoplenum;
-  int peopletotalnum;
-  int like;
-  int commentnum;
-  int commentid;
-  int time;
-  List<String> resImg;
-  String nickname;
-  String phone;
-  String pwd;
   String avatar;
-  int createTime;
-  int loginTime;
-  int logoutTime;
-  int status;
-  int yearOld;
+  int createtime;
+  String description;
+  String did;
+  int gender;
+  String id;
+  int lat;
+  int like;
+  int lng;
+  String loc;
+  String nickname;
+  List<String> resImg;
+  String title;
+  String uid;
   bool liked;
+  List<Comments> comments;
 
   Data(
-      {this.id,
-        this.uid,
-        this.title,
-        this.desc,
-        this.img,
+      {this.avatar,
+        this.createtime,
+        this.description,
+        this.did,
         this.gender,
-        this.begin,
-        this.location,
-        this.lng,
+        this.id,
         this.lat,
-        this.peoplenum,
-        this.peopletotalnum,
         this.like,
-        this.commentnum,
-        this.commentid,
-        this.time,
-        this.resImg,
+        this.lng,
+        this.loc,
         this.nickname,
-        this.phone,
-        this.pwd,
-        this.avatar,
-        this.createTime,
-        this.loginTime,
-        this.logoutTime,
-        this.status,
-        this.yearOld,
-        this.liked});
+        this.resImg,
+        this.title,
+        this.uid,
+        this.comments,
+        this.liked
+      });
 
   Data.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    uid = json['uid'];
-    title = json['title'];
-    desc = json['desc'];
-    img = json['img'];
-    gender = json['gender'];
-    begin = json['begin'];
-    location = json['location'];
-    lng = json['lng'];
-    lat = json['lat'];
-    peoplenum = json['peoplenum'];
-    peopletotalnum = json['peopletotalnum'];
-    like = json['like'];
-    commentnum = json['commentnum'];
-    commentid = json['commentid'];
-    time = json['time'];
-    resImg = json['res_img'].cast<String>();
-    nickname = json['nickname'];
-    phone = json['phone'];
-    pwd = json['pwd'];
-    avatar = json['avatar'];
-    createTime = json['createTime'];
-    loginTime = json['loginTime'];
-    logoutTime = json['logout_time'];
-    status = json['status'];
-    yearOld = json['year_old'];
+    avatar = json['Avatar'];
+    createtime = json['Createtime'];
+    description = json['Description'];
+    did = json['Did'];
+    gender = json['Gender'];
+    id = json['Id'];
+    lat = json['Lat'];
+    like = json['Like'];
+    lng = json['Lng'];
+    loc = json['Loc'];
+    nickname = json['Nickname'];
+    resImg = json['ResImg'];
+    title = json['Title'];
+    uid = json['Uid'];
     liked = json['liked'];
+    if (json['comments'] != null) {
+      comments = new List<Comments>();
+      json['comments'].forEach((v) {
+        comments.add(new Comments.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['uid'] = this.uid;
-    data['title'] = this.title;
-    data['desc'] = this.desc;
-    data['img'] = this.img;
-    data['gender'] = this.gender;
-    data['begin'] = this.begin;
-    data['location'] = this.location;
-    data['lng'] = this.lng;
-    data['lat'] = this.lat;
-    data['peoplenum'] = this.peoplenum;
-    data['peopletotalnum'] = this.peopletotalnum;
-    data['like'] = this.like;
-    data['commentnum'] = this.commentnum;
-    data['commentid'] = this.commentid;
-    data['time'] = this.time;
-    data['res_img'] = this.resImg;
-    data['nickname'] = this.nickname;
-    data['phone'] = this.phone;
-    data['pwd'] = this.pwd;
-    data['avatar'] = this.avatar;
-    data['createTime'] = this.createTime;
-    data['loginTime'] = this.loginTime;
-    data['logout_time'] = this.logoutTime;
-    data['status'] = this.status;
-    data['year_old'] = this.yearOld;
+    data['Avatar'] = this.avatar;
+    data['Createtime'] = this.createtime;
+    data['Description'] = this.description;
+    data['Did'] = this.did;
+    data['Gender'] = this.gender;
+    data['Id'] = this.id;
+    data['Lat'] = this.lat;
+    data['Like'] = this.like;
+    data['Lng'] = this.lng;
+    data['Loc'] = this.loc;
+    data['Nickname'] = this.nickname;
+    data['ResImg'] = this.resImg;
+    data['Title'] = this.title;
+    data['Uid'] = this.uid;
     data['liked'] = this.liked;
+    if (this.comments != null) {
+      data['comments'] = this.comments.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class Comments {
+  String commentId;
+  String content;
+  String uid;
+  String ateUid;
+  String nickname;
+  String ateNickname;
+  int createTime;
+
+  Comments(
+      {this.commentId,
+        this.content,
+        this.uid,
+        this.ateUid,
+        this.nickname,
+        this.ateNickname,
+        this.createTime});
+
+  Comments.fromJson(Map<String, dynamic> json) {
+    commentId = json['commentId'];
+    content = json['content'];
+    uid = json['uid'];
+    ateUid = json['ateUid'];
+    nickname = json['nickname'];
+    ateNickname = json['ateNickname'];
+    createTime = json['createTime'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['commentId'] = this.commentId;
+    data['content'] = this.content;
+    data['uid'] = this.uid;
+    data['ateUid'] = this.ateUid;
+    data['nickname'] = this.nickname;
+    data['ateNickname'] = this.ateNickname;
+    data['createTime'] = this.createTime;
     return data;
   }
 }

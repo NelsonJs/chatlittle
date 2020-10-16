@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:littelchat/common/widgets/view-page.dart';
 
 class PersonDetail extends StatefulWidget {
   final int uid;
@@ -16,8 +17,8 @@ class _PersonState extends State<PersonDetail> {
   void initState() {
     setState(() {
       data.add(Image.asset('images/p1.jpg'));
-      data.add(Image.asset('images/p1.jpg'));
-      data.add(Image.asset('images/p1.jpg'));
+      data.add(Image.asset('images/q1.jpg'));
+      data.add(Image.asset('images/a1.jpg'));
     });
     super.initState();
   }
@@ -28,12 +29,14 @@ class _PersonState extends State<PersonDetail> {
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
+            elevation: 0.5,
             pinned: true,
-            expandedHeight: 220,
+            expandedHeight: 190,
             flexibleSpace: FlexibleSpaceBar(
-              background: PageView.builder(itemBuilder: (context,index){
-                return data[index];
-              },itemCount: data.length)
+              background: Container(
+                margin: EdgeInsets.only(top: 20),
+                child: ViewPage(),
+              ),
             ),
             actions: <Widget>[
               Center(child: Container(
@@ -42,12 +45,35 @@ class _PersonState extends State<PersonDetail> {
               ))
             ],
           ),
-          SliverFixedExtentList(
+          SliverPadding(
+              padding: EdgeInsets.only(left: 15),
+              sliver: SliverToBoxAdapter(
+                child: Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('姓名'),
+                      Text('彭大帅')
+                    ],
+                  ),
+                ),
+              ),
+          )
+         /* SliverFixedExtentList(
               delegate: SliverChildBuilderDelegate(
-                      (context,index)=>ListTile(title: Text('data')), childCount: 22
+                      (context,index){
+                        return SliverToBoxAdapter(
+                          child: Container(
+                            child: ListView.builder(
+                                itemBuilder: null
+                            ),
+                          )
+                        );
+                      },
+                  childCount: 22
               ),
               itemExtent: 50,
-          )
+          )*/
         ],
       ),
     );

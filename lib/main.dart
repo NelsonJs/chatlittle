@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:littelchat/account_page/Login.dart';
 import 'package:littelchat/bean/MessageBean.dart';
@@ -18,9 +19,12 @@ import 'main_page/find.dart';
 import 'main_page/travel.dart';
 
 
-void main() => runApp(
-  ChangeNotifierProvider(create: (_)=>LoginModel(),child:  MyApp(),)
-);
+void main() {
+  SystemUiOverlayStyle systemUiOverlayStyle = SystemUiOverlayStyle(statusBarColor: Colors.transparent);
+  SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
+  runApp(ChangeNotifierProvider(create: (_)=>LoginModel(),child:  MyApp()));
+
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -97,17 +101,17 @@ class HomePageState extends State<HomePage> {
     return new Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.home),title: Text('首页')),
-          BottomNavigationBarItem(icon: Icon(Icons.train),title: Text('出行')),
-          BottomNavigationBarItem(icon: Icon(Icons.people),title: Text('对眼')),
-          BottomNavigationBarItem(icon: Icon(Icons.question_answer),title: Text('问答')),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline),title: Text('我的')),
+          BottomNavigationBarItem(icon: Icon(Icons.home,size: 20,),title: Text('首页',style: TextStyle(fontSize: 14),)),
+          BottomNavigationBarItem(icon: Icon(Icons.train,size: 20),title: Text('出行',style: TextStyle(fontSize: 14))),
+          BottomNavigationBarItem(icon: Icon(Icons.people,size: 20),title: Text('对眼',style: TextStyle(fontSize: 14))),
+          BottomNavigationBarItem(icon: Icon(Icons.question_answer,size: 20),title: Text('老乡',style: TextStyle(fontSize: 14))),
+          BottomNavigationBarItem(icon: Icon(Icons.person_outline,size: 20),title: Text('我的',style: TextStyle(fontSize: 14))),
         ],
         currentIndex: curIndex,//设置该行会改变指示器的文字图案颜色
         type: BottomNavigationBarType.fixed,
         onTap: onTapClick,
         selectedItemColor: Colors.black87,
-        elevation: 2,
+        elevation: 3,
       ),
       /*  pages[curIndex],*/
       body: IndexedStack(
@@ -119,7 +123,7 @@ class HomePageState extends State<HomePage> {
 
   void onTapClick(int index) {
       setState(() {
-        /*if (index == 3){//登录
+        if (index == 3 || index == 4){//登录
           SpUtils().getInt(SpUtils.uid).then((value){
             if (value != null){
               curIndex = index;
@@ -129,7 +133,7 @@ class HomePageState extends State<HomePage> {
           });
       } else {
           curIndex = index;
-        }*/
+        }
         curIndex = index;
       });
   }

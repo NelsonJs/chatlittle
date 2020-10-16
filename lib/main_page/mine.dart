@@ -76,7 +76,7 @@ class MinePage extends State<Mine> {
     return Scaffold(
       appBar: AppBar(
         title: Text('老乡',style: TextStyle(color: Colors.black87,fontSize: 16)),
-        elevation: 1,
+        elevation: 0.5,
       ),
     body: Container(
       padding: EdgeInsets.fromLTRB(10, 15, 0, 10),

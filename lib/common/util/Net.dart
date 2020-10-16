@@ -6,6 +6,7 @@ import 'package:littelchat/bean/AccountBea.dart';
 import 'package:littelchat/bean/ChatRecordBean.dart';
 import 'package:littelchat/bean/ConversationBean.dart';
 import 'package:littelchat/bean/active_bean.dart';
+import 'package:littelchat/bean/comment.dart';
 import 'package:littelchat/bean/conversation-list.dart';
 import 'package:littelchat/bean/love_intro.dart';
 import 'package:littelchat/bean/near_nynamic.dart';
@@ -24,7 +25,7 @@ class Net {
     Options _options;
 
     static Dio dio = Dio(BaseOptions(
-      baseUrl: 'http://192.168.1.5:5874/',
+      baseUrl: 'http://192.168.1.5:8080/',
         connectTimeout: 5000,
         responseType: ResponseType.json
     ));
@@ -85,14 +86,28 @@ class Net {
 
     Future<NearDynamic> nearDynamicList() async {
         Response r = await dio.get("index/neardynamic");
-        print(r.data.toString());
+        print("nearDynamicList-->"+r.data.toString());
         return NearDynamic.fromJson(r.data);
     }
 
-    Future<ActiveBean> activeList() async {
-        Response r = await dio.get("index/neardynamic");
-        return ActiveBean.fromJson(r.data);
+    Future<Comment> getComments() async {
+        Response r = await dio.get("comment/list");
+        print("getComments--->"+r.data.toString());
+        return Comment.fromJson(r.data);
     }
+
+    Future<ResponseParent> sendComment(String did,content,uid,nickname,ateUid,ateNickname) async{
+        var m = Map<String,dynamic>();
+        m["did"] = did;
+        m["content"] = content;
+        m["uid"] = uid;
+        m["ateUid"] = ateUid;
+        m["nickname"] = nickname;
+        m["ateNickname"] = ateNickname;
+        Response res = await dio.post("/comment/create",data: m);
+        return ResponseParent.fromJson(res.data);
+    }
+
 
     Future<LoveIntro> loveIntroList(int time) async {
         Response r = await dio.get("index/loveintrolist?t=time&limit=4");

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:littelchat/bean/conversation-list.dart';
 import 'package:littelchat/common/util/Net.dart';
 import 'package:littelchat/common/util/SpUtils.dart';
+import 'package:littelchat/common/util/time-utils.dart';
+import 'package:littelchat/message_page/Contact.dart';
 import 'package:littelchat/message_page/chat_detail.dart';
 
 class ChatMain extends StatefulWidget {
@@ -24,7 +26,18 @@ class _StateChatMain extends State<ChatMain> {
     return Scaffold(
       appBar: AppBar(
         title: Text('信息',style: TextStyle(color: Colors.black87,fontSize: 16)),
-        elevation: 1,
+        elevation: 0.5,
+        actions: <Widget>[
+            Center(
+              child: Padding(
+                  padding: EdgeInsets.only(right: 14),
+                  child: GestureDetector(
+                    child: Text('通讯录',style: TextStyle(fontSize: 14)),onTap: (){
+                    Navigator.push(context,MaterialPageRoute(builder: (context)=>Contact()));
+                  },
+                  )),
+            )
+          ]
       ),
       body: FutureBuilder<ConversationList>(
           future: Net().getConversations(uid.toString()),
@@ -50,7 +63,7 @@ class _StateChatMain extends State<ChatMain> {
                               Row(
                                 children: [
                                   ClipOval(
-                                    child: Image.asset(("images/boy.png"),width: 40,height: 40),
+                                    child: Image.asset((mData[index].ctype == "2" ? "images/group.png" : "images/boy.png"),width: 40,height: 40),
                                   ),
                                   Expanded(
                                       child: Column(
@@ -58,7 +71,7 @@ class _StateChatMain extends State<ChatMain> {
                                         children: [
                                           Padding(
                                             padding: EdgeInsets.only(left: 8),
-                                            child: Text(mData[index].peerid,style: TextStyle(color: Colors.black87,fontSize: 14)),
+                                            child: Text(mData[index].nickname,style: TextStyle(color: Colors.black87,fontSize: 14)),
                                           ),
                                           Padding(
                                             padding: EdgeInsets.only(left: 8),
@@ -67,7 +80,7 @@ class _StateChatMain extends State<ChatMain> {
                                         ],
                                       )
                                   ),
-                                  Text(mData[index].createTime.toString(),style: TextStyle(color: Colors.grey,fontSize: 12))
+                                  Text(TimeUtils().chatTime(mData[index].createTime),style: TextStyle(color: Colors.grey,fontSize: 12))
                                 ],
                               ),
                               Container(

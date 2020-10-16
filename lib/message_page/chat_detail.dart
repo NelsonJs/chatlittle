@@ -73,7 +73,18 @@ class ChatDetailPage extends State<ChatDetail> {
     return Scaffold(
       appBar: AppBar(
         title: Text(otherName,style: TextStyle(color: Colors.black87,fontSize: 16)),
-        elevation: 1
+        elevation: 1,
+        actions: [
+          Center(
+            child: Padding(
+                padding: EdgeInsets.only(right: 25),
+                child: GestureDetector(
+                  child: Icon(Icons.settings,size: 20,color: Colors.grey,),onTap: (){
+                  //Navigator.push(context, MaterialPageRoute(builder: (context)=>PublishDynamic()));
+                },
+                )),
+          )
+        ],
       ),
       body: Padding(
           padding: EdgeInsets.fromLTRB(15, 0, 15, 0),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:littelchat/chat/PersonDetail.dart';
 import 'package:littelchat/message_page/chat_detail.dart';
 
 class Contact extends StatefulWidget {
@@ -10,16 +11,23 @@ class ContactPage extends State<Contact> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('通讯录')),
+      appBar: AppBar(
+          title: Text('通讯录',style: TextStyle(color: Colors.black87,fontSize: 16)),
+        elevation: 0.5,
+      ),
       body: Container(
         child: ListView.builder(
           itemBuilder: (context, index) {
             if (index == 0) {
-              return Padding(padding: EdgeInsets.fromLTRB(10, 10, 10, 0),child: newFriendItem());
+              return Container(
+                padding: EdgeInsets.only(left: 15,top: 10),
+                color: Colors.white,
+                child: newFriendItem(),
+              );
             }
             return item();
           },
-          itemCount: 8,
+          itemCount: 18,
         ),
       ),
     );
@@ -31,7 +39,7 @@ class ContactPage extends State<Contact> {
         children: <Widget>[
           Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
             CircleAvatar(
-              backgroundImage: AssetImage('images/p1.jpg'),
+              backgroundImage: AssetImage('images/new_friend.png'),
               radius: 20,
             ),
             Padding(
@@ -57,7 +65,7 @@ class ContactPage extends State<Contact> {
       child: Container(
         color: Colors.white,
         child: Padding(
-          padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+          padding: EdgeInsets.fromLTRB(15, 10, 10, 0),
           child: Column(
             children: <Widget>[
               Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
@@ -87,7 +95,7 @@ class ContactPage extends State<Contact> {
 
       ),
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatDetail()));
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>PersonDetail(100)));
       },
     );
   }

@@ -102,6 +102,7 @@ class DynamicState extends State<PublishDynamic> {
   Widget build(BuildContext context) {
     return  Scaffold(
       appBar: AppBar(
+        elevation: 5.0,
         actions: <Widget>[
           Center(
             child: Container(
