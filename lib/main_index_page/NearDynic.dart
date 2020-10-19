@@ -57,8 +57,8 @@ class NearDynicPage extends State<NearDynic> {
                           itemCount: mData.length,
                           itemBuilder: (context,index) {
                             Widget w;
-                            if (mData[index].resImg != null && mData[index].resImg.length > 0){
-                              w = img(mData[index].resImg);
+                            if (mData[index].resimg != null && mData[index].resimg.length > 0){
+                              w = img(mData[index].resimg);
                             } else {
                               w = empty();
                             }
@@ -120,14 +120,14 @@ class NearDynicPage extends State<NearDynic> {
                                             ],
                                           ),
                                           onTap: (){
-                                              Navigator.push(context, MaterialPageRoute(builder: (context)=>DynamicDetail(mData[index].did,comments:mData[index].comments)));
+                                              Navigator.push(context, MaterialPageRoute(builder: (context)=>DynamicDetail(mData[index].did,data:mData[index],k: iconKeys[index],)));
                                           },
                                         ),
                                         margin: EdgeInsets.only(right: 30,bottom: 10),
                                       ),
                                       Container(
                                         child: GestureDetector(
-                                          child: IconWidget(iconKeys[index],mData[index].liked == null ? Icons.favorite_border : mData[index].liked ? Icons.favorite : Icons.favorite_border,mData[index].like.toString()),
+                                          child: IconWidget(iconKeys[index],mData[index].liked == null ? Icons.favorite_border : mData[index].liked == 1 ? Icons.favorite : Icons.favorite_border,mData[index].likenum.toString()),
                                           onTap: (){
                                             iconKeys[index].currentState.setIconTxt(Icons.favorite, "52");
                                           },
@@ -137,27 +137,6 @@ class NearDynicPage extends State<NearDynic> {
                                     ],
                                   ),
                                   Divider(height: 1,color: Colors.grey[300]),
-                                  ListView.builder(
-                                      shrinkWrap: true,
-                                      physics: NeverScrollableScrollPhysics(),
-                                      itemCount: mData[index].comments == null ? 0 : mData[index].comments.length,
-                                      itemBuilder: (context,i){
-                                        print(mData[index].comments[i].ateUid);
-                                        return Padding(
-                                          padding: EdgeInsets.only(top: 5,bottom: 5),
-                                          child: Row(
-                                            children: [
-                                              Text(mData[index].comments[i].nickname),
-                                              Offstage(
-                                                offstage: (mData[index].comments[i].ateUid == null || mData[index].comments[i].ateUid == "") ? true:false ,
-                                                child: Text('@'+mData[index].comments[i].ateNickname),
-                                              ),
-                                              Text("："+mData[index].comments[i].content),
-                                            ],
-                                          ),
-                                        );
-                                      }
-                                  )
                                 ],
                               ),
                             );

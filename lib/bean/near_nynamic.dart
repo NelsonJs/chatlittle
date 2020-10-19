@@ -32,14 +32,14 @@ class Data {
   int gender;
   String id;
   int lat;
-  int like;
+  int liked;
+  int likenum;
   int lng;
-  String loc;
+  String location;
   String nickname;
-  List<String> resImg;
+  List<String> resimg;
   String title;
   String uid;
-  bool liked;
   List<Comments> comments;
 
   Data(
@@ -50,16 +50,15 @@ class Data {
         this.gender,
         this.id,
         this.lat,
-        this.like,
+        this.liked,
+        this.likenum,
         this.lng,
-        this.loc,
+        this.location,
         this.nickname,
-        this.resImg,
+        this.resimg,
         this.title,
         this.uid,
-        this.comments,
-        this.liked
-      });
+        this.comments});
 
   Data.fromJson(Map<String, dynamic> json) {
     avatar = json['Avatar'];
@@ -69,14 +68,14 @@ class Data {
     gender = json['Gender'];
     id = json['Id'];
     lat = json['Lat'];
-    like = json['Like'];
+    liked = json['Liked'];
+    likenum = json['Likenum'];
     lng = json['Lng'];
-    loc = json['Loc'];
+    location = json['Location'];
     nickname = json['Nickname'];
-    resImg = json['ResImg'];
+    resimg = json['Resimg'];
     title = json['Title'];
     uid = json['Uid'];
-    liked = json['liked'];
     if (json['comments'] != null) {
       comments = new List<Comments>();
       json['comments'].forEach((v) {
@@ -94,14 +93,14 @@ class Data {
     data['Gender'] = this.gender;
     data['Id'] = this.id;
     data['Lat'] = this.lat;
-    data['Like'] = this.like;
+    data['Liked'] = this.liked;
+    data['Likenum'] = this.likenum;
     data['Lng'] = this.lng;
-    data['Loc'] = this.loc;
+    data['Location'] = this.location;
     data['Nickname'] = this.nickname;
-    data['ResImg'] = this.resImg;
+    data['Resimg'] = this.resimg;
     data['Title'] = this.title;
     data['Uid'] = this.uid;
-    data['liked'] = this.liked;
     if (this.comments != null) {
       data['comments'] = this.comments.map((v) => v.toJson()).toList();
     }
@@ -111,41 +110,97 @@ class Data {
 
 class Comments {
   String commentId;
+  String cid;
   String content;
   String uid;
-  String ateUid;
   String nickname;
-  String ateNickname;
+  int likenum;
+  int status;
+  List<Reply> reply;
   int createTime;
 
   Comments(
       {this.commentId,
+        this.cid,
         this.content,
         this.uid,
-        this.ateUid,
         this.nickname,
-        this.ateNickname,
+        this.likenum,
+        this.status,
+        this.reply,
         this.createTime});
 
   Comments.fromJson(Map<String, dynamic> json) {
     commentId = json['commentId'];
+    cid = json['cid'];
     content = json['content'];
     uid = json['uid'];
-    ateUid = json['ateUid'];
     nickname = json['nickname'];
-    ateNickname = json['ateNickname'];
+    likenum = json['likenum'];
+    status = json['status'];
+    if (json['reply'] != null) {
+      reply = new List<Reply>();
+      json['reply'].forEach((v) {
+        reply.add(new Reply.fromJson(v));
+      });
+    }
     createTime = json['createTime'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['commentId'] = this.commentId;
+    data['cid'] = this.cid;
     data['content'] = this.content;
     data['uid'] = this.uid;
-    data['ateUid'] = this.ateUid;
     data['nickname'] = this.nickname;
-    data['ateNickname'] = this.ateNickname;
+    data['likenum'] = this.likenum;
+    data['status'] = this.status;
+    if (this.reply != null) {
+      data['reply'] = this.reply.map((v) => v.toJson()).toList();
+    }
     data['createTime'] = this.createTime;
+    return data;
+  }
+}
+
+class Reply {
+  String id;
+  String uid;
+  String content;
+  String likenum;
+  String nickname;
+  String replyuid;
+  String replynickname;
+
+  Reply(
+      {this.id,
+        this.uid,
+        this.content,
+        this.likenum,
+        this.nickname,
+        this.replyuid,
+        this.replynickname});
+
+  Reply.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    uid = json['uid'];
+    content = json['content'];
+    likenum = json['likenum'];
+    nickname = json['nickname'];
+    replyuid = json['replyuid'];
+    replynickname = json['replynickname'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['uid'] = this.uid;
+    data['content'] = this.content;
+    data['likenum'] = this.likenum;
+    data['nickname'] = this.nickname;
+    data['replyuid'] = this.replyuid;
+    data['replynickname'] = this.replynickname;
     return data;
   }
 }
