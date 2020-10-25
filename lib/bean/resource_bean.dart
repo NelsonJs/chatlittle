@@ -1,13 +1,13 @@
 class ResourceBean {
   int code;
-  List<int> data;
+  List<String> data;
 
   ResourceBean({this.code, this.data});
 
   ResourceBean.fromJson(Map<String, dynamic> json) {
     code = json['code'];
     if (json['data'] != null) {
-      data = json['data'].cast<int>();
+      data = json['data'].cast<String>();
     }
   }
 

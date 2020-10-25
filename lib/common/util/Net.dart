@@ -25,7 +25,7 @@ class Net {
     Options _options;
 
     static Dio dio = Dio(BaseOptions(
-      baseUrl: 'http://192.168.1.5:8080/',
+      baseUrl: 'http://192.168.0.109:8080/',
         connectTimeout: 5000,
         responseType: ResponseType.json
     ));
@@ -132,16 +132,7 @@ class Net {
         await dio.post("path",data: formData);
     }
 
-    Future<ResourceBean> uploadImgWithByte(List<List<int>> bytes) async {
-        print("图片个数:${bytes.length}");
-        var formData = FormData();
-       for (var i=0; i<bytes.length;i++) {
-           formData.files.add(MapEntry("upload", MultipartFile.fromBytes(bytes[i],filename: "$i.jpg")));
-       }
-        var res = await dio.post("resource/uploadimg",data: formData);
-        print(res.data.toString());
-        return ResourceBean.fromJson(res.data);
-    }
+
 
     Future<ResourceBean> publishLoveIntro(List<int> bytes,String uid,Map<String,dynamic> paramMap) async {
         var formData = FormData();
@@ -169,13 +160,18 @@ class Net {
         return ResourceBean.fromJson(res.data);
     }
 
-    Future<ResourceBean> publishDynamic(List<int> ids,String title) async {
+    Future<ResourceBean> publishDynamic(List<String> ids,String title,String desc) async {
         var map = Map<String,dynamic>();
-        SpUtils().getInt(SpUtils.uid).then((value) {
+        map["uid"] = "100";
+        map["title"] = title;
+        map["desc"] = desc;
+        map["resImg"] = ids;
+       /* SpUtils().getInt(SpUtils.uid).then((value) {
            map["uid"] = value.toString();
            map["title"] = title;
-           map["ids"] = ids;
-        });
+           map["desc"] = desc;
+           //map["ids"] = ids;
+        });*/
         var res = await dio.post("index/dynamic",data: map);
         print("提交数据->${res.data.toString()}");
         return ResourceBean.fromJson(res.data);
@@ -187,6 +183,28 @@ class Net {
         var res = await dio.post("user/avatar?uid=$uid",data: formData);
         print(res.data.toString());
         return ResourceBean.fromJson(res.data);
+    }
+
+    Future<ResourceBean> uploadImgWithByte(List<List<int>> bytes) async {
+        print("图片个数:${bytes.length}");
+        var formData = FormData();
+        for (var i=0; i<bytes.length;i++) {
+            formData.files.add(MapEntry("upload", MultipartFile.fromBytes(bytes[i],filename: "$i.jpg")));
+        }
+        var res = await dio.post("resource/uploadimg",data: formData);
+        print(res.data.toString());
+        return ResourceBean.fromJson(res.data);
+    }
+
+    Future<ResourceBean> dynamicImage(List<List<int>> imgs) async {
+        var formData = FormData();
+        for (int i = 0; i < imgs.length; i++) {
+            int micro = DateTime.now().microsecond;
+            formData.files.add(MapEntry("uploads", MultipartFile.fromBytes(imgs[i],filename: micro.toString()+".jpg")));
+        }
+        var res = await dio.post("resource/image/dynamic/",data: formData);
+        ResourceBean rb = ResourceBean.fromJson(res.data);
+        return rb;
     }
 
     Future<ResponseParent> updateUserInfo(String uid,String nickName,String phone,String gender) async {

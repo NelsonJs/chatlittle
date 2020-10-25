@@ -13,6 +13,7 @@ class DynamicState extends State<PublishDynamic> {
   int gridCount = 0;
   bool showLoading = false;
   TextEditingController editingController = TextEditingController();
+  TextEditingController titleController = TextEditingController();
 
   @override
   void initState() {
@@ -34,7 +35,7 @@ class DynamicState extends State<PublishDynamic> {
           return Offstage(
             offstage: images.length < 9 ? false : true,
             child: GestureDetector(
-              child: Image.asset('images/add_img.png'),
+              child: Image.asset('images/add_img.png',scale: 1.5),
               onTap: (){
                 loadAssets();
               },
@@ -43,11 +44,14 @@ class DynamicState extends State<PublishDynamic> {
         } else {
           print(images[index].name+"  "+images[index].identifier);
           Asset asset = images[index];
-          return AssetThumb(
-                  asset: asset,
-                  width: 250,
-                  height: 250,
-              );
+          return Container(
+
+            child: AssetThumb(
+              asset: asset,
+              width: 50,
+              height: 50,
+            ),
+          );
           }
       }),
     );
@@ -87,9 +91,9 @@ class DynamicState extends State<PublishDynamic> {
       var byteData = await images[i].getByteData();
       byts.add(byteData.buffer.asUint8List());
     }
-    Net().uploadImgWithByte(byts).then((value){
+    Net().dynamicImage(byts).then((value){
         if (value.code == 1){
-          Net().publishDynamic(value.data, editingController.text).then((value) {
+          Net().publishDynamic(value.data,titleController.text.toString(), editingController.text.toString()).then((value) {
             if (value.code > 0) {
               Navigator.pop(context);
             }
@@ -102,7 +106,7 @@ class DynamicState extends State<PublishDynamic> {
   Widget build(BuildContext context) {
     return  Scaffold(
       appBar: AppBar(
-        elevation: 5.0,
+        elevation: 0.5,
         actions: <Widget>[
           Center(
             child: Container(
@@ -120,33 +124,47 @@ class DynamicState extends State<PublishDynamic> {
           )
         ],
       ),
-      body: showLoading ? Center(child: CupertinoActivityIndicator(radius: 15)) : Column(
-        children: <Widget>[
-          Center(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                  maxHeight: 120,
-                  minHeight: 120
-              ),
-              child: Padding(
+      body: showLoading ? Center(child: CupertinoActivityIndicator(radius: 15)) : Container(
+        color: Colors.white,
+        child: Column(
+          children: <Widget>[
+            Padding(
                 padding: EdgeInsets.fromLTRB(16, 3, 16, 3),
                 child: TextField(
-                  controller: editingController,
+                  controller: titleController,
                   maxLines: null,
                   keyboardType: TextInputType.multiline,
                   decoration: InputDecoration(
-                      hintText: '这一刻的想法',
+                      hintText: '标题',
                       border: InputBorder.none
                   ),
-                ),),
+                )),
+            Divider(height: 1,color: Colors.grey[300]),
+            Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                    maxHeight: 120,
+                    minHeight: 120
+                ),
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(16, 3, 16, 3),
+                  child: TextField(
+                    controller: editingController,
+                    maxLines: null,
+                    keyboardType: TextInputType.multiline,
+                    decoration: InputDecoration(
+                        hintText: '这一刻的想法',
+                        border: InputBorder.none
+                    ),
+                  )),
+              ),
             ),
-          ),
-          Divider(height: 1,color: Colors.grey[300]),
-          Container(
-            margin: EdgeInsets.fromLTRB(16, 10, 16, 0),
-            child: buildGridView(),
-          ),
-        ],
+            Divider(height: 1,color: Colors.grey[300]),
+            Container(
+              child: buildGridView(),
+            ),
+          ],
+        ),
       )
     );
   }

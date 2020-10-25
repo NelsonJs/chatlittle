@@ -30,7 +30,7 @@ class Data {
   String description;
   String did;
   int gender;
-  String id;
+  int id;
   int lat;
   int liked;
   int likenum;
