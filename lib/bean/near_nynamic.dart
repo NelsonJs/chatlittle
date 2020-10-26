@@ -73,7 +73,9 @@ class Data {
     lng = json['Lng'];
     location = json['Location'];
     nickname = json['Nickname'];
-    resimg = json['Resimg'];
+    if (json['Resimg'] != null) {
+      resimg = json['Resimg'].cast<String>();
+    }
     title = json['Title'];
     uid = json['Uid'];
     if (json['comments'] != null) {

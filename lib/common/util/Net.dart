@@ -25,7 +25,7 @@ class Net {
     Options _options;
 
     static Dio dio = Dio(BaseOptions(
-      baseUrl: 'http://192.168.0.109:8080/',
+      baseUrl: 'http://192.168.1.5:8080/',
         connectTimeout: 5000,
         responseType: ResponseType.json
     ));
@@ -162,6 +162,7 @@ class Net {
 
     Future<ResourceBean> publishDynamic(List<String> ids,String title,String desc) async {
         var map = Map<String,dynamic>();
+        print("图片：$ids");
         map["uid"] = "100";
         map["title"] = title;
         map["desc"] = desc;
@@ -185,17 +186,6 @@ class Net {
         return ResourceBean.fromJson(res.data);
     }
 
-    Future<ResourceBean> uploadImgWithByte(List<List<int>> bytes) async {
-        print("图片个数:${bytes.length}");
-        var formData = FormData();
-        for (var i=0; i<bytes.length;i++) {
-            formData.files.add(MapEntry("upload", MultipartFile.fromBytes(bytes[i],filename: "$i.jpg")));
-        }
-        var res = await dio.post("resource/uploadimg",data: formData);
-        print(res.data.toString());
-        return ResourceBean.fromJson(res.data);
-    }
-
     Future<ResourceBean> dynamicImage(List<List<int>> imgs) async {
         var formData = FormData();
         for (int i = 0; i < imgs.length; i++) {
@@ -204,6 +194,7 @@ class Net {
         }
         var res = await dio.post("resource/image/dynamic/",data: formData);
         ResourceBean rb = ResourceBean.fromJson(res.data);
+        print(rb.data);
         return rb;
     }
 
