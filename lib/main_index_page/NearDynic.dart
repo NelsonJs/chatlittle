@@ -29,8 +29,13 @@ class NearDynicPage extends State<NearDynic> {
               child: Padding(
                   padding: EdgeInsets.only(right: 10),
                   child: GestureDetector(
-                    child: Icon(Icons.add),onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>PublishDynamic()));
+                    child: Icon(Icons.add),onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>PublishDynamic())).then((value){
+                      setState(() {
+
+                      });
+                    });
+
                   },
                   )),
             )
@@ -167,11 +172,11 @@ class NearDynicPage extends State<NearDynic> {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.all(Radius.circular(5)),
-            child: ImageWidget(url: images[0]),
+            child: Image.network(images[0],width: 120,height:120),
           ),
           ClipRRect(
             borderRadius: BorderRadius.all(Radius.circular(5)),
-            child: ImageWidget(url: images[1]),
+            child: Image.network(images[1],width: 120,height:120),
           )
         ],
       );
