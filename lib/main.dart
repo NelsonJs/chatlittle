@@ -94,7 +94,7 @@ class HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-
+  int mIndex = 0;
   @override
   Widget build(BuildContext context) {
     //getData();
@@ -124,17 +124,25 @@ class HomePageState extends State<HomePage> {
   void onTapClick(int index) {
       setState(() {
         if (index == 3 || index == 4){//登录
-          SpUtils().getInt(SpUtils.uid).then((value){
+          SpUtils().getString(SpUtils.uid).then((value){
             if (value != null){
               curIndex = index;
             } else {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>Login()));
+              Future fu = Navigator.push(context, MaterialPageRoute(builder: (context)=>Login()));
+              fu.then((value) {
+                SpUtils().getString(SpUtils.uid).then((v){
+                  if (v != null){
+                    curIndex = index;
+                  } else {
+                    curIndex = 0;
+                  }
+                });
+              });
             }
           });
       } else {
           curIndex = index;
         }
-        curIndex = index;
       });
   }
 

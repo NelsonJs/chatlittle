@@ -30,7 +30,7 @@ class LoginPage extends State<Login> {
           ),
           Container(
             decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor,
+              color: Colors.blue,
             ),
             height: 150,
             child: Scaffold(
@@ -40,9 +40,15 @@ class LoginPage extends State<Login> {
                 backgroundColor: Colors.transparent,
                 leading: Align(
                   alignment: Alignment.center,
-                  child: Icon(
-                    Icons.arrow_back_ios,
-                    size: 18,
+                  child: GestureDetector(
+                    child: Icon(
+                        Icons.arrow_back_ios,
+                        size: 18,
+                        color: Colors.white
+                    ),
+                    onTap: (){
+                      Navigator.pop(context);
+                    },
                   ),
                 ),
               ),
@@ -69,7 +75,7 @@ class LoginPage extends State<Login> {
                             child: TextField(
                               controller: _controllerName,
                               decoration: InputDecoration(
-                                icon: Icon(Icons.person, size: 25),
+                                icon: Icon(Icons.person, size: 25,color: Colors.grey),
                                 hintText: '用户名/账号',
                                 hintStyle: TextStyle(color: Colors.black26, fontSize: 14),
                                 border: InputBorder.none,
@@ -87,7 +93,7 @@ class LoginPage extends State<Login> {
                             child: TextField(
                               controller: _controllerPwd,
                               decoration: InputDecoration(
-                                icon: Icon(Icons.lock, size: 25),
+                                icon: Icon(Icons.lock, size: 25,color: Colors.grey,),
                                 hintText: '密码',
                                 hintStyle: TextStyle(color: Colors.black26, fontSize: 14),
                                 border: InputBorder.none,
@@ -105,7 +111,7 @@ class LoginPage extends State<Login> {
                             GestureDetector(
                               child: Container(
                                   margin: EdgeInsets.only(top: 10),
-                                  child: Text('忘记密码？',style: TextStyle(fontSize: 12,color: Theme.of(context).primaryColor))
+                                  child: Text('忘记密码？',style: TextStyle(fontSize: 12,color: Colors.blue))
                               ),
                               onTap: (){
                                 Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ForgetPw()));
@@ -127,17 +133,14 @@ class LoginPage extends State<Login> {
                                           login.then((value) {
                                             print("value-->${value.msg}");
                                             if (value == null) return;
-                                            if (value.uid > 0) {
+                                            if (value.uid != null) {
                                               bus.emit("login");
-                                              context
-                                                  .read<LoginModel>()
-                                                  .setAccountBean(value);
                                               Navigator.pop(context);
                                             }
                                           });
                                         },
                                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(18))),
-                                        color:  Theme.of(context).primaryColor,
+                                        color:  Colors.blue,
                                         textColor: Colors.white,
                                         disabledColor:  Colors.blueAccent[100],
                                         focusColor: Colors.blueAccent,
@@ -154,14 +157,14 @@ class LoginPage extends State<Login> {
                             GestureDetector(
                               child: Container(
                                   margin: EdgeInsets.only(top: 10),
-                                  child: Text('没有账号？立即注册',style: TextStyle(fontSize: 12,color: Theme.of(context).primaryColor))
+                                  child: Text('没有账号？立即注册',style: TextStyle(fontSize: 12,color: Colors.blue))
                               ),
                               onTap: (){
                                 var login = Net().register(
                                     _controllerName.text, _controllerPwd.text);
                                 login.then((value) {
                                   if (value == null) return;
-                                  if (value.uid > 0) {
+                                  if (value.uid != null) {
                                     context
                                         .read<LoginModel>()
                                         .setAccountBean(value);
@@ -189,9 +192,9 @@ class LoginPage extends State<Login> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Text('----------------------- ',style: TextStyle(fontSize:12,decoration: TextDecoration.none)),
+                      //Text('----------------------- ',style: TextStyle(fontSize:12,decoration: TextDecoration.none)),
                       Text('第三方登录',style: TextStyle(fontSize:12,decoration: TextDecoration.none)),
-                      Text(' -----------------------',style: TextStyle(fontSize:12,decoration: TextDecoration.none)),
+                      //Text(' -----------------------',style: TextStyle(fontSize:12,decoration: TextDecoration.none)),
                     ],
                   ),
                     Container(

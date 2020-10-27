@@ -45,7 +45,7 @@ class Net {
         var r = await dio.post("user/register",data: map);
         Global.accountBean = AccountBean.fromJson(r.data);
         if (Global.accountBean.code != -1) {
-            SpUtils().saveInt(SpUtils.uid, Global.accountBean.uid);
+            SpUtils().saveString(SpUtils.uid, Global.accountBean.uid);
             SpUtils().saveString(SpUtils.userName, Global.accountBean.username);
         }
         print("${Global.accountBean}");
@@ -59,7 +59,7 @@ class Net {
         var r = await dio.post("user/login",data: map);
         Global.accountBean = AccountBean.fromJson(r.data);
         if (Global.accountBean.code != -1) {
-            SpUtils().saveInt(SpUtils.uid, Global.accountBean.uid);
+            SpUtils().saveString(SpUtils.uid, Global.accountBean.uid);
             SpUtils().saveString(SpUtils.userName, Global.accountBean.username);
         }
         print("${Global.accountBean}");

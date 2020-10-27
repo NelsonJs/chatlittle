@@ -1,6 +1,6 @@
 class AccountBean {
   int code;
-  int uid;
+  String uid;
   String username;
   String pwd;
   String msg;
