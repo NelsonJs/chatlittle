@@ -13,12 +13,12 @@ class ChatMain extends StatefulWidget {
 }
 
 class _StateChatMain extends State<ChatMain> {
-  int uid = 0;
+  String uid;
   List<CLData> mData = [];
   @override
   void initState() {
     super.initState();
-    SpUtils().getInt(SpUtils.uid).then((value) => uid = value);
+    SpUtils().getString(SpUtils.uid).then((value) => uid = value);
   }
 
   @override
