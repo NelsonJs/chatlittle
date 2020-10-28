@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:littelchat/account_page/forget_pw.dart';
+import 'package:littelchat/account_page/register-page.dart';
 import 'package:littelchat/common/Global.dart';
 import 'package:littelchat/common/util/EventBus.dart';
 import 'package:littelchat/common/util/LoginModel.dart';
 import 'package:littelchat/common/util/Net.dart';
 import 'package:littelchat/common/util/SocketNet.dart';
+import 'package:littelchat/common/widgets/SnackBackUtil.dart';
 import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
@@ -18,6 +20,13 @@ class Login extends StatefulWidget {
 class LoginPage extends State<Login> {
   TextEditingController _controllerName = TextEditingController();
   TextEditingController _controllerPwd = TextEditingController();
+
+  _showSnackBar(BuildContext context,String msg) {
+    Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text(msg),
+        duration: Duration(seconds: 1),
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -126,25 +135,31 @@ class LoginPage extends State<Login> {
                                 child: Container(
                                     width: double.infinity,
                                     margin: EdgeInsets.only(top:20),
-                                    child: FlatButton(
-                                        onPressed: (){
-                                          var login = Net().login(
-                                              _controllerName.text, _controllerPwd.text);
-                                          login.then((value) {
-                                            print("value-->${value.msg}");
-                                            if (value == null) return;
-                                            if (value.uid != null) {
-                                              bus.emit("login");
-                                              Navigator.pop(context);
-                                            }
-                                          });
-                                        },
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(18))),
-                                        color:  Colors.blue,
-                                        textColor: Colors.white,
-                                        disabledColor:  Colors.blueAccent[100],
-                                        focusColor: Colors.blueAccent,
-                                        child: Text('登录',style: TextStyle(color: Colors.white))
+                                    child: Builder(
+                                        builder: (BuildContext c){
+                                          return FlatButton(
+                                              onPressed: (){
+                                                var login = Net().login(
+                                                    _controllerName.text, _controllerPwd.text);
+                                                login.then((value) {
+                                                  print("value-->${value.msg}");
+                                                  if (value == null) return;
+                                                  if (value.code == -1) {
+                                                    _showSnackBar(c,value.msg);
+                                                  } else if (value.data.uid != null) {
+                                                    bus.emit("login");
+                                                    Navigator.pop(c);
+                                                  }
+                                                });
+                                              },
+                                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(18))),
+                                              color:  Colors.blue,
+                                              textColor: Colors.white,
+                                              disabledColor:  Colors.blueAccent[100],
+                                              focusColor: Colors.blueAccent,
+                                              child: Text('登录',style: TextStyle(color: Colors.white))
+                                          );
+                                        }
                                     )
                                 )
                             ),
@@ -160,18 +175,11 @@ class LoginPage extends State<Login> {
                                   child: Text('没有账号？立即注册',style: TextStyle(fontSize: 12,color: Colors.blue))
                               ),
                               onTap: (){
-                                var login = Net().register(
-                                    _controllerName.text, _controllerPwd.text);
-                                login.then((value) {
-                                  if (value == null) return;
-                                  if (value.uid != null) {
-                                    context
-                                        .read<LoginModel>()
-                                        .setAccountBean(value);
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>RegisterPage())).then((value){
+                                  if (value != null) {
                                     Navigator.pop(context);
                                   }
                                 });
-
                               },
                             )
                           ],

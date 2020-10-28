@@ -25,7 +25,7 @@ class Net {
     Options _options;
 
     static Dio dio = Dio(BaseOptions(
-      baseUrl: 'http://192.168.0.109:8080/',
+      baseUrl: 'http://192.168.1.7:8080/',
         connectTimeout: 5000,
         responseType: ResponseType.json
     ));
@@ -39,30 +39,36 @@ class Net {
     }
 
     Future<AccountBean> register(String name,String pwd) async {
+        print("名称：$name 密码：$pwd");
         var map = Map<String,dynamic>();
-        map["username"] = name;
+        map["phone"] = name;
         map["pwd"] = pwd;
         var r = await dio.post("user/register",data: map);
         Global.accountBean = AccountBean.fromJson(r.data);
-        if (Global.accountBean.code != -1) {
-            SpUtils().saveString(SpUtils.uid, Global.accountBean.uid);
-            SpUtils().saveString(SpUtils.userName, Global.accountBean.username);
+        if (Global.accountBean.code == 1) {
+            SpUtils().saveString(SpUtils.uid, Global.accountBean.data.uid);
+            SpUtils().saveString(SpUtils.userName, Global.accountBean.data.nickname);
+            SpUtils().saveString(SpUtils.phone, Global.accountBean.data.phone);
+            SpUtils().saveInt(SpUtils.gender, Global.accountBean.data.gender);
         }
         print("${Global.accountBean}");
         return Global.accountBean;
     }
 
     Future<AccountBean> login(String name,String pwd) async {
+        print("名称：$name 密码：$pwd");
         var map = Map<String,dynamic>();
-        map["username"] = name;
+        map["phone"] = name;
         map["pwd"] = pwd;
         var r = await dio.post("user/login",data: map);
         Global.accountBean = AccountBean.fromJson(r.data);
-        if (Global.accountBean.code != -1) {
-            SpUtils().saveString(SpUtils.uid, Global.accountBean.uid);
-            SpUtils().saveString(SpUtils.userName, Global.accountBean.username);
+        if (Global.accountBean.code == 1) {
+            SpUtils().saveString(SpUtils.uid, Global.accountBean.data.uid);
+            SpUtils().saveString(SpUtils.userName, Global.accountBean.data.nickname);
+            SpUtils().saveString(SpUtils.phone, Global.accountBean.data.phone);
+            SpUtils().saveInt(SpUtils.gender, Global.accountBean.data.gender);
         }
-        print("${Global.accountBean}");
+        print("${Global.accountBean.code}");
         return Global.accountBean;
     }
 

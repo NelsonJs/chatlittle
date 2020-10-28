@@ -9,7 +9,12 @@ class SnackBarUtil extends StatelessWidget{
   
   @override
   Widget build(BuildContext context) {
-    return SnackBar(content: Text(showTxt));
+    return Builder(
+        builder: (BuildContext c){
+          return Container(
+          );
+        },
+    );
   }
 
 }
