@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:littelchat/account_page/account-page.dart';
 import 'package:littelchat/active_page/publish_dynamic.dart';
 import 'package:littelchat/bean/near_nynamic.dart';
 import 'package:littelchat/common/util/Net.dart';
 import 'package:littelchat/common/util/SpUtils.dart';
+import 'package:littelchat/common/util/time-utils.dart';
 import 'package:littelchat/common/widgets/ImageWidget.dart';
 import 'package:littelchat/common/widgets/icon_widget.dart';
 import 'package:littelchat/main_index_page/dynamic-detail.dart';
@@ -105,7 +107,7 @@ class NearDynicPage extends State<NearDynic> {
                                     children: <Widget>[
                                       Container(
                                         margin: EdgeInsets.only(top: 25),
-                                        child: Text('18小时前·软件园二期'),
+                                        child: Text(TimeUtils().chatTime(mData[index].createtime)),
                                       )
                                     ],
                                   ),
@@ -126,6 +128,7 @@ class NearDynicPage extends State<NearDynic> {
                                           ),
                                           onTap: (){
                                               Navigator.push(context, MaterialPageRoute(builder: (context)=>DynamicDetail(mData[index].did,data:mData[index],k: iconKeys[index],)));
+                                           // Navigator.push(context, MaterialPageRoute(builder: (context)=>AccountPage()));
                                           },
                                         ),
                                         margin: EdgeInsets.only(right: 30,bottom: 10),

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:littelchat/bean/near_nynamic.dart';
+import 'package:littelchat/common/util/time-utils.dart';
 import 'package:littelchat/common/widgets/ImageWidget.dart';
 import 'package:littelchat/common/widgets/icon_widget.dart';
 
@@ -24,6 +25,7 @@ class _DynamicDetailState extends State<DynamicDetail> {
                 style: TextStyle(color: Colors.black87, fontSize: 16)),
             elevation: 0.5),
         body: Container(
+          color: Colors.white,
           padding: EdgeInsets.only(left: 15),
           child: Column(
             children: [
@@ -35,12 +37,15 @@ class _DynamicDetailState extends State<DynamicDetail> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                margin: EdgeInsets.only(top: 10),
-                                child: Text(widget.data.title),
+                                margin: EdgeInsets.only(top: 10,bottom: 5),
+                                child: Text(widget.data.title,style: TextStyle(fontSize: 16)),
                               ),
-                              Text(widget.data.description == null
-                                  ? ""
-                                  : widget.data.description),
+                              Container(
+                                margin: EdgeInsets.only(bottom: 5),
+                                child: Text(widget.data.description == null
+                                    ? ""
+                                    : widget.data.description,style: TextStyle(fontSize: 12,color: Colors.grey)),
+                              ),
                               Container(
                                   child: widget.data.resimg != null &&
                                       widget.data.resimg.length > 0
@@ -50,7 +55,7 @@ class _DynamicDetailState extends State<DynamicDetail> {
                                 children: <Widget>[
                                   Container(
                                     margin: EdgeInsets.only(top: 25),
-                                    child: Text('18小时前·软件园二期'),
+                                    child: Text(TimeUtils().chatTime(widget.data.createtime)),
                                   )
                                 ],
                               ),

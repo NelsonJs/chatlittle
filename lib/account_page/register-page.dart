@@ -25,6 +25,8 @@ class _StateRegister extends State<RegisterPage> {
         elevation: 0.5,
       ),
       body: Container(
+        color: Colors.white,
+        margin: EdgeInsets.only(top: 100),
         child: Align(
           alignment: Alignment.center,
           child: Column(
