@@ -1,10 +1,10 @@
-class Comment {
+class CommentBean {
   int code;
   List<Data> data;
 
-  Comment({this.code, this.data});
+  CommentBean({this.code, this.data});
 
-  Comment.fromJson(Map<String, dynamic> json) {
+  CommentBean.fromJson(Map<String, dynamic> json) {
     code = json['code'];
     if (json['data'] != null) {
       data = new List<Data>();
@@ -25,41 +25,90 @@ class Comment {
 }
 
 class Data {
-  String commentId;
-  String content;
-  String uid;
-  String ateUid;
-  String nickname;
-  String ateNickname;
-  int createTime;
+  Comment comment;
+  List<Comment> comments;
 
-  Data(
-      {this.commentId,
-        this.content,
-        this.uid,
-        this.ateUid,
-        this.nickname,
-        this.ateNickname,
-        this.createTime});
+  Data({this.comment, this.comments});
 
   Data.fromJson(Map<String, dynamic> json) {
+    comment =
+    json['Comment'] != null ? new Comment.fromJson(json['Comment']) : null;
+    if (json['Comments'] != null) {
+      comments = new List<Comment>();
+      json['Comments'].forEach((v) {
+        comments.add(new Comment.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.comment != null) {
+      data['Comment'] = this.comment.toJson();
+    }
+    if (this.comments != null) {
+      data['Comments'] = this.comments.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class Comment {
+  String commentId;
+  String cid;
+  String fid;
+  String pid;
+  String content;
+  String uid;
+  String nickname;
+  String replyuid;
+  String replyname;
+  int likenum;
+  int status;
+  int createTime;
+
+  Comment(
+      {this.commentId,
+        this.cid,
+        this.fid,
+        this.pid,
+        this.content,
+        this.uid,
+        this.nickname,
+        this.replyuid,
+        this.replyname,
+        this.likenum,
+        this.status,
+        this.createTime});
+
+  Comment.fromJson(Map<String, dynamic> json) {
     commentId = json['commentId'];
+    cid = json['cid'];
+    fid = json['fid'];
+    pid = json['pid'];
     content = json['content'];
     uid = json['uid'];
-    ateUid = json['ateUid'];
     nickname = json['nickname'];
-    ateNickname = json['ateNickname'];
+    replyuid = json['replyuid'];
+    replyname = json['replyname'];
+    likenum = json['likenum'];
+    status = json['status'];
     createTime = json['createTime'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['commentId'] = this.commentId;
+    data['cid'] = this.cid;
+    data['fid'] = this.fid;
+    data['pid'] = this.pid;
     data['content'] = this.content;
     data['uid'] = this.uid;
-    data['ateUid'] = this.ateUid;
     data['nickname'] = this.nickname;
-    data['ateNickname'] = this.ateNickname;
+    data['replyuid'] = this.replyuid;
+    data['replyname'] = this.replyname;
+    data['likenum'] = this.likenum;
+    data['status'] = this.status;
     data['createTime'] = this.createTime;
     return data;
   }

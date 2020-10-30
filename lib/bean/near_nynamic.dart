@@ -40,7 +40,7 @@ class Data {
   List<String> resimg;
   String title;
   String uid;
-  List<Comments> comments;
+  List<CommentData> comments;
 
   Data(
       {this.avatar,
@@ -79,9 +79,9 @@ class Data {
     title = json['Title'];
     uid = json['Uid'];
     if (json['comments'] != null) {
-      comments = new List<Comments>();
+      comments = new List<CommentData>();
       json['comments'].forEach((v) {
-        comments.add(new Comments.fromJson(v));
+        comments.add(new CommentData.fromJson(v));
       });
     }
   }
@@ -110,42 +110,75 @@ class Data {
   }
 }
 
-class Comments {
+class CommentData {
+  Comment comment;
+  List<Comment> comments;
+
+  CommentData({this.comment, this.comments});
+
+  CommentData.fromJson(Map<String, dynamic> json) {
+    comment =
+    json['Comment'] != null ? new Comment.fromJson(json['Comment']) : null;
+    if (json['Comments'] != null) {
+      comments = new List<Comment>();
+      json['Comments'].forEach((v) {
+        comments.add(new Comment.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.comment != null) {
+      data['Comment'] = this.comment.toJson();
+    }
+    if (this.comments != null) {
+      data['Comments'] = this.comments.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class Comment {
   String commentId;
   String cid;
+  String fid;
+  String pid;
   String content;
   String uid;
   String nickname;
+  String replyuid;
+  String replyname;
   int likenum;
   int status;
-  List<Reply> reply;
   int createTime;
 
-  Comments(
+  Comment(
       {this.commentId,
         this.cid,
+        this.fid,
+        this.pid,
         this.content,
         this.uid,
         this.nickname,
+        this.replyuid,
+        this.replyname,
         this.likenum,
         this.status,
-        this.reply,
         this.createTime});
 
-  Comments.fromJson(Map<String, dynamic> json) {
+  Comment.fromJson(Map<String, dynamic> json) {
     commentId = json['commentId'];
     cid = json['cid'];
+    fid = json['fid'];
+    pid = json['pid'];
     content = json['content'];
     uid = json['uid'];
     nickname = json['nickname'];
+    replyuid = json['replyuid'];
+    replyname = json['replyname'];
     likenum = json['likenum'];
     status = json['status'];
-    if (json['reply'] != null) {
-      reply = new List<Reply>();
-      json['reply'].forEach((v) {
-        reply.add(new Reply.fromJson(v));
-      });
-    }
     createTime = json['createTime'];
   }
 
@@ -153,56 +186,16 @@ class Comments {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['commentId'] = this.commentId;
     data['cid'] = this.cid;
+    data['fid'] = this.fid;
+    data['pid'] = this.pid;
     data['content'] = this.content;
     data['uid'] = this.uid;
-    data['nickname'] = this.nickname;
-    data['likenum'] = this.likenum;
-    data['status'] = this.status;
-    if (this.reply != null) {
-      data['reply'] = this.reply.map((v) => v.toJson()).toList();
-    }
-    data['createTime'] = this.createTime;
-    return data;
-  }
-}
-
-class Reply {
-  String id;
-  String uid;
-  String content;
-  String likenum;
-  String nickname;
-  String replyuid;
-  String replynickname;
-
-  Reply(
-      {this.id,
-        this.uid,
-        this.content,
-        this.likenum,
-        this.nickname,
-        this.replyuid,
-        this.replynickname});
-
-  Reply.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    uid = json['uid'];
-    content = json['content'];
-    likenum = json['likenum'];
-    nickname = json['nickname'];
-    replyuid = json['replyuid'];
-    replynickname = json['replynickname'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['uid'] = this.uid;
-    data['content'] = this.content;
-    data['likenum'] = this.likenum;
     data['nickname'] = this.nickname;
     data['replyuid'] = this.replyuid;
-    data['replynickname'] = this.replynickname;
+    data['replyname'] = this.replyname;
+    data['likenum'] = this.likenum;
+    data['status'] = this.status;
+    data['createTime'] = this.createTime;
     return data;
   }
 }

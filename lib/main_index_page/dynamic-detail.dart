@@ -88,21 +88,21 @@ class _DynamicDetailState extends State<DynamicDetail> {
                           )),
                       SliverList(
                           delegate: SliverChildBuilderDelegate((context, index) {
-                            print('index==>' + index.toString());
+                            print(widget.data.comments[index]);
                             return Container(
                               child: Column(
                                 children: [
                                   Row(
                                     children: [
-                                      Text(widget.data.comments[index].nickname +
-                                          "：" +
-                                          widget.data.comments[index].content),
+                                      Text(widget.data.comments[index].comment.nickname+
+                                          ":" +
+                                          widget.data.comments[index].comment.content),
                                     ],
                                   ),
                                   Offstage(
-                                      offstage: (widget.data.comments[index].reply ==
+                                      offstage: (widget.data.comments[index].comments ==
                                           null ||
-                                          widget.data.comments[index].reply.length ==
+                                          widget.data.comments[index].comments.length ==
                                               0)
                                           ? true
                                           : false,
@@ -112,22 +112,17 @@ class _DynamicDetailState extends State<DynamicDetail> {
                                           child: ListView.builder(
                                               shrinkWrap: true,
                                               itemCount:
-                                              widget.data.comments[index].reply ==
+                                              widget.data.comments[index].comments ==
                                                   null
                                                   ? 0
-                                                  : widget.data.comments[index].reply
+                                                  : widget.data.comments[index].comments
                                                   .length,
                                               itemBuilder: (context, i) {
                                                 return Row(
                                                   children: [
-                                                    Text(widget.data.comments[index]
-                                                        .reply[i].nickname +
-                                                        ">" +
-                                                        widget.data.comments[index]
-                                                            .reply[i].replynickname +
+                                                    Text(widget.data.comments[index].comments[i].nickname+
                                                         ":" +
-                                                        widget.data.comments[index]
-                                                            .reply[i].content)
+                                                        widget.data.comments[index].comments[i].content)
                                                   ],
                                                 );
                                               }))),
@@ -176,30 +171,6 @@ class _DynamicDetailState extends State<DynamicDetail> {
     );
   }
 
-  /* Row(
-              children: [
-                Align(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: '评论',
-                        contentPadding: EdgeInsets.only(top: 5,bottom: 5,left: 5,right: 5),
-                        focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.red,width: 1),borderRadius: BorderRadius.all(Radius.circular(4))),
-                        enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.red,width: 1),borderRadius: BorderRadius.all(Radius.circular(4))),
-                        disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey,width: 1),borderRadius: BorderRadius.all(Radius.circular(4))),
-                      ),
-                    )
-                ),
-                Container(
-                  margin: EdgeInsets.only(left: 10,right: 15),
-                  child: GestureDetector(
-                    child: Text("发送"),
-                    onTap: (){
-
-                    },
-                  ),
-                )
-              ],
-            )*/
 
   Widget empty() {
     return Container();

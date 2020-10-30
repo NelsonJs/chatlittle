@@ -96,20 +96,27 @@ class Net {
         return NearDynamic.fromJson(r.data);
     }
 
-    Future<Comment> getComments() async {
+    Future<CommentBean> getComments() async {
         Response r = await dio.get("comment/list");
         print("getComments--->"+r.data.toString());
-        return Comment.fromJson(r.data);
+        return CommentBean.fromJson(r.data);
     }
 
-    Future<ResponseParent> sendComment(String did,content,uid,nickname,ateUid,ateNickname) async{
+    Future<ResponseParent> sendComment(String did,content,uid,nickname,cid,replyUid,replyNickname) async{
         var m = Map<String,dynamic>();
-        m["did"] = did;
-        m["content"] = content;
-        m["uid"] = uid;
-        m["ateUid"] = ateUid;
-        m["nickname"] = nickname;
-        m["ateNickname"] = ateNickname;
+        if (cid != null) { //回复评论
+            m["did"] = did;
+            m["cid"] = cid;
+            var innerM = Map<String,dynamic>();
+            innerM["uid"] = uid;
+            innerM["nickname"] = nickname;
+            innerM["nickname"] = nickname;
+        } else {//直接回复动态
+            m["did"] = did;
+            m["content"] = content;
+            m["uid"] = uid;
+            m["nickname"] = nickname;
+        }
         Response res = await dio.post("/comment/create",data: m);
         return ResponseParent.fromJson(res.data);
     }
