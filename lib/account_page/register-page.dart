@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:littelchat/common/util/Net.dart';
+import 'package:littelchat/common/util/SpUtils.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -65,7 +66,9 @@ class _StateRegister extends State<RegisterPage> {
                                         if (value == null) return;
                                         if (value.code == -1) {
                                           _showSnackBar(c,value.msg);
-                                        } else if (value.data.uid != null) {
+                                        } else if (value.data.uid != null && value.data.uid.isNotEmpty) {
+                                          SpUtils().saveString(SpUtils.uid, value.data.uid);
+                                          SpUtils().saveString(SpUtils.userName, value.data.nickname);
                                           Navigator.pop(c,value.data.uid);
                                         }
                                       });

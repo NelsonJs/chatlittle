@@ -13,6 +13,7 @@ import 'package:littelchat/bean/near_nynamic.dart';
 import 'package:littelchat/bean/recoment_users.dart';
 import 'package:littelchat/bean/resource_bean.dart';
 import 'package:littelchat/bean/respont_parent.dart';
+import 'package:littelchat/bean/send-comment.dart';
 import 'package:littelchat/common/Global.dart';
 import 'package:littelchat/common/util/SpUtils.dart';
 
@@ -25,7 +26,7 @@ class Net {
     Options _options;
 
     static Dio dio = Dio(BaseOptions(
-      baseUrl: 'http://192.168.1.7:8080/',
+      baseUrl: 'http://192.168.0.106:8080/',
         connectTimeout: 5000,
         responseType: ResponseType.json
     ));
@@ -68,7 +69,7 @@ class Net {
             SpUtils().saveString(SpUtils.phone, Global.accountBean.data.phone);
             SpUtils().saveInt(SpUtils.gender, Global.accountBean.data.gender);
         }
-        print("${Global.accountBean.code}");
+        print("${Global.accountBean.data.uid}");
         return Global.accountBean;
     }
 
@@ -102,23 +103,20 @@ class Net {
         return CommentBean.fromJson(r.data);
     }
 
-    Future<ResponseParent> sendComment(String did,content,uid,nickname,cid,replyUid,replyNickname) async{
+    Future<SendComment> sendComment(String fid,String did,String content,
+        String uid,String nickname,String replyUid,String replyNickname) async{
+        print(did);
+        print(nickname);
         var m = Map<String,dynamic>();
-        if (cid != null) { //回复评论
-            m["did"] = did;
-            m["cid"] = cid;
-            var innerM = Map<String,dynamic>();
-            innerM["uid"] = uid;
-            innerM["nickname"] = nickname;
-            innerM["nickname"] = nickname;
-        } else {//直接回复动态
-            m["did"] = did;
-            m["content"] = content;
-            m["uid"] = uid;
-            m["nickname"] = nickname;
-        }
+        m["fid"] = fid;
+        m["dId"] = did;
+        m["content"] = content;
+        m["uid"] = uid;
+        m["nickname"] = nickname;
+        m["replyuid"] = replyUid;
+        m["replyname"] = replyNickname;
         Response res = await dio.post("/comment/create",data: m);
-        return ResponseParent.fromJson(res.data);
+        return SendComment.fromJson(res.data);
     }
 
 

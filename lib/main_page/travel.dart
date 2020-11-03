@@ -16,7 +16,7 @@ class TravelPage extends State<Travel> {
   List<Data> datas = [];
 
   getData() async {
-    ConversationBean userBean = await SpUtils().getInt(SpUtils.uid).then((value) => Net().conversations(value.toString()));
+    ConversationBean userBean = await SpUtils().getString(SpUtils.uid).then((value) => Net().conversations(value.toString()));
     datas.clear();
     datas.addAll(userBean.data);
     setState(() {});

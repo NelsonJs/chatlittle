@@ -118,10 +118,10 @@ class CommentData {
 
   CommentData.fromJson(Map<String, dynamic> json) {
     comment =
-    json['Comment'] != null ? new Comment.fromJson(json['Comment']) : null;
-    if (json['Comments'] != null) {
+    json['comment'] != null ? new Comment.fromJson(json['comment']) : null;
+    if (json['comments'] != null) {
       comments = new List<Comment>();
-      json['Comments'].forEach((v) {
+      json['comments'].forEach((v) {
         comments.add(new Comment.fromJson(v));
       });
     }
@@ -130,17 +130,17 @@ class CommentData {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.comment != null) {
-      data['Comment'] = this.comment.toJson();
+      data['comment'] = this.comment.toJson();
     }
     if (this.comments != null) {
-      data['Comments'] = this.comments.map((v) => v.toJson()).toList();
+      data['comments'] = this.comments.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
 class Comment {
-  String commentId;
+  String dId;
   String cid;
   String fid;
   String pid;
@@ -151,10 +151,11 @@ class Comment {
   String replyname;
   int likenum;
   int status;
+  bool liked;
   int createTime;
 
   Comment(
-      {this.commentId,
+      {this.dId,
         this.cid,
         this.fid,
         this.pid,
@@ -165,10 +166,11 @@ class Comment {
         this.replyname,
         this.likenum,
         this.status,
+        this.liked,
         this.createTime});
 
   Comment.fromJson(Map<String, dynamic> json) {
-    commentId = json['commentId'];
+    dId = json['dId'];
     cid = json['cid'];
     fid = json['fid'];
     pid = json['pid'];
@@ -179,12 +181,13 @@ class Comment {
     replyname = json['replyname'];
     likenum = json['likenum'];
     status = json['status'];
+    liked = json['liked'];
     createTime = json['createTime'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['commentId'] = this.commentId;
+    data['dId'] = this.dId;
     data['cid'] = this.cid;
     data['fid'] = this.fid;
     data['pid'] = this.pid;
@@ -195,6 +198,7 @@ class Comment {
     data['replyname'] = this.replyname;
     data['likenum'] = this.likenum;
     data['status'] = this.status;
+    data['liked'] = this.liked;
     data['createTime'] = this.createTime;
     return data;
   }

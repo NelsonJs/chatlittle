@@ -125,7 +125,8 @@ class HomePageState extends State<HomePage> {
       setState(() {
         if (index == 3 || index == 4){//登录
           SpUtils().getString(SpUtils.uid).then((value){
-            if (value != null){
+            print("main-uid-->"+value);
+            if (value != null && value.isNotEmpty){
               curIndex = index;
             } else {
               Future fu = Navigator.push(context, MaterialPageRoute(builder: (context)=>Login()));

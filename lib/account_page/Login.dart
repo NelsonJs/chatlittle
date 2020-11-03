@@ -9,6 +9,7 @@ import 'package:littelchat/common/util/EventBus.dart';
 import 'package:littelchat/common/util/LoginModel.dart';
 import 'package:littelchat/common/util/Net.dart';
 import 'package:littelchat/common/util/SocketNet.dart';
+import 'package:littelchat/common/util/SpUtils.dart';
 import 'package:littelchat/common/widgets/SnackBackUtil.dart';
 import 'package:provider/provider.dart';
 
@@ -146,7 +147,9 @@ class LoginPage extends State<Login> {
                                                   if (value == null) return;
                                                   if (value.code == -1) {
                                                     _showSnackBar(c,value.msg);
-                                                  } else if (value.data.uid != null) {
+                                                  } else if (value.data.uid != null && value.data.uid.isNotEmpty) {
+                                                    SpUtils().saveString(SpUtils.uid, value.data.uid);
+                                                    SpUtils().saveString(SpUtils.userName, value.data.nickname);
                                                     bus.emit("login");
                                                     Navigator.pop(c);
                                                   }
