@@ -135,9 +135,20 @@ class NearDynicPage extends State<NearDynic> {
                                       ),
                                       Container(
                                         child: GestureDetector(
-                                          child: IconWidget(iconKeys[index],mData[index].liked == null ? Icons.favorite_border : mData[index].liked == 1 ? Icons.favorite : Icons.favorite_border,mData[index].likenum.toString()),
-                                          onTap: (){
-                                            iconKeys[index].currentState.setIconTxt(Icons.favorite, "52");
+                                          child: IconWidget(iconKeys[index],mData[index].liked == null ? Icons.favorite_border : mData[index].liked ? Icons.favorite : Icons.favorite_border,mData[index].likenum.toString()),
+                                          onTap: () async {
+                                             String uid = await SpUtils().getString(SpUtils.uid);
+                                             Net().likeDynamic(uid, mData[index].did).then((value){
+                                               mData[index].liked = value.data.liked;
+                                               mData[index].likenum = value.data.likeNum;
+                                               IconData icon;
+                                               if (mData[index].liked) {
+                                                 icon = Icons.favorite;
+                                               } else {
+                                                 icon = Icons.favorite_border;
+                                               }
+                                               iconKeys[index].currentState.setIconTxt(icon, mData[index].likenum.toString());
+                                             });
                                           },
                                         ),
                                         margin: EdgeInsets.only(right: 30,bottom: 10),

@@ -13,7 +13,6 @@ class IconWidget extends StatefulWidget {
 }
 
 class StateIconWidget extends State<IconWidget> {
-  var count = 1;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -29,11 +28,9 @@ class StateIconWidget extends State<IconWidget> {
   }
 
   void setIconTxt(IconData icon,String txt) {
-    count++;
-    print(count);
     setState(() {
         widget.iconData = icon;
-        widget.txt = "$count";
+        widget.txt = "$txt";
       });
   }
 }

@@ -32,7 +32,7 @@ class Data {
   int gender;
   int id;
   int lat;
-  int liked;
+  bool liked;
   int likenum;
   int lng;
   String location;

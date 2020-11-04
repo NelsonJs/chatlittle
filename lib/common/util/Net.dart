@@ -8,6 +8,8 @@ import 'package:littelchat/bean/ConversationBean.dart';
 import 'package:littelchat/bean/active_bean.dart';
 import 'package:littelchat/bean/comment.dart';
 import 'package:littelchat/bean/conversation-list.dart';
+import 'package:littelchat/bean/like-comment.dart';
+import 'package:littelchat/bean/like-dynamic.dart';
 import 'package:littelchat/bean/love_intro.dart';
 import 'package:littelchat/bean/near_nynamic.dart';
 import 'package:littelchat/bean/recoment_users.dart';
@@ -92,7 +94,10 @@ class Net {
     }
 
     Future<NearDynamic> nearDynamicList() async {
-        Response r = await dio.get("index/neardynamic");
+        var uid = await SpUtils().getString(SpUtils.uid);
+        var map = Map<String,dynamic>();
+        map["uid"] = uid;
+        Response r = await dio.get("index/neardynamic",queryParameters: map);
         print("nearDynamicList-->"+r.data.toString());
         return NearDynamic.fromJson(r.data);
     }
@@ -119,6 +124,26 @@ class Net {
         return SendComment.fromJson(res.data);
     }
 
+
+    Future<LikeComment> likeComment(String uid,String cid) async {
+        var m = Map<String,dynamic>();
+        m["uid"] = uid;
+        if (cid != null || cid != "") {
+            m["cid"] = cid;
+        }
+        Response res = await dio.post("/comment/like",data: m);
+        return LikeComment.fromJson(res.data);
+    }
+
+    Future<LikeDynamic> likeDynamic(String uid,String did) async {
+        var m = Map<String,dynamic>();
+        m["uid"] = uid;
+        if (did != null || did != "") {
+            m["did"] = did;
+        }
+        Response res = await dio.post("index/dynamic/like",data: m);
+        return LikeDynamic.fromJson(res.data);
+    }
 
     Future<LoveIntro> loveIntroList(int time) async {
         Response r = await dio.get("index/loveintrolist?t=time&limit=4");

@@ -136,8 +136,22 @@ class _DynamicDetailState extends State<DynamicDetail> {
                                           Column(
                                             crossAxisAlignment: CrossAxisAlignment.center,
                                             children: [
-                                              Icon(widget.data.comments[index].comment.liked == null ? Icons.favorite_border :
-                                              widget.data.comments[index].comment.liked ? Icons.favorite:Icons.favorite_border,color: Colors.grey[350],),
+                                              GestureDetector(
+                                                child: Icon(widget.data.comments[index].comment.liked == null ? Icons.favorite_border :
+                                                widget.data.comments[index].comment.liked ? Icons.favorite:Icons.favorite_border,color: Colors.grey[350],),
+                                                onTap: () async{
+                                                    String uid = await SpUtils().getString(SpUtils.uid);
+                                                    Net().likeComment(uid, widget.data.comments[index].comment.cid).then((value){
+                                                      if (value.code == 1) {
+                                                        setState(() {
+                                                          widget.data.comments[index].comment = value.data;
+                                                        });
+                                                      } else {
+                                                         _showSnackBar(context, value.msg);
+                                                      }
+                                                    });
+                                                },
+                                              ),
                                               Offstage(
                                                   offstage: widget.data.comments[index].comment.likenum == 0 ? true : false,
                                                   child: Text("${widget.data.comments[index].comment.likenum}",style: TextStyle(fontSize: 14,color: Colors.grey))
@@ -232,8 +246,17 @@ class _DynamicDetailState extends State<DynamicDetail> {
                                                                 GestureDetector(
                                                                   child: Icon(widget.data.comments[index].comments[i].liked == null ? Icons.favorite_border :
                                                                   widget.data.comments[index].comments[i].liked ? Icons.favorite:Icons.favorite_border,color: Colors.grey[350]),
-                                                                  onTap: () {
-
+                                                                  onTap: () async{
+                                                                    String uid = await SpUtils().getString(SpUtils.uid);
+                                                                    Net().likeComment(uid, widget.data.comments[index].comments[i].cid).then((value){
+                                                                      if (value.code == 1) {
+                                                                        setState(() {
+                                                                          widget.data.comments[index].comments[i] = value.data;
+                                                                        });
+                                                                      } else {
+                                                                        _showSnackBar(context, value.msg);
+                                                                      }
+                                                                    });
                                                                   },
                                                                 ),
                                                                 Offstage(
