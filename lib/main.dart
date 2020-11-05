@@ -103,8 +103,8 @@ class HomePageState extends State<HomePage> {
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.home,size: 20,),title: Text('首页',style: TextStyle(fontSize: 14),)),
           BottomNavigationBarItem(icon: Icon(Icons.train,size: 20),title: Text('出行',style: TextStyle(fontSize: 14))),
-          BottomNavigationBarItem(icon: Icon(Icons.people,size: 20),title: Text('对眼',style: TextStyle(fontSize: 14))),
-          BottomNavigationBarItem(icon: Icon(Icons.question_answer,size: 20),title: Text('老乡',style: TextStyle(fontSize: 14))),
+          BottomNavigationBarItem(icon: Image.asset("images/alove.png",width: 20,height: 20,),activeIcon:Image.asset("images/love.png",width: 20,height: 20,),title: Text('相亲',style: TextStyle(fontSize: 14))),
+          BottomNavigationBarItem(icon: Image.asset("images/msg.png",width: 20,height: 20,),activeIcon:Image.asset("images/amsg.png",width: 20,height: 20,),title: Text('信息',style: TextStyle(fontSize: 14))),
           BottomNavigationBarItem(icon: Icon(Icons.person_outline,size: 20),title: Text('我的',style: TextStyle(fontSize: 14))),
         ],
         currentIndex: curIndex,//设置该行会改变指示器的文字图案颜色
@@ -123,7 +123,7 @@ class HomePageState extends State<HomePage> {
 
   void onTapClick(int index) {
       setState(() {
-        if (index == 3 || index == 4){//登录
+        /*if (index == 3 || index == 4){//登录
           SpUtils().getString(SpUtils.uid).then((value){
             print("main-uid-->"+value);
             if (value != null && value.isNotEmpty){
@@ -143,7 +143,8 @@ class HomePageState extends State<HomePage> {
           });
       } else {
           curIndex = index;
-        }
+        }*/
+        curIndex = index;
       });
   }
 

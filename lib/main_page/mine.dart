@@ -65,7 +65,9 @@ class MinePage extends State<Mine> {
   void initState() {
     SpUtils().getString(SpUtils.userName).then((value){
       setState(() {
-        name = value;
+        if (value.isNotEmpty) {
+          name = value;
+        }
       });
     });
     super.initState();
@@ -76,11 +78,13 @@ class MinePage extends State<Mine> {
     return Scaffold(
       appBar: AppBar(
         title: Text('老乡',style: TextStyle(color: Colors.black87,fontSize: 16)),
-        elevation: 0.5,
+        elevation: 0,
       ),
     body: Container(
-      padding: EdgeInsets.fromLTRB(10, 15, 0, 10),
+      color: Colors.white,
+      padding: EdgeInsets.fromLTRB(16, 0, 0, 10),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
             margin: EdgeInsets.fromLTRB(0, 5, 13, 15),
@@ -89,8 +93,9 @@ class MinePage extends State<Mine> {
                 child: Row(
                   children: <Widget>[
                     GestureDetector(
-                      child: ClipOval(
-                        child: resultList.length == 0 ? Image.asset('images/p1.jpg',width: 30,height: 30,fit: BoxFit.cover) : Image.memory(uint8list,width: 30,height: 30,fit: BoxFit.cover)
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.only(topRight: Radius.circular(20),bottomLeft: Radius.circular(20),bottomRight: Radius.circular(20)),
+                        child: resultList.length == 0 ? Image.asset('images/p1.jpg',width: 100,height: 115,fit: BoxFit.cover) : Image.memory(uint8list,width: 60,height: 80,fit: BoxFit.cover)
                       ),
                       onTap: (){
                         loadAssets();
@@ -102,18 +107,45 @@ class MinePage extends State<Mine> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Container(
-                              padding: EdgeInsets.only(left: 5),
-                             child: Text('$name'),
-                             // child: Text("${context.watch<LoginModel>().accountBean.username}"),
+                              margin: EdgeInsets.only(left: 25),
+                              child: Row(
+                                children: [
+                                  Text('Justin Homeless',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500))
+                                ],
+                              ),
                             ),
                             Container(
-                              padding: EdgeInsets.only(left: 5),
-                              child: Text('18325984568',style: TextStyle(fontSize: 12,color: Colors.grey)),
-                            )
+                                margin: EdgeInsets.only(left: 25,top: 5),
+                                child: Text('个人资料 >',style: TextStyle(fontSize: 12,color: Colors.grey))
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(left: 25,top: 15),
+                              child:Row(
+                                children: [
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text('7',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500)),
+                                      Text('关注',style: TextStyle(fontSize: 10,color: Colors.grey))
+                                    ],
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(left: 30),
+                                      child:Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text('5',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500)),
+                                          Text('粉丝',style: TextStyle(fontSize: 10,color: Colors.grey))
+                                        ],
+                                      )
+                                  )
+                                ],
+                              )
+                            ),
+
                           ],
                         )
                     ),
-                    Icon(Icons.navigate_next)
                   ],
                 ),
                 onTap: (){
@@ -128,102 +160,77 @@ class MinePage extends State<Mine> {
                 },
               )
           ),
-          Divider(height: 1,color: Colors.grey[350]),
-          Padding(padding:  EdgeInsets.fromLTRB(0, 10, 16, 10),
+          Divider(height: 1,color: Colors.grey[300]),
+          Container(
+            margin: EdgeInsets.only(top: 20,left: 2),
+            child: Text('功能',style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500),),
+          ),
+          Container(margin:  EdgeInsets.fromLTRB(0, 10, 16, 10),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisSize: MainAxisSize.max,
                     children: <Widget>[
-                      Expanded(child: Row(
-                        children: <Widget>[
-                          Image.asset('images/dongtai.png',width: 30,height: 30),
-                          Padding(padding: EdgeInsets.only(left: 8),child: Text('我的动态'),)
+                      Column(
+                        children: [
+                          Image.asset('images/dongtai.png',width: 40,height: 40,fit: BoxFit.contain),
+                          Container(child: Text('动态',style: TextStyle(fontSize: 14,fontWeight: FontWeight.w400)),)
                         ],
-                      )),
-                      Row(
+                      ),
+                      Column(
                         children: <Widget>[
-                          Text('3条'),
-                          Padding(padding: EdgeInsets.only(left: 8),child:Image.asset('images/next.png'))
+                          Image.asset('images/likeme.png',width: 40,height: 40,fit: BoxFit.contain),
+                          Container(child: Text('点赞'),)
                         ],
-                      )
+                      ),
+                      Column(
+                        children: <Widget>[
+                          Image.asset('images/smile.png',width: 40,height: 40,fit: BoxFit.contain),
+                          Container(child: Text('心情'),)
+                        ],
+                      ),
+                      Column(
+                        children: <Widget>[
+                          Image.asset('images/comment.png',width: 35,height: 35,fit: BoxFit.contain),
+                          Container(child: Text('评论'),)
+                        ],
+                      ),
                     ],
                   )),
-          Divider(height: 1,color: Colors.grey[350]),
-          Padding(padding: EdgeInsets.fromLTRB(0, 10, 16, 10),
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(child: Row(
-                        children: <Widget>[
-                          Image.asset('images/active.png',width: 30,height: 30),
-                          Padding(padding: EdgeInsets.only(left: 8),child: Text('我的活动'),)
-                        ],
-                      )),
-                      Row(
-                        children: <Widget>[
-                          Text('7条'),
-                          Padding(padding: EdgeInsets.only(left: 8),child:Image.asset('images/next.png'))
-                        ],
-                      )
-                    ],
-                  )),
-          Divider(height: 1,color: Colors.grey[350]),
-          Padding(padding: EdgeInsets.fromLTRB(0, 10, 16, 10),
-            child: Row(
-            children: <Widget>[
-              Expanded(child: Row(
-                children: <Widget>[
-                  Image.asset('images/likeme.png',width: 30,height: 30),
-                  Padding(padding: EdgeInsets.only(left: 8),child: Text('喜欢我'),)
-                ],
-              )),
-              Row(
-                children: <Widget>[
-                  Text('23人'),
-                  Padding(padding: EdgeInsets.only(left: 8),child:Image.asset('images/next.png'))
-                ],
-              )
-            ],
-          ),),
-          Divider(height: 1,color: Colors.grey[350]),
-          Padding(padding: EdgeInsets.fromLTRB(0, 10, 16, 10),
-            child: Row(
-              children: <Widget>[
-                Expanded(child: Row(
-                  children: <Widget>[
-                    Image.asset('images/smile.png',width: 30,height: 30),
-                    Padding(padding: EdgeInsets.only(left: 8),child: Text('设置心情'),)
-                  ],
-                )),
-                Row(
-                  children: <Widget>[
-                    Text('未设置'),
-                    Padding(padding: EdgeInsets.only(left: 8),child:Image.asset('images/next.png'))
-                  ],
-                )
-              ],
-            ),),
-          Divider(height: 1,color: Colors.grey[350]),
-          Padding(padding: EdgeInsets.fromLTRB(0, 10, 16, 10),
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SettingPage()));
-              },
+          Container(
+            margin: EdgeInsets.only(top: 20,left: 2),
+            child: Text('通用',style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500),),
+          ),
+          Container(margin:  EdgeInsets.fromLTRB(0, 10, 16, 10),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
-                  Expanded(child: Row(
-                    children: <Widget>[
-                      Image.asset('images/setting.png',width: 30,height: 30),
-                      Padding(padding: EdgeInsets.only(left: 8),child: Text('设置'),)
+                  Column(
+                    children: [
+                      Image.asset('images/share.png',width: 40,height: 40,fit: BoxFit.contain),
+                      Container(child: Text('分享',style: TextStyle(fontSize: 14,fontWeight: FontWeight.w400)),)
                     ],
-                  )),
-                  Row(
+                  ),
+                  Column(
                     children: <Widget>[
-                      Padding(padding: EdgeInsets.only(left: 8),child:Image.asset('images/next.png'))
+                      Image.asset('images/setting.png',width: 40,height: 40,fit: BoxFit.contain),
+                      Container(child: Text('设置'),)
                     ],
+                  ),
+                  Placeholder(
+                    fallbackWidth: 40,
+                    fallbackHeight: 40,
+                    strokeWidth: 0,
+                    color: Colors.white,
+                  ),
+                  Placeholder(
+                    fallbackWidth: 40,
+                    fallbackHeight: 40,
+                    strokeWidth: 0,
+                    color: Colors.white,
                   )
                 ],
-              ),
-            )),
-          Divider(height: 1,color: Colors.grey[350]),
+              )),
         ],
       )
     ),
