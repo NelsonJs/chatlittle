@@ -40,25 +40,63 @@ class TravelPage extends State<Travel> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('老乡',style: TextStyle(color: Colors.black87,fontSize: 16)),
-        elevation: 0.5,
-        actions: <Widget>[
-          Center(
-            child: Padding(
-                padding: EdgeInsets.only(right: 10),
-                  child: GestureDetector(
-                    child: Icon(Icons.add),onTap: (){
-                      Navigator.push(context,MaterialPageRoute(builder: (context)=>Contact()));
-                  },
-            )),
-          )
-        ],
-      ),
       body: Container(
         color: Colors.white,
-
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              flexibleSpace: FlexibleSpaceBar(
+                title: Text('老乡',style: TextStyle(color: Colors.black87,fontSize: 16)),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Container(
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Text('自驾')
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Text('南昌---->福州'),
+                        Expanded(child: null),
+                        Text('更多 >  ')
+                      ],
+                    ),
+                    ListView.builder(
+                        itemBuilder: (context,index){
+                          return ziJiaItem();
+                      },
+                      itemCount: 2,
+                    )
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
       )
+    );
+  }
+
+  Widget ziJiaItem() {
+    return Stack(
+        children: [
+          Container(
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Text('凯迪拉克一辆'),
+                    Text('出行时间：15：20'),
+                  ]
+                )
+              ],
+            ),
+          )
+        ],
     );
   }
 
