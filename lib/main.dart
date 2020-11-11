@@ -66,13 +66,13 @@ class HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    SpUtils().getInt(SpUtils.uid).then((value){
+    SpUtils().getString(SpUtils.uid).then((value){
       {
         if (value == null)return;
-        if (value > 0){
+        if (int.parse(value) > 0){
           var params = Map();
           params["Cmd"] = "login";
-          params["Uid"] = value.toString();
+          params["Uid"] = value;
           params["content"] = "this is test txt";
           String s = jsonEncode(params);
           SocketNet.instance.getWebSocket().sink.add(s);
