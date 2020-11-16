@@ -98,7 +98,7 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     //getData();
-    return new Scaffold(
+    return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(icon: Icon(Icons.home,size: 20,),title: Text('首页',style: TextStyle(fontSize: 14),)),

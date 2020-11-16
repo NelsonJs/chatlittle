@@ -16,6 +16,7 @@ import 'package:littelchat/bean/recoment_users.dart';
 import 'package:littelchat/bean/resource_bean.dart';
 import 'package:littelchat/bean/respont_parent.dart';
 import 'package:littelchat/bean/send-comment.dart';
+import 'package:littelchat/bean/travel.dart';
 import 'package:littelchat/common/Global.dart';
 import 'package:littelchat/common/util/SpUtils.dart';
 
@@ -28,7 +29,7 @@ class Net {
     Options _options;
 
     static Dio dio = Dio(BaseOptions(
-      baseUrl: 'http://192.168.0.106:8080/',
+      baseUrl: 'http://192.168.1.7:8080/',
         connectTimeout: 5000,
         responseType: ResponseType.json
     ));
@@ -106,6 +107,12 @@ class Net {
         Response r = await dio.get("comment/list");
         print("getComments--->"+r.data.toString());
         return CommentBean.fromJson(r.data);
+    }
+
+    Future<TravelBean> getTravels() async {
+        Response r = await dio.get("travel/list");
+        print("getTravels--->"+r.data.toString());
+        return TravelBean.fromJson(r.data);
     }
 
     Future<SendComment> sendComment(String fid,String did,String content,
