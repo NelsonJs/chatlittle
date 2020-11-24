@@ -39,7 +39,8 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate
       ],
       supportedLocales: [
-        const Locale('en', 'US'), // English
+        const Locale('zh', 'CH'), // English
+        const Locale('en', 'US')
       ],
       home: HomePage(),
     );
