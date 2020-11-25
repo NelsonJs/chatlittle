@@ -12,7 +12,7 @@ class _StatePublishTravel extends State<PublishTravel>{
   List<String> travelCarTypes = [];
   List<String> driveMoneys = [];
   List<String> carTotalNum = [];
-  String startPlace = "出发地",endPlace = "目的地";
+  String startPlace = "出发地",endPlace = "目的地",selectTravelTime = "选择出行时间",selectTravelPlace = "选择集合地点";
 
   @override
   void initState() {
@@ -46,134 +46,171 @@ class _StatePublishTravel extends State<PublishTravel>{
           )
         ],
       ),
-      body: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _travelType(),
-              ],
-            ),
-            Offstage(
-              offstage: selectTravelTypeValue == "出行" ? false : true,
-              child: Container(
-                margin: EdgeInsets.only(left: 16),
-                color: Colors.white,
-                child: Column(
-                  children: [
-                    Row(
+      body: SingleChildScrollView(
+        child: Container(
+          color: Color(0xf2f4f5),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _travelType(),
+
+                ],
+              ),
+              Offstage(
+                  offstage: selectTravelTypeValue == "出行" ? false : true,
+                  child: Container(
+                    padding: EdgeInsets.only(left: 16),
+                    color: Colors.white,
+                    child: Column(
                       children: [
-                        Container(
-                          child: GestureDetector(
-                            child: Text("$startPlace"),
-                            onTap: (){
-                              _getLoc(1);
-                            },
-                          ),
-                        ),
-                        Text("    ------------>    "),
-                        Container(
-                            child: GestureDetector(
-                              child: Text("$endPlace"),
-                              onTap: (){
+                        Row(
+                          children: [
+                            FlatButton(
+                              color: Colors.grey,
+                              textColor: Colors.black87,
+                              height: 35,
+                              onPressed: (){
+                                _getLoc(1);
+                              }, //如果onPressed里面填null，则背景颜色会显示异常
+                              child:  Text("$startPlace",style: TextStyle(fontSize: 13)),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(4)),
+                                  side: BorderSide(style: BorderStyle.solid,color: Colors.white)
+                              ),),
+
+                            Text("    >    "),
+                            FlatButton(
+                              color: Colors.grey,
+                              textColor: Colors.black87,
+                              height: 35,
+                              onPressed: (){
                                 _getLoc(2);
-                              },
+                              }, //如果onPressed里面填null，则背景颜色会显示异常
+                              child:  Text("$endPlace",style: TextStyle(fontSize: 13)),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(4)),
+                                  side: BorderSide(style: BorderStyle.solid,color: Colors.white)
+                              ),),
+
+                            Expanded(child: Text("")),
+                            Container(
+                              child: _travelCarType(),
+                              margin: EdgeInsets.only(right: 16),
                             )
+                          ],
+                          crossAxisAlignment: CrossAxisAlignment.center,
                         ),
-                        Expanded(child: Text("")),
-                        Container(
-                          child: _travelCarType(),
-                          margin: EdgeInsets.only(right: 16),
+                        Offstage(
+                          offstage: selectCarTypeValue == "自驾" ? false : true,
+                          child: Container(
+                            margin: EdgeInsets.only(right: 16,top: 5),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("为方便识别，请输入车辆描述:",style: TextStyle(fontSize: 12,color: Colors.grey)),//汽车描述如：哈弗F7X 黑色 闽D8DJ21
+                                TextField(
+                                  decoration: InputDecoration(
+                                    hintText: "汽车描述如：哈弗F7X 黑色 闽D8DJ21",
+                                    hintStyle: TextStyle(color: Colors.grey,fontSize: 13),
+                                    contentPadding: EdgeInsets.all(0),
+                                    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey[300],width: 1),borderRadius: BorderRadius.all(Radius.circular(2))),
+                                    enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey[300],width: 1),borderRadius: BorderRadius.all(Radius.circular(2))),
+                                    disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey[300],width: 1),borderRadius: BorderRadius.all(Radius.circular(2))),
+                                  ),
+                                  textAlign: TextAlign.left,
+                                  keyboardType: TextInputType.phone,
+                                  maxLength: 15,
+                                ),
+                                Text("人数设置:",style: TextStyle(fontSize: 12,color: Colors.grey)),
+                                Row(
+                                  children: [
+                                    Container(
+                                      child: SizedBox.fromSize(
+                                        child: TextField(
+                                          decoration: InputDecoration(
+                                            hintText: "设置可搭载人数",
+                                            contentPadding: EdgeInsets.all(0),
+                                            hintStyle: TextStyle(color: Colors.grey,fontSize: 13),
+                                            focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey[300],width: 1),borderRadius: BorderRadius.all(Radius.circular(2))),
+                                            enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey[300],width: 1),borderRadius: BorderRadius.all(Radius.circular(2))),
+                                            disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey[300],width: 1),borderRadius: BorderRadius.all(Radius.circular(2))),
+                                          ),
+                                          textAlign: TextAlign.left,
+                                          keyboardType: TextInputType.phone,
+                                        ),
+                                        size: Size(100, 40),
+                                      ),
+                                      margin: EdgeInsets.only(bottom: 10),
+                                    ),
+                                    Text(" / "),
+                                    Container(
+                                      margin: EdgeInsets.only(bottom: 10),
+                                      child: SizedBox.fromSize(
+                                        child: TextField(
+                                          decoration: InputDecoration(
+                                            hintText: "设置总人数",
+                                            contentPadding: EdgeInsets.all(0),
+                                            hintStyle: TextStyle(color: Colors.grey,fontSize: 13),
+                                            focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey[300],width: 1),borderRadius: BorderRadius.all(Radius.circular(2))),
+                                            enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey[300],width: 1),borderRadius: BorderRadius.all(Radius.circular(2))),
+                                            disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey[300],width: 1),borderRadius: BorderRadius.all(Radius.circular(2))),
+                                          ),
+                                          textAlign: TextAlign.center,
+                                          keyboardType: TextInputType.phone,
+                                        ),
+                                        size: Size(100, 40),
+                                      ),
+                                    )
+                                  ],
+                                ),
+
+                                Row(
+                                  children: [
+                                    Text("资费标准：",style: TextStyle(color: Colors.grey,fontSize: 13)),
+                                    _driveMoneySelect(),
+                                  ],
+                                ),
+                                TextField(
+                                  decoration: InputDecoration(
+                                    hintText: "公告如：输入公告：例如:大家少带一点东西~",
+                                    hintStyle: TextStyle(color: Colors.grey,fontSize: 13),
+                                    contentPadding: EdgeInsets.all(0),
+                                    focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey[300],width: 1),borderRadius: BorderRadius.all(Radius.circular(2))),
+                                    enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey[300],width: 1),borderRadius: BorderRadius.all(Radius.circular(2))),
+                                    disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey[300],width: 1),borderRadius: BorderRadius.all(Radius.circular(2))),
+                                  ),
+                                  textAlign: TextAlign.left,
+                                  keyboardType: TextInputType.phone,
+                                  maxLines: 4,
+                                ),
+                                Container(
+                                    child: FlatButton(
+                                      color: Colors.grey,
+                                      textColor: Colors.black87,
+                                      height: 35,
+                                      onPressed: (){
+                                        _showDatePicker();
+                                      }, //如果onPressed里面填null，则背景颜色会显示异常
+                                      child:  Text("$selectTravelTime",style: TextStyle(fontSize: 13)),
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(Radius.circular(4)),
+                                          side: BorderSide(style: BorderStyle.solid,color: Colors.white)
+                                      ),)
+                                ),
+                              ],
+                            ),
+                          ),
                         )
                       ],
                     ),
-                    Offstage(
-                      offstage: selectCarTypeValue == "自驾" ? false : true,
-                      child: Container(
-                        margin: EdgeInsets.only(right: 16),
-                        child: Column(
-                          children: [
-                            TextField(
-                              decoration: InputDecoration(
-                                  hintText: "汽车描述如：哈弗F7X 黑色 闽D8DJ21",
-                                  hintStyle: TextStyle(
-                                      color: Colors.grey
-                                  )
-                              ),
-                              maxLength: 15,
-                            ),
-                            Row(
-                              children: [
-                                GestureDetector(
-                                  child: Text("选择出行时间"),
-                                  onTap: (){
-                                    _showDatePicker();
-                                  },
-                                ),
-                                GestureDetector(
-                                  child: Container(
-                                    child: Text("选择地点"),
-                                    margin: EdgeInsets.only(left: 20),
-                                  ),
-                                  onTap: (){
-                                      _getLoc(2);
-                                  },
-                                ),
-                              ],
-                            ),
-                            
-                            Row(
-                              children: [
-                                  Container(
-                                    margin: EdgeInsets.only(top: 15),
-                                    child: SizedBox.fromSize(
-                                      child: TextField(
-                                        decoration: InputDecoration(
-                                            hintText: "设置可搭载人数",
-                                            hintStyle: TextStyle(color: Colors.grey,fontSize: 13),
-                                        ),
-                                        textAlign: TextAlign.left,
-                                        keyboardType: TextInputType.phone,
-                                      ),
-                                      size: Size(100, 20),
-                                    ),
-                                  ),
-                                Text(" / "),
-                                Container(
-                                  margin: EdgeInsets.only(top: 15),
-                                  child: SizedBox.fromSize(
-                                    child: TextField(
-                                      decoration: InputDecoration(
-                                        hintText: "设置总人数",
-                                        hintStyle: TextStyle(color: Colors.grey,fontSize: 13),
-                                      ),
-                                      textAlign: TextAlign.center,
-                                      keyboardType: TextInputType.phone,
-                                    ),
-                                    size: Size(100, 20),
-                                  ),
-                                )
-                              ],
-                            ),
+                  )
+              ),
 
-                            Row(
-                              children: [
-                                Text('')
-                              ],
-                            )
-
-                          ],
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              )
-            ),
-
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -262,10 +299,10 @@ class _StatePublishTravel extends State<PublishTravel>{
   Widget _driveMoneySelect() {
     return DropdownButton<String>(
       value: selectMoneyType,
-      items: travelTypes.map<DropdownMenuItem<String>>((String value){
+      items: driveMoneys.map<DropdownMenuItem<String>>((String value){
         return DropdownMenuItem<String>(
           value: value,
-          child: Text(value),
+          child: Text(value,style: TextStyle(fontSize: 13)),
         );
       }).toList(),
       onChanged: (String value){
@@ -283,7 +320,7 @@ class _StatePublishTravel extends State<PublishTravel>{
         items: travelTypes.map<DropdownMenuItem<String>>((String value){
           return DropdownMenuItem<String>(
             value: value,
-            child: Text(value),
+            child: Text(value,style: TextStyle(fontSize: 13)),
           );
         }).toList(),
         onChanged: (String value){
@@ -301,7 +338,7 @@ class _StatePublishTravel extends State<PublishTravel>{
       items: travelCarTypes.map<DropdownMenuItem<String>>((String value){
         return DropdownMenuItem<String>(
           value: value,
-          child: Text(value),
+          child: Text(value,style: TextStyle(fontSize: 13)),
         );
       }).toList(),
       onChanged: (String value){
