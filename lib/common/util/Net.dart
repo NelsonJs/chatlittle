@@ -29,7 +29,7 @@ class Net {
     Options _options;
 
     static Dio dio = Dio(BaseOptions(
-      baseUrl: 'http://192.168.1.7:8080/',
+      baseUrl: 'http://192.168.1.3:8080/',
         connectTimeout: 5000,
         responseType: ResponseType.json
     ));
@@ -113,6 +113,11 @@ class Net {
         Response r = await dio.get("travel/list");
         print("getTravels--->"+r.data.toString());
         return TravelBean.fromJson(r.data);
+    }
+
+    Future<ResponseParent> publishTravel(Map<String,dynamic> params) async {
+        Response response = await dio.post("travel/publish",data: params);
+        return ResponseParent.fromJson(response.data);
     }
 
     Future<SendComment> sendComment(String fid,String did,String content,

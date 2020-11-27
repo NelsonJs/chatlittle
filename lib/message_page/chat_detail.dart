@@ -163,7 +163,7 @@ class ChatDetailPage extends State<ChatDetail> {
                     onPressed: (){
                       setState(() {
                         if (_controller.text == ""){
-                            SnackBarUtil('请输入内容');
+                            SnackBarUtil().showToast(context, _controller.text);
                             return;
                         }
                         var params = Map();

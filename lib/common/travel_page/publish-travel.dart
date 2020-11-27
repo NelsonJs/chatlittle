@@ -1,6 +1,8 @@
 import 'package:city_pickers/city_pickers.dart';
 import 'package:flutter/material.dart';
 import 'package:littelchat/bean/expand-bean.dart';
+import 'package:littelchat/common/util/Net.dart';
+import 'package:littelchat/common/widgets/SnackBackUtil.dart';
 
 class PublishTravel extends StatefulWidget {
   @override
@@ -13,6 +15,10 @@ class _StatePublishTravel extends State<PublishTravel>{
   List<String> driveMoneys = [];
   List<String> carTotalNum = [];
   String startPlace = "出发地",endPlace = "目的地",selectTravelTime = "选择出行时间",selectTravelPlace = "选择集合地点";
+  TextEditingController carDescController = TextEditingController();
+  TextEditingController curPeopleNumController = TextEditingController();
+  TextEditingController totalPeopleNumController = TextEditingController();
+  TextEditingController noticeController = TextEditingController();
 
   @override
   void initState() {
@@ -36,14 +42,42 @@ class _StatePublishTravel extends State<PublishTravel>{
       appBar: AppBar(
         elevation: 0.5,
         actions: [
-          GestureDetector(
-            child: Padding(
+          Builder(builder: (BuildContext c){
+            return GestureDetector(
+              child: Padding(
                 padding: EdgeInsets.only(right: 14),
                 child: Center(
                   child: Text('发布'),
                 ),
-            ),
-          )
+              ),
+              onTap: (){
+                var params = Map<String,dynamic>();
+                params["ttype"] = selectTravelTypeValue;
+                params["startloc"] = startPlace;
+                params["endloc"] = endPlace;
+                params["cartype"] = selectCarTypeValue;
+                params["curnum"] = curPeopleNumController.text.toString();
+                params["total"] = totalPeopleNumController.text.toString();
+                params["price"] = selectMoneyType;
+                if (hasSetDate && hasSetTime){
+                  params["starttime"] = "${_selectedDate.year}/${_selectedDate.month}/${_selectedDate.day} ${_selectedTime.hour}:${_selectedTime.minute}";
+                } else if (hasSetDate){
+                  params["starttime"] = "${_selectedDate.year}/${_selectedDate.month}/${_selectedDate.day}";
+                }
+                params["description"] = noticeController.text.toString();
+                if ("自驾" == selectCarTypeValue){
+                  params["car"] = carDescController.text.toString();
+                }
+                Net().publishTravel(params).then((value){
+                  if (value.code == 1){
+                    SnackBarUtil().showToast(c,"发布成功");
+                  } else {
+                    SnackBarUtil().showToast(c,"${value.msg}");
+                  }
+                });
+              },
+            );
+          })
         ],
       ),
       body: SingleChildScrollView(
@@ -123,6 +157,7 @@ class _StatePublishTravel extends State<PublishTravel>{
                                   textAlign: TextAlign.left,
                                   keyboardType: TextInputType.phone,
                                   maxLength: 15,
+                                  controller: carDescController,
                                 ),
                                 Text("人数设置:",style: TextStyle(fontSize: 12,color: Colors.grey)),
                                 Row(
@@ -131,7 +166,7 @@ class _StatePublishTravel extends State<PublishTravel>{
                                       child: SizedBox.fromSize(
                                         child: TextField(
                                           decoration: InputDecoration(
-                                            hintText: "设置可搭载人数",
+                                            hintText: "设置已搭载人数",
                                             contentPadding: EdgeInsets.all(0),
                                             hintStyle: TextStyle(color: Colors.grey,fontSize: 13),
                                             focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey[300],width: 1),borderRadius: BorderRadius.all(Radius.circular(2))),
@@ -140,6 +175,7 @@ class _StatePublishTravel extends State<PublishTravel>{
                                           ),
                                           textAlign: TextAlign.left,
                                           keyboardType: TextInputType.phone,
+                                          controller: curPeopleNumController,
                                         ),
                                         size: Size(100, 40),
                                       ),
@@ -160,6 +196,7 @@ class _StatePublishTravel extends State<PublishTravel>{
                                           ),
                                           textAlign: TextAlign.center,
                                           keyboardType: TextInputType.phone,
+                                          controller: totalPeopleNumController,
                                         ),
                                         size: Size(100, 40),
                                       ),
@@ -218,6 +255,7 @@ class _StatePublishTravel extends State<PublishTravel>{
 
   //调起日期选择器
   DateTime _selectedDate = DateTime.now(); //当前选中的日期
+  bool hasSetDate = false;
   _showDatePicker() {
     //获取异步方法里面的值的第一种方式：then
     showDatePicker(
@@ -232,6 +270,7 @@ class _StatePublishTravel extends State<PublishTravel>{
         if (selectedValue != null){
           //将选中的值传递出来
           this._selectedDate = selectedValue;
+          hasSetDate = true;
           _showTimePicker();
         }
       });
@@ -240,6 +279,7 @@ class _StatePublishTravel extends State<PublishTravel>{
 
   //调起时间选择器
   TimeOfDay _selectedTime = TimeOfDay.now(); //当前选中的时间
+  bool hasSetTime = false;
   _showTimePicker() async {
     // 获取异步方法里面的值的第二种方式：async+await
     //await的作用是等待异步方法showDatePicker执行完毕之后获取返回值
@@ -250,6 +290,7 @@ class _StatePublishTravel extends State<PublishTravel>{
     //将选中的值传递出来
     setState(() {
       if (result != null) {
+        hasSetTime = true;
         this._selectedTime = result;
       }
     });
