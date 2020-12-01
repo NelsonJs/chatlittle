@@ -1,5 +1,6 @@
 import 'package:city_pickers/city_pickers.dart';
 import 'package:flutter/material.dart';
+import 'package:littelchat/bean/constants.dart';
 import 'package:littelchat/bean/expand-bean.dart';
 import 'package:littelchat/common/util/Net.dart';
 import 'package:littelchat/common/widgets/SnackBackUtil.dart';
@@ -47,7 +48,7 @@ class _StatePublishTravel extends State<PublishTravel>{
               child: Padding(
                 padding: EdgeInsets.only(right: 14),
                 child: Center(
-                  child: Text('发布'),
+                  child: Text('${Constants.PUBLISH}'),
                 ),
               ),
               onTap: (){
@@ -65,12 +66,12 @@ class _StatePublishTravel extends State<PublishTravel>{
                   params["starttime"] = "${_selectedDate.year}/${_selectedDate.month}/${_selectedDate.day}";
                 }
                 params["description"] = noticeController.text.toString();
-                if ("自驾" == selectCarTypeValue){
+                if ("${Constants.SELF_DRIVING}" == selectCarTypeValue){
                   params["car"] = carDescController.text.toString();
                 }
                 Net().publishTravel(params).then((value){
                   if (value.code == 1){
-                    SnackBarUtil().showToast(c,"发布成功");
+                    SnackBarUtil().showToast(c,"${Constants.PUBLISH_SUCCESSFUL}");
                   } else {
                     SnackBarUtil().showToast(c,"${value.msg}");
                   }
@@ -94,7 +95,7 @@ class _StatePublishTravel extends State<PublishTravel>{
                 ],
               ),
               Offstage(
-                  offstage: selectTravelTypeValue == "出行" ? false : true,
+                  offstage: selectTravelTypeValue == "${Constants.GO_OUT}" ? false : true,
                   child: Container(
                     padding: EdgeInsets.only(left: 16),
                     color: Colors.white,
@@ -138,16 +139,16 @@ class _StatePublishTravel extends State<PublishTravel>{
                           crossAxisAlignment: CrossAxisAlignment.center,
                         ),
                         Offstage(
-                          offstage: selectCarTypeValue == "自驾" ? false : true,
+                          offstage: selectCarTypeValue == "${Constants.SELF_DRIVING}" ? false : true,
                           child: Container(
                             margin: EdgeInsets.only(right: 16,top: 5),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("为方便识别，请输入车辆描述:",style: TextStyle(fontSize: 12,color: Colors.grey)),//汽车描述如：哈弗F7X 黑色 闽D8DJ21
+                                Text("${Constants.CAR_DESC_LABEL}",style: TextStyle(fontSize: 12,color: Colors.grey)),
                                 TextField(
                                   decoration: InputDecoration(
-                                    hintText: "汽车描述如：哈弗F7X 黑色 闽D8DJ21",
+                                    hintText: "${Constants.CAR_DESC_HINT}",
                                     hintStyle: TextStyle(color: Colors.grey,fontSize: 13),
                                     contentPadding: EdgeInsets.all(0),
                                     focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey[300],width: 1),borderRadius: BorderRadius.all(Radius.circular(2))),
@@ -159,14 +160,14 @@ class _StatePublishTravel extends State<PublishTravel>{
                                   maxLength: 15,
                                   controller: carDescController,
                                 ),
-                                Text("人数设置:",style: TextStyle(fontSize: 12,color: Colors.grey)),
+                                Text("${Constants.PEOPLE_NUM_SET}",style: TextStyle(fontSize: 12,color: Colors.grey)),
                                 Row(
                                   children: [
                                     Container(
                                       child: SizedBox.fromSize(
                                         child: TextField(
                                           decoration: InputDecoration(
-                                            hintText: "设置已搭载人数",
+                                            hintText: "${Constants.SET_HAS_PEOPLE_NUM}",
                                             contentPadding: EdgeInsets.all(0),
                                             hintStyle: TextStyle(color: Colors.grey,fontSize: 13),
                                             focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey[300],width: 1),borderRadius: BorderRadius.all(Radius.circular(2))),
@@ -187,7 +188,7 @@ class _StatePublishTravel extends State<PublishTravel>{
                                       child: SizedBox.fromSize(
                                         child: TextField(
                                           decoration: InputDecoration(
-                                            hintText: "设置总人数",
+                                            hintText: "${Constants.SET_TOTAL_NUM}",
                                             contentPadding: EdgeInsets.all(0),
                                             hintStyle: TextStyle(color: Colors.grey,fontSize: 13),
                                             focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey[300],width: 1),borderRadius: BorderRadius.all(Radius.circular(2))),
@@ -206,13 +207,13 @@ class _StatePublishTravel extends State<PublishTravel>{
 
                                 Row(
                                   children: [
-                                    Text("资费标准：",style: TextStyle(color: Colors.grey,fontSize: 13)),
+                                    Text("${Constants.PRICE_LEVEL}",style: TextStyle(color: Colors.grey,fontSize: 13)),
                                     _driveMoneySelect(),
                                   ],
                                 ),
                                 TextField(
                                   decoration: InputDecoration(
-                                    hintText: "公告如：输入公告：例如:大家少带一点东西~",
+                                    hintText: "${Constants.NOTICE_HINT}",
                                     hintStyle: TextStyle(color: Colors.grey,fontSize: 13),
                                     contentPadding: EdgeInsets.all(0),
                                     focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey[300],width: 1),borderRadius: BorderRadius.all(Radius.circular(2))),

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:littelchat/bean/ConversationBean.dart';
+import 'package:littelchat/bean/constants.dart';
 import 'package:littelchat/bean/travel.dart';
 import 'package:littelchat/common/travel_page/publish-travel.dart';
 import 'package:littelchat/common/util/EventBus.dart';
@@ -247,7 +248,7 @@ class TravelPage extends State<Travel> {
                       children: [
                         Container(
                           margin: EdgeInsets.only(top: 10),
-                          child: Text('资费标准：',style: TextStyle(fontWeight: FontWeight.w500)),
+                          child: Text('${Constants.PRICE_LEVEL}',style: TextStyle(fontWeight: FontWeight.w500)),
                         ),
                         Container(
                           margin: EdgeInsets.only(top: 2),
@@ -260,7 +261,7 @@ class TravelPage extends State<Travel> {
                       color: Colors.blue,
                         textColor: Colors.white,
                         onPressed: (){},
-                        child:  Text('申请加入'),
+                        child:  Text('${Constants.APPLY_JOIN}'),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(4)),
                           side: BorderSide(style: BorderStyle.solid,color: Colors.white)

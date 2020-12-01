@@ -60,7 +60,7 @@ class TravelData {
 
 class Travels {
   String tid;
-  int ttype;
+  String ttype;
   String car;
   int carnum;
   String uid;
