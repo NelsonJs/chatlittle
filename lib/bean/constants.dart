@@ -11,4 +11,5 @@ class Constants {
   static const PRICE_LEVEL = "资费标准：";
   static const NOTICE_HINT = "公告如：输入公告：例如:大家少带一点东西~";
   static const APPLY_JOIN = "申请加入";
+  static const SUCCESSFUL = "成功";
 }

@@ -57,13 +57,13 @@ class _StatePublishTravel extends State<PublishTravel>{
                 params["startloc"] = startPlace;
                 params["endloc"] = endPlace;
                 params["cartype"] = selectCarTypeValue;
-                params["curnum"] = curPeopleNumController.text.toString();
-                params["total"] = totalPeopleNumController.text.toString();
+                params["curnum"] = int.parse(curPeopleNumController.text.toString());
+                params["total"] = int.parse(totalPeopleNumController.text.toString());
                 params["price"] = selectMoneyType;
                 if (hasSetDate && hasSetTime){
-                  params["starttime"] = "${_selectedDate.year}/${_selectedDate.month}/${_selectedDate.day} ${_selectedTime.hour}:${_selectedTime.minute}";
+                  params["starttime"] = _selectedDate.millisecond+_selectedTime.hour*60*60*1000+_selectedTime.minute*60*1000;
                 } else if (hasSetDate){
-                  params["starttime"] = "${_selectedDate.year}/${_selectedDate.month}/${_selectedDate.day}";
+                  params["starttime"] = _selectedDate.millisecond;
                 }
                 params["description"] = noticeController.text.toString();
                 if ("${Constants.SELF_DRIVING}" == selectCarTypeValue){
@@ -72,6 +72,7 @@ class _StatePublishTravel extends State<PublishTravel>{
                 Net().publishTravel(params).then((value){
                   if (value.code == 1){
                     SnackBarUtil().showToast(c,"${Constants.PUBLISH_SUCCESSFUL}");
+                    Navigator.pop(context,Constants.SUCCESSFUL);
                   } else {
                     SnackBarUtil().showToast(c,"${value.msg}");
                   }
@@ -156,7 +157,7 @@ class _StatePublishTravel extends State<PublishTravel>{
                                     disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey[300],width: 1),borderRadius: BorderRadius.all(Radius.circular(2))),
                                   ),
                                   textAlign: TextAlign.left,
-                                  keyboardType: TextInputType.phone,
+                                  keyboardType: TextInputType.text,
                                   maxLength: 15,
                                   controller: carDescController,
                                 ),
@@ -174,7 +175,7 @@ class _StatePublishTravel extends State<PublishTravel>{
                                             enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey[300],width: 1),borderRadius: BorderRadius.all(Radius.circular(2))),
                                             disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey[300],width: 1),borderRadius: BorderRadius.all(Radius.circular(2))),
                                           ),
-                                          textAlign: TextAlign.left,
+                                          textAlign: TextAlign.center,
                                           keyboardType: TextInputType.phone,
                                           controller: curPeopleNumController,
                                         ),
@@ -221,8 +222,9 @@ class _StatePublishTravel extends State<PublishTravel>{
                                     disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey[300],width: 1),borderRadius: BorderRadius.all(Radius.circular(2))),
                                   ),
                                   textAlign: TextAlign.left,
-                                  keyboardType: TextInputType.phone,
+                                  keyboardType: TextInputType.text,
                                   maxLines: 4,
+                                  controller: noticeController,
                                 ),
                                 Container(
                                     child: FlatButton(
@@ -293,6 +295,7 @@ class _StatePublishTravel extends State<PublishTravel>{
       if (result != null) {
         hasSetTime = true;
         this._selectedTime = result;
+        selectTravelTime = "${_selectedDate.year}-${_selectedDate.month}-${_selectedDate.day} ${_selectedTime.hour}:${_selectedTime.minute}";
       }
     });
   }

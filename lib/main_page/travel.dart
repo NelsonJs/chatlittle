@@ -34,6 +34,7 @@ class TravelPage extends State<Travel> {
       setState(() {
         hideLoading = true;
         if (value.code == 1) {
+          datas.clear();
           datas.addAll(value.data);
         } else {
           msg = value.msg;
@@ -58,8 +59,11 @@ class TravelPage extends State<Travel> {
             child: Center(
               child: Padding(padding: EdgeInsets.only(right: 14),child: Text('发布'),),
             ),
-            onTap: (){
-              Navigator.push(context,MaterialPageRoute(builder: (context)=>PublishTravel()));
+            onTap: () async {
+              var result = await Navigator.push(context,MaterialPageRoute(builder: (context)=>PublishTravel()));
+              if (result == Constants.SUCCESSFUL) {
+                _requestData();
+              }
             },
           )
         ],

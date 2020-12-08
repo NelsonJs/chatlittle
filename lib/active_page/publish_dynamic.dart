@@ -124,46 +124,48 @@ class DynamicState extends State<PublishDynamic> {
           )
         ],
       ),
-      body: showLoading ? Center(child: CupertinoActivityIndicator(radius: 15)) : Container(
-        color: Colors.white,
-        child: Column(
-          children: <Widget>[
-            Padding(
-                padding: EdgeInsets.fromLTRB(16, 3, 16, 3),
-                child: TextField(
-                  controller: titleController,
-                  maxLines: null,
-                  keyboardType: TextInputType.multiline,
-                  decoration: InputDecoration(
-                      hintText: '标题',
-                      border: InputBorder.none
-                  ),
-                )),
-            Divider(height: 1,color: Colors.grey[300]),
-            Center(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                    maxHeight: 120,
-                    minHeight: 120
-                ),
-                child: Padding(
+      body: showLoading ? Center(child: CupertinoActivityIndicator(radius: 15)) : SingleChildScrollView(
+        child: Container(
+          color: Colors.white,
+          child: Column(
+            children: <Widget>[
+              Padding(
                   padding: EdgeInsets.fromLTRB(16, 3, 16, 3),
                   child: TextField(
-                    controller: editingController,
+                    controller: titleController,
                     maxLines: null,
                     keyboardType: TextInputType.multiline,
                     decoration: InputDecoration(
-                        hintText: '这一刻的想法',
+                        hintText: '标题',
                         border: InputBorder.none
                     ),
                   )),
+              Divider(height: 1,color: Colors.grey[300]),
+              Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                      maxHeight: 120,
+                      minHeight: 120
+                  ),
+                  child: Padding(
+                      padding: EdgeInsets.fromLTRB(16, 3, 16, 3),
+                      child: TextField(
+                        controller: editingController,
+                        maxLines: null,
+                        keyboardType: TextInputType.multiline,
+                        decoration: InputDecoration(
+                            hintText: '这一刻的想法',
+                            border: InputBorder.none
+                        ),
+                      )),
+                ),
               ),
-            ),
-            Divider(height: 1,color: Colors.grey[300]),
-            Container(
-              child: buildGridView(),
-            ),
-          ],
+              Divider(height: 1,color: Colors.grey[300]),
+              Container(
+                child: buildGridView(),
+              ),
+            ],
+          ),
         ),
       )
     );
