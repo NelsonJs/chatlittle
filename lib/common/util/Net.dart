@@ -29,7 +29,7 @@ class Net {
     Options _options;
 
     static Dio dio = Dio(BaseOptions(
-      baseUrl: 'http://9394.cool:80/',
+      baseUrl: 'http://192.168.1.5:8080/',
         connectTimeout: 5000,
         responseType: ResponseType.json
     ));
@@ -133,6 +133,7 @@ class Net {
         m["replyuid"] = replyUid;
         m["replyname"] = replyNickname;
         Response res = await dio.post("/comment/create",data: m);
+        print(res.data);
         return SendComment.fromJson(res.data);
     }
 

@@ -6,6 +6,7 @@ import 'package:littelchat/common/util/SpUtils.dart';
 import 'package:littelchat/common/util/time-utils.dart';
 import 'package:littelchat/common/widgets/ImageWidget.dart';
 import 'package:littelchat/common/widgets/icon_widget.dart';
+import 'package:littelchat/common/widgets/text-empty-widget.dart';
 
 class DynamicDetail extends StatefulWidget {
   final String did;
@@ -24,7 +25,7 @@ class _DynamicDetailState extends State<DynamicDetail> {
 
   _showSnackBar(BuildContext context,String msg) {
     Scaffold.of(context).showSnackBar(SnackBar(
-      content: Text(msg),
+      content: TextEWidget(msg),
       duration: Duration(seconds: 1),
     ));
   }
@@ -36,7 +37,7 @@ class _DynamicDetailState extends State<DynamicDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            title: Text('详情',
+            title: TextEWidget('详情',
                 style: TextStyle(color: Colors.black87, fontSize: 16)),
             elevation: 0.5),
         body: Container(
@@ -52,7 +53,7 @@ class _DynamicDetailState extends State<DynamicDetail> {
                             children: [
                               Container(
                                 margin: EdgeInsets.only(top: 15,bottom: 15,left: 15,right: 15),
-                                child: Text(widget.data.title,style: TextStyle(fontSize: 16)),
+                                child: TextEWidget(widget.data.title,style: TextStyle(fontSize: 16)),
                               ),
                               Container(
                                   margin: EdgeInsets.only(left: 15,right: 15),
@@ -64,7 +65,7 @@ class _DynamicDetailState extends State<DynamicDetail> {
                                 children: <Widget>[
                                   Container(
                                     margin: EdgeInsets.only(top: 25,left: 15,right: 15),
-                                    child: Text(TimeUtils().chatTime(widget.data.createtime)),
+                                    child: TextEWidget(TimeUtils().chatTime(widget.data.createtime)),
                                   )
                                 ],
                               ),
@@ -97,22 +98,23 @@ class _DynamicDetailState extends State<DynamicDetail> {
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
                                               Container(
-                                                child: Text(widget.data.comments[index].comment.nickname,style: TextStyle(fontSize: 12,color: Colors.grey)),
+                                                child: TextEWidget(widget.data.comments[index].comment?.nickname,style: TextStyle(fontSize: 12,color: Colors.grey)),
                                                 margin: EdgeInsets.only(bottom: 3),
                                               ),
                                               Container(
-                                                child: Text(widget.data.comments[index].comment.content),
+                                                child: TextEWidget(widget.data.comments[index].comment?.content),
                                               ),
                                               Container(
                                                 child: Row(
                                                   crossAxisAlignment: CrossAxisAlignment.center,
                                                   children: [
                                                     Container(
-                                                      child: Text(TimeUtils().chatTime(widget.data.comments[index].comment.createTime),style: TextStyle(fontSize: 10,color: Colors.grey)),
+                                                      child: TextEWidget(TimeUtils().chatTime(widget.data.comments[index].comment?.createTime == null ? 0 : widget.data.comments[index].comment.createTime),
+                                                          style: TextStyle(fontSize: 10,color: Colors.grey)),
                                                     ),
                                                     GestureDetector(
                                                       child: Container(
-                                                        child: Text('回复',style: TextStyle(fontSize: 10,color: Colors.grey)),
+                                                        child: TextEWidget('回复',style: TextStyle(fontSize: 10,color: Colors.grey)),
                                                         margin: EdgeInsets.only(left: 20),
                                                       ),
                                                       onTap: () async {
@@ -137,11 +139,11 @@ class _DynamicDetailState extends State<DynamicDetail> {
                                             crossAxisAlignment: CrossAxisAlignment.center,
                                             children: [
                                               GestureDetector(
-                                                child: Icon(widget.data.comments[index].comment.liked == null ? Icons.favorite_border :
+                                                child: Icon(widget.data.comments[index].comment?.liked == null ? Icons.favorite_border :
                                                 widget.data.comments[index].comment.liked ? Icons.favorite:Icons.favorite_border,color: Colors.grey[350],),
                                                 onTap: () async{
                                                     String uid = await SpUtils().getString(SpUtils.uid);
-                                                    Net().likeComment(uid, widget.data.comments[index].comment.cid).then((value){
+                                                    Net().likeComment(uid, widget.data.comments[index].comment?.cid).then((value){
                                                       if (value.code == 1) {
                                                         setState(() {
                                                           widget.data.comments[index].comment = value.data;
@@ -153,8 +155,8 @@ class _DynamicDetailState extends State<DynamicDetail> {
                                                 },
                                               ),
                                               Offstage(
-                                                  offstage: widget.data.comments[index].comment.likenum == 0 ? true : false,
-                                                  child: Text("${widget.data.comments[index].comment.likenum}",style: TextStyle(fontSize: 14,color: Colors.grey))
+                                                  offstage: widget.data.comments[index].comment?.likenum == 0 ? true : false,
+                                                  child: TextEWidget("${widget.data.comments[index].comment?.likenum}",style: TextStyle(fontSize: 14,color: Colors.grey))
                                               )
                                             ],
                                           )
@@ -201,26 +203,26 @@ class _DynamicDetailState extends State<DynamicDetail> {
                                                                 Container(
                                                                   child: Row(
                                                                       children: [
-                                                                        Text(widget.data.comments[index].comments[i].nickname,style: TextStyle(fontSize: 12,color: Colors.grey)),
-                                                                        Text(' @ ',style: TextStyle(fontSize: 12,color: Colors.grey)),
-                                                                        Text(widget.data.comments[index].comments[i].replyname,style: TextStyle(fontSize: 12,color: Colors.grey)),
+                                                                        TextEWidget(widget.data.comments[index].comments[i]?.nickname,style: TextStyle(fontSize: 12,color: Colors.grey)),
+                                                                        TextEWidget(' @ ',style: TextStyle(fontSize: 12,color: Colors.grey)),
+                                                                        TextEWidget(widget.data.comments[index].comments[i]?.replyname,style: TextStyle(fontSize: 12,color: Colors.grey)),
                                                                       ]
                                                                   ),
                                                                   margin: EdgeInsets.only(bottom: 3),
                                                                 ),
                                                                 Container(
-                                                                  child: Text(widget.data.comments[index].comments[i].content),
+                                                                  child: TextEWidget(widget.data.comments[index].comments[i]?.content),
                                                                 ),
                                                                 Container(
                                                                   child: Row(
                                                                     crossAxisAlignment: CrossAxisAlignment.center,
                                                                     children: [
                                                                       Container(
-                                                                        child: Text(TimeUtils().chatTime(widget.data.comments[index].comments[i].createTime),style: TextStyle(fontSize: 10,color: Colors.grey)),
+                                                                        child: TextEWidget(TimeUtils().chatTime(widget.data.comments[index].comments[i]?.createTime),style: TextStyle(fontSize: 10,color: Colors.grey)),
                                                                       ),
                                                                       GestureDetector(
                                                                         child: Container(
-                                                                          child: Text('回复',style: TextStyle(fontSize: 10,color: Colors.grey)),
+                                                                          child: TextEWidget('回复',style: TextStyle(fontSize: 10,color: Colors.grey)),
                                                                           margin: EdgeInsets.only(left: 20),
                                                                         ),
                                                                         onTap: () async {
@@ -244,11 +246,11 @@ class _DynamicDetailState extends State<DynamicDetail> {
                                                               crossAxisAlignment: CrossAxisAlignment.center,
                                                               children: [
                                                                 GestureDetector(
-                                                                  child: Icon(widget.data.comments[index].comments[i].liked == null ? Icons.favorite_border :
+                                                                  child: Icon(widget.data.comments[index].comments[i]?.liked == null ? Icons.favorite_border :
                                                                   widget.data.comments[index].comments[i].liked ? Icons.favorite:Icons.favorite_border,color: Colors.grey[350]),
                                                                   onTap: () async{
                                                                     String uid = await SpUtils().getString(SpUtils.uid);
-                                                                    Net().likeComment(uid, widget.data.comments[index].comments[i].cid).then((value){
+                                                                    Net().likeComment(uid, widget.data.comments[index].comments[i]?.cid).then((value){
                                                                       if (value.code == 1) {
                                                                         setState(() {
                                                                           widget.data.comments[index].comments[i] = value.data;
@@ -260,8 +262,8 @@ class _DynamicDetailState extends State<DynamicDetail> {
                                                                   },
                                                                 ),
                                                                 Offstage(
-                                                                  offstage: widget.data.comments[index].comments[i].likenum == 0 ? true : false,
-                                                                  child: Text("${widget.data.comments[index].comments[i].likenum}",style: TextStyle(fontSize: 14,color: Colors.grey))
+                                                                  offstage: widget.data.comments[index].comments[i]?.likenum == 0 ? true : false,
+                                                                  child: TextEWidget("${widget.data.comments[index].comments[i]?.likenum}",style: TextStyle(fontSize: 14,color: Colors.grey))
                                                                 )
                                                               ],
                                                             )
@@ -301,58 +303,61 @@ class _DynamicDetailState extends State<DynamicDetail> {
                             disabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.white,width: 1),borderRadius: BorderRadius.all(Radius.circular(4))),
                           ),
                         )),
-                        GestureDetector(
-                          child: Container(
-                            margin: EdgeInsets.only(right: 15),
-                            child: Text('评论',style: TextStyle(fontSize: 14,color: Colors.blue),),
-                          ),
-                          onTap: () {
-                            if (mReplyUid.isEmpty) {
-                              SpUtils().getString(SpUtils.uid).then((uid) {
-                                print("uid--->"+uid);
-                                SpUtils().getString(SpUtils.userName).then((name) =>
-                                    Net().sendComment(null, widget.data.did, sendC.text, uid, name, null, null).then((value){
+                        Builder(builder: (context){
+                          return GestureDetector(
+                            child: Container(
+                              margin: EdgeInsets.only(right: 15),
+                              child: TextEWidget('评论',style: TextStyle(fontSize: 14,color: Colors.blue),),
+                            ),
+                            onTap: () {
+                              if (mReplyUid.isEmpty) {
+                                print("coming");
+                                SpUtils().getString(SpUtils.uid).then((uid) {
+                                  print("uid--->"+uid);
+                                  SpUtils().getString(SpUtils.userName).then((name) =>
+                                      Net().sendComment(null, widget.data.did, sendC.text, uid, name, null, null).then((value){
+                                        setState(() {
+                                          var cData = CommentData();
+                                          cData.comment = value.data;
+                                          widget.data.comments.add(cData);
+                                          sendC.text = "";
+                                          focusNode.unfocus();
+                                        });
+                                      })
+                                  );
+                                });
+                              } else {
+                                Net().sendComment(mFid, widget.data.did, sendC.text, mUid, mNickname,
+                                    mReplyUid,mReplyName).then((value) {
+                                  if (value.code == 1) {
+                                    if (widget.data.comments[mIndex].comments == null) {
+                                      List<Comment> comments = [];
                                       setState(() {
-                                        var cData = CommentData();
-                                        cData.comment = value.data;
-                                        widget.data.comments.add(cData);
-                                        sendC.text = "";
-                                        focusNode.unfocus();
+                                        comments.add(value.data);
+                                        widget.data.comments[mIndex].comments = comments;
                                       });
-                                    })
-                                );
-                              });
-                            } else {
-                              Net().sendComment(mFid, widget.data.did, sendC.text, mUid, mNickname,
-                                  mReplyUid,mReplyName).then((value) {
-                                if (value.code == 1) {
-                                  if (widget.data.comments[mIndex].comments == null) {
-                                    List<Comment> comments = [];
-                                    setState(() {
-                                      comments.add(value.data);
-                                      widget.data.comments[mIndex].comments = comments;
-                                    });
+                                    } else {
+                                      setState(() {
+                                        widget.data.comments[mIndex].comments.add(value.data);
+                                      });
+                                    }
                                   } else {
-                                    setState(() {
-                                      widget.data.comments[mIndex].comments.add(value.data);
-                                    });
+                                    _showSnackBar(context, value.msg);
                                   }
-                                } else {
-                                  _showSnackBar(context, value.msg);
-                                }
-                                mFid = "";
-                                mUid = "";
-                                mNickname = "";
-                                mReplyUid = "";
-                                mReplyName = "";
-                                mIndex = -1;
-                                sendC.text = "";
-                                focusNode.unfocus();
-                              });
-                            }
+                                  mFid = "";
+                                  mUid = "";
+                                  mNickname = "";
+                                  mReplyUid = "";
+                                  mReplyName = "";
+                                  mIndex = -1;
+                                  sendC.text = "";
+                                  focusNode.unfocus();
+                                });
+                              }
 
-                          },
-                        )
+                            },
+                          );
+                        })
                       ],
                     ),
 
