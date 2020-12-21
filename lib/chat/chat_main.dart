@@ -92,7 +92,7 @@ class _StateChatMain extends State<ChatMain> {
                         ),
                         onTap: () async {
                           final content = await Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatDetail(selfUid: int.parse(mData[index].uid),
-                            identifier: mData[index].peerid,nickName: mData[index].peerid,ctype: mData[index].ctype,)));
+                            identifier: mData[index].peerid,nickName: mData[index].nickname,ctype: mData[index].ctype,)));
                           setState(() {
                             mData[mData.length-1].content = content;
                           });

@@ -56,10 +56,24 @@ class ItemSelfText extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Expanded(child: Padding(
-                      padding: EdgeInsets.fromLTRB(45, 10, 10, 0),
-                      child: Align(alignment: Alignment.topRight,child: Text(txt),),
-                    )),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Offstage(
+                          child: Align(
+                            child: CupertinoActivityIndicator(radius: 8),
+                          ),
+                          offstage: true,
+                        ),
+                        Container(
+                          child: Container(child: Text(txt,style: TextStyle(color: Colors.white)),constraints: BoxConstraints(maxWidth: 200),),
+                          margin: EdgeInsets.only(right: 10,left: 5),
+                          padding: EdgeInsets.all(5),
+                          alignment: Alignment.centerRight,
+                          decoration: BoxDecoration(color: Colors.blue,shape: BoxShape.rectangle,borderRadius: BorderRadius.all(Radius.circular(4))),
+                        ),
+                      ],
+                    ),
                   GestureDetector(
                     child: CircleAvatar(
                       backgroundImage: AssetImage('images/p1.jpg'),

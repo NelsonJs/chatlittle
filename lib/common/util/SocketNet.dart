@@ -2,7 +2,7 @@ import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class SocketNet{
-  WebSocketChannel _channel = IOWebSocketChannel.connect('ws://192.168.1.5:6767/serveWs');
+  WebSocketChannel _channel = IOWebSocketChannel.connect('ws://192.168.1.5:7979/serveWs');
 
   factory SocketNet() => _getInstance();
   static SocketNet get instance => _getInstance();

@@ -24,6 +24,7 @@ class ChatDetail extends StatefulWidget {
 
 class ChatDetailPage extends State<ChatDetail> {
   int selfUid = 0;
+  String selfName = "";
   String otherName = "";
   String otherUid;
   String ctype = "";
@@ -52,13 +53,16 @@ class ChatDetailPage extends State<ChatDetail> {
     super.initState();
     getNetData();
     bus.on("msg", (arg) {
+     // print(arg);
       MessageBean b = arg;
-      Data d = Data(content: b.content,uid: b.sendId,peerid: b.receiveId);
+      print(b.content);
+      Data d = Data(content: b.content,uid: b.sendId,peerid: b.receiveId,msgType: b.msgType);
       data.insert(0, d);
       scrollController.animateTo(0, duration: Duration(milliseconds: 500), curve: Curves.ease);
       setState(() {
       });
     });
+    SpUtils().getString(SpUtils.userName).then((value) => selfName = value);
   }
 
   @override
@@ -101,16 +105,22 @@ class ChatDetailPage extends State<ChatDetail> {
                           shrinkWrap: true,
                           reverse: true,
                           itemBuilder: (context,index){
-//                            if (index == 2){
-//                              return Image1();
-//                            } else {
-//                              return Item(data[index].name);
-//                            }
-                          if (int.parse(data[index].uid) == 100){
-                              return ItemSelfText(data[index].content);
-                          } else {
-                            return ItemOtherText(txt: data[index].content,name: otherName);
-                          }
+                            if (data[index].msgType == 1){
+                              print('msgtype = 1');
+                              return Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text('${data[index].content}',style: TextStyle(fontSize: 12,color: Colors.grey),)
+                                ],
+                              );
+                            } else {
+                              if (int.parse(data[index].uid) == 100){
+                                return ItemSelfText(data[index].content);
+                              } else {
+                                return ItemOtherText(txt: data[index].content,name: otherName);
+                              }
+                            }
+
                             //return ItemSelfText(data[index].name);
                           }
                       ),
@@ -169,11 +179,12 @@ class ChatDetailPage extends State<ChatDetail> {
                         var params = Map();
                         params["Cmd"] = "send";
                         params["Ctype"] = ctype;
-                        print(ctype);
                         params["Uid"] = selfUid.toString();
+                        params["Nickname"] = selfName;
+                        print(selfName);
                         params["PeerUid"] = otherUid;
                         params["Content"] = _controller.text;
-                        params["MsgType"] = 1;
+                        params["MsgType"] = 2;
                         params["AppId"] = 1;
                         String s = jsonEncode(params);
                         SocketNet.instance.getWebSocket().sink.add(s);

@@ -80,12 +80,9 @@ class HomePageState extends State<HomePage> {
         }}
     });
     _channel.stream.listen((event) {
-      print(event);
+      //print(event);
       Map<String,dynamic> d = jsonDecode(event);
-      if (d['MsgType'] == 0) {
-        bus.emit("msg",MessageBean.fromJson(d));
-      }
-
+      bus.emit("msg",MessageBean.fromJson(d));
     });
   }
 
@@ -124,9 +121,9 @@ class HomePageState extends State<HomePage> {
 
   void onTapClick(int index) {
       setState(() {
-        /*if (index == 3 || index == 4){//登录
+        if (index == 3 || index == 4){//登录
           SpUtils().getString(SpUtils.uid).then((value){
-            print("main-uid-->"+value);
+            print(value);
             if (value != null && value.isNotEmpty){
               curIndex = index;
             } else {
@@ -144,8 +141,7 @@ class HomePageState extends State<HomePage> {
           });
       } else {
           curIndex = index;
-        }*/
-        curIndex = index;
+        }
       });
   }
 

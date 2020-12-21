@@ -35,11 +35,10 @@ class SpUtils {
   }
 
   Future clear() async {
-    bool one = await saveString(userName, null);
-    bool two = await saveString(phone, null);
-
-    bool three = await saveInt(uid, null);
-    return one && two && three;
+    SharedPreferences sp = await _sp;
+    bool b = await sp.clear();
+    print("------${sp.getString("uid")}");
+    return b;
   }
 
 }

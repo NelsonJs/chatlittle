@@ -9,6 +9,7 @@ import 'package:littelchat/bean/AccountBea.dart';
 import 'package:littelchat/chat/PersonDetail.dart';
 import 'package:littelchat/common/Global.dart';
 import 'package:littelchat/common/setting.dart';
+import 'package:littelchat/common/util/EventBus.dart';
 import 'package:littelchat/common/util/LoginModel.dart';
 import 'package:littelchat/common/util/Net.dart';
 import 'package:littelchat/common/util/SpUtils.dart';
@@ -71,6 +72,15 @@ class MinePage extends State<Mine> {
       });
     });
     super.initState();
+    bus.on("login", (arg) {
+      SpUtils().getString(SpUtils.userName).then((value){
+        setState(() {
+          if (value.isNotEmpty) {
+            name = value;
+          }
+        });
+      });
+    });
   }
 
   @override
@@ -110,7 +120,7 @@ class MinePage extends State<Mine> {
                               margin: EdgeInsets.only(left: 25),
                               child: Row(
                                 children: [
-                                  Text('Justin Homeless',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500))
+                                  Text(name,style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500))
                                 ],
                               ),
                             ),
@@ -211,11 +221,16 @@ class MinePage extends State<Mine> {
                       Container(child: Text('分享',style: TextStyle(fontSize: 14,fontWeight: FontWeight.w400)),)
                     ],
                   ),
-                  Column(
-                    children: <Widget>[
-                      Image.asset('images/setting.png',width: 40,height: 40,fit: BoxFit.contain),
-                      Container(child: Text('设置'),)
-                    ],
+                  GestureDetector(
+                    child: Column(
+                      children: <Widget>[
+                        Image.asset('images/setting.png',width: 40,height: 40,fit: BoxFit.contain),
+                        Container(child: Text('设置'),)
+                      ],
+                    ),
+                    onTap: (){
+                      Navigator.push(context,MaterialPageRoute(builder: (context)=>SettingPage()));
+                    },
                   ),
                   Placeholder(
                     fallbackWidth: 40,

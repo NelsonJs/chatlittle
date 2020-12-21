@@ -12,4 +12,7 @@ class Constants {
   static const NOTICE_HINT = "公告如：输入公告：例如:大家少带一点东西~";
   static const APPLY_JOIN = "申请加入";
   static const SUCCESSFUL = "成功";
+  static const MODIFY_PWD = "修改密码";
+  static const LOGOUT = "退出";
+  static const SETTING = "设置";
 }
