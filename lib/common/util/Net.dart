@@ -72,7 +72,7 @@ class Net {
             SpUtils().saveString(SpUtils.phone, Global.accountBean.data.phone);
             SpUtils().saveInt(SpUtils.gender, Global.accountBean.data.gender);
         }
-        print(r.data);
+        print(">>>>>>>>>>>>>${r.data}");
         return Global.accountBean;
     }
 

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:littelchat/account_page/Login.dart';
+import 'package:littelchat/account_page/account-page.dart';
 import 'package:littelchat/account_page/modify_self_info.dart';
 import 'package:littelchat/bean/AccountBea.dart';
 import 'package:littelchat/chat/PersonDetail.dart';
@@ -126,7 +127,12 @@ class MinePage extends State<Mine> {
                             ),
                             Container(
                                 margin: EdgeInsets.only(left: 25,top: 5),
-                                child: Text('个人资料 >',style: TextStyle(fontSize: 12,color: Colors.grey))
+                                child: GestureDetector(
+                                  child: Text('个人资料 >',style: TextStyle(fontSize: 12,color: Colors.grey)),
+                                  onTap: (){
+                                    Navigator.push(context, MaterialPageRoute(builder: (context)=>AccountPage()));
+                                  },
+                                )
                             ),
                             Container(
                               margin: EdgeInsets.only(left: 25,top: 15),

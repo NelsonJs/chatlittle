@@ -187,6 +187,7 @@ class ChatDetailPage extends State<ChatDetail> {
                         params["MsgType"] = 2;
                         params["AppId"] = 1;
                         String s = jsonEncode(params);
+                        print(s);
                         SocketNet.instance.getWebSocket().sink.add(s);
                         data.insert(0, generateData(selfUid.toString(), otherUid, _controller.text));
                         scrollController.animateTo(0, duration: Duration(milliseconds: 500), curve: Curves.ease);
