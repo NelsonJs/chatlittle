@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:littelchat/account_page/account-page.dart';
 import 'package:littelchat/active_page/publish_dynamic.dart';
 import 'package:littelchat/bean/near_nynamic.dart';
 import 'package:littelchat/common/util/Net.dart';
 import 'package:littelchat/common/util/SpUtils.dart';
+import 'package:littelchat/common/util/hex-color.dart';
 import 'package:littelchat/common/util/time-utils.dart';
 import 'package:littelchat/common/widgets/ImageWidget.dart';
 import 'package:littelchat/common/widgets/icon_widget.dart';
@@ -20,11 +23,25 @@ class NearDynicPage extends State<NearDynic> {
   bool hideLoading = true;
   var iconKeys = <int,GlobalKey<StateIconWidget>>{};
   var fieldMap = <int,bool>{};
+  var dropItems = [DropdownMenuItem(child: Text('谢家滩'),value: "谢家滩")];
+
+  DateTime _dateTime;
+
+  int page = 0;
+  int limit = 10;
+
+  // 获取更多信息
+  String get _infoTextStr {
+    _dateTime = DateTime.now();
+    String fillChar = _dateTime.minute < 10 ? "0" : "";
+    return "更新时间:${_dateTime.hour}:$fillChar${_dateTime.minute}";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('老乡',style: TextStyle(color: Colors.black87,fontSize: 16)),
+        title: DropdownButton(items: dropItems,icon: Icon(Icons.arrow_right),underline: Container(height: 0,),hint: Text('谢家滩',style: TextStyle(fontSize: 14),),),
         elevation: 0.5,
           actions: <Widget>[
             Center(
@@ -43,97 +60,169 @@ class NearDynicPage extends State<NearDynic> {
             )
           ]
       ),
-      body: FutureBuilder<NearDynamic>(
-          future: Net().nearDynamicList(),
-          builder: (context,snapshot){
-            if (snapshot.connectionState == ConnectionState.done){
-                if (snapshot.hasError){
-                  return Center(
-                    child: Text('服务器出错${snapshot.error.toString()}'),
-                  );
-                } else {
-                  if (snapshot.data.data != null) {
-                    mData.clear();
-                    mData.addAll(snapshot.data.data);
-                  }
-                  return ConstrainedBox(constraints: BoxConstraints.expand(),
-                   child: Stack(
-                    alignment: Alignment.center,
-                    children: <Widget>[
-                      ListView.builder(
-                          itemCount: mData.length,
-                          itemBuilder: (context,index) {
-                            Widget w;
-                            if (mData[index].resimg != null && mData[index].resimg.length > 0){
-                              w = img(mData[index].resimg);
-                            } else {
-                              w = empty();
-                            }
-                            if (!iconKeys.containsKey(index)) {
-                              iconKeys[index] = GlobalKey();
-                            }
-                            return Container(
-                              color: Colors.white,
-                              padding: EdgeInsets.fromLTRB(16, 20, 10, 0),
-                              child:Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Row(
-                                    children: <Widget>[
-                                      ClipOval(
-                                        child: mData[index].avatar == null ? Image.asset((mData[index].gender == 1 ? "images/boy.png":"images/girl.png"),width: 40,height: 40) :
+      body: EasyRefresh.custom(
+        header: ClassicalHeader(
+          refreshedText: "刷新完成",
+          refreshingText: "正在刷新..",
+          refreshText: "下拉刷新",
+          refreshReadyText: "松开刷新",
+          infoText: _infoTextStr
+        ),
+        /*footer: ClassicalFooter(
+          loadText: "上拉加载",
+          loadReadyText: "松开加载",
+          loadedText: "加载完成",
+          loadingText: "正在加载",
+          noMoreText: "没有更多内容啦~",
+          infoText: _infoTextStr
+        ),*/
+        firstRefresh: true,
+        firstRefreshWidget: Container(
+          width: double.infinity,
+          height: double.infinity,
+          child: Center(
+            child: SizedBox(
+              height: 200,
+              width: 300,
+              child: CupertinoActivityIndicator(radius: 8,),
+            ),
+          ),
+        ),
+        onRefresh: () async {
+          page = 0;
+          NearDynamic nd = await Net().nearDynamicList(page,limit);
+          if (nd != null) {
+            setState(() {
+              mData.clear();
+              mData.addAll(nd.data);
+            });
+          }
+        },
+        onLoad: () async {
+          await Future.delayed(Duration(seconds: 2), () {
+            if (mounted) {
+
+            }
+          });
+          /*page ++;
+          NearDynamic nd = await Net().nearDynamicList(page,limit);
+          if (nd != null) {
+            setState(() {
+             // mData.addAll(nd.data);
+            });
+          }*/
+        },
+         slivers: [
+           SliverList(
+               delegate: SliverChildBuilderDelegate((context,index){
+                 Widget w;
+                 if (mData[index].resimg != null && mData[index].resimg.length > 0){
+                   w = img(mData[index].resimg);
+                 } else {
+                   w = empty();
+                 }
+                 if (!iconKeys.containsKey(index)) {
+                   iconKeys[index] = GlobalKey();
+                 }
+                 return Container(
+                   color: Colors.white,
+                   padding: EdgeInsets.fromLTRB(16, 20, 16, 0),
+                   child:Column(
+                     crossAxisAlignment: CrossAxisAlignment.start,
+                     children: <Widget>[
+                       Row(
+                         children: <Widget>[
+                           ClipOval(
+                             child: /*mData[index].avatar == null ? Image.asset((mData[index].gender == 1 ? "images/boy.png":"images/girl.png"),width: 40,height: 40) :
                                         Image.network(mData[index].avatar,width: 40,height: 40,fit: BoxFit.cover,errorBuilder: (context,obj,trace){
                                           print("头像获取失败：${mData[index].gender}");
                                             return Image.asset((mData[index].gender == 1 ? "images/boy.png":"images/girl.png"),width: 40,height: 40);
-                                        }),
-                                      ),
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Padding(padding: EdgeInsets.fromLTRB(10, 0, 0, 0),child: Text(mData[index].nickname == null ? "加载中.." : mData[index].nickname,style: TextStyle(fontSize: 15,color: Colors.red))),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.only(top: 10),
-                                    child: Text(mData[index].title),
-                                  ),
-                                  Text(mData[index].description == null ? "":mData[index].description),
-                                  Container(
-                                    child: w,
-                                  ),
-                                  Row(
-                                    children: <Widget>[
-                                      Container(
-                                        margin: EdgeInsets.only(top: 25),
-                                        child: Text(TimeUtils().chatTime(mData[index].createtime)),
-                                      )
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: <Widget>[
-                                      Container(
-                                        child: GestureDetector(
-                                          child: Row(
-                                          crossAxisAlignment:CrossAxisAlignment.center,
-                                            children: [
-                                              Icon(Icons.chat,size: 15,),
-                                              Container(
-                                                child: Text('评论'),
-                                                margin: EdgeInsets.only(left: 5),
-                                              )
-                                            ],
-                                          ),
-                                          onTap: (){
-                                              Navigator.push(context, MaterialPageRoute(builder: (context)=>DynamicDetail(mData[index].did,data:mData[index],k: iconKeys[index],)));
-                                           // Navigator.push(context, MaterialPageRoute(builder: (context)=>AccountPage()));
-                                          },
-                                        ),
-                                        margin: EdgeInsets.only(right: 30,bottom: 10),
-                                      ),
-                                      Container(
+                                        })*/Icon(Icons.account_circle,size: 40,color: Colors.grey[400],),
+                           ),
+                           Column(
+                             crossAxisAlignment: CrossAxisAlignment.start,
+                             children: <Widget>[
+                               Padding(padding: EdgeInsets.fromLTRB(10, 0, 0, 0),child: Text(mData[index].nickname == null ? "加载中.." : mData[index].nickname,style: TextStyle(fontSize: 15,color: HexColor("3e3e3e")))),
+                             ],
+                           ),
+                           Expanded(child: Container()),
+                           Container(
+                             child: Text(TimeUtils().chatTime(mData[index].createtime),style: TextStyle(fontSize: 12,color: HexColor("3e3e3e")),),
+                           )
+                         ],
+                       ),
+                       Container(
+                         margin: EdgeInsets.only(top: 20,left: 5,bottom: 40),
+                         child: Text(mData[index].title),
+                       ),
+                       Container(
+                         child: w,
+                       ),
+                       Row(
+                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                         children: <Widget>[
+                           Container(
+                             child: GestureDetector(
+                               child: Row(
+                                 children: [
+                                   Icon(Icons.share,size: 20,color: HexColor("#9E9E9E")),
+                                   Container(
+                                     child: Text('49',style: TextStyle(color: HexColor("#3e3e3e"),fontSize: 12)),
+                                     margin: EdgeInsets.only(left: 2),
+                                   ),
+
+                                 ],
+                               ),
+                               onTap: (){
+                                 Navigator.push(context, MaterialPageRoute(builder: (context)=>DynamicDetail(mData[index].did,data:mData[index],k: iconKeys[index],)));
+                                 // Navigator.push(context, MaterialPageRoute(builder: (context)=>AccountPage()));
+                               },
+                             ),
+                             margin: EdgeInsets.only(left: 5,bottom: 10),
+                           ),
+                           Container(
+                             child: GestureDetector(
+                               child: Row(
+                                 crossAxisAlignment:CrossAxisAlignment.center,
+                                 children: [
+                                   Icon(Icons.chat_bubble_outline,size: 20,color: HexColor("#9E9E9E")),
+                                   Container(
+                                     child: Text('952',style: TextStyle(color: HexColor("#3e3e3e"),fontSize: 12)),
+                                     margin: EdgeInsets.only(left: 2),
+                                   ),
+
+
+                                 ],
+                               ),
+                               onTap: (){
+                                 Navigator.push(context, MaterialPageRoute(builder: (context)=>DynamicDetail(mData[index].did,data:mData[index],k: iconKeys[index],)));
+                                 // Navigator.push(context, MaterialPageRoute(builder: (context)=>AccountPage()));
+                               },
+                             ),
+                             margin: EdgeInsets.only(bottom: 10),
+                           ),
+                           Container(
+                             child: GestureDetector(
+                               child: Row(
+                                 crossAxisAlignment:CrossAxisAlignment.center,
+                                 children: [
+                                   Icon(Icons.favorite_border,size: 20,color: HexColor("#9E9E9E")),
+                                   Container(
+                                     child: Text('5689',style: TextStyle(color: HexColor("#3e3e3e"),fontSize: 12)),
+                                     margin: EdgeInsets.only(left: 2),
+                                   ),
+
+
+                                 ],
+                               ),
+                               onTap: (){
+                                 Navigator.push(context, MaterialPageRoute(builder: (context)=>DynamicDetail(mData[index].did,data:mData[index],k: iconKeys[index],)));
+                                 // Navigator.push(context, MaterialPageRoute(builder: (context)=>AccountPage()));
+                               },
+                             ),
+                             margin: EdgeInsets.only(bottom: 10),
+                           )
+                           /*Container(
                                         child: GestureDetector(
                                           child: IconWidget(iconKeys[index],mData[index].liked == null ? Icons.favorite_border : mData[index].liked ? Icons.favorite : Icons.favorite_border,mData[index].likenum.toString()),
                                           onTap: () async {
@@ -152,28 +241,22 @@ class NearDynicPage extends State<NearDynic> {
                                           },
                                         ),
                                         margin: EdgeInsets.only(right: 30,bottom: 10),
-                                      ),
-                                    ],
-                                  ),
-                                  Divider(height: 1,color: Colors.grey[300]),
-                                ],
-                              ),
-                            );
-                          }
-                      ),Offstage(
-                        offstage: hideLoading,
-                        child: CupertinoActivityIndicator(radius: 15),
-                      ),
-                    ],
-                  ),);
-                }
-            } else {
-              return Center(child: CupertinoActivityIndicator(radius: 15,),);
-            }
-          }
+                                      ),*/
+                         ],
+                       ),
+                       Divider(height: 1,color: Colors.grey[300]),
+                     ],
+                   ),
+                 );
+              },
+                 childCount: mData == null ? 0 : mData.length
+           )
+           )
+         ],
       )
     );
   }
+
 
   Widget img(List<String> images){
     if (images.length == 1) {

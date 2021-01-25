@@ -36,7 +36,8 @@ class MyApp extends StatelessWidget {
       ),
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate
+        GlobalWidgetsLocalizations.delegate,
+
       ],
       supportedLocales: [
         const Locale('zh', 'CH'), // English
@@ -99,17 +100,25 @@ class HomePageState extends State<HomePage> {
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.home,size: 20,),title: Text('首页',style: TextStyle(fontSize: 14),)),
-          BottomNavigationBarItem(icon: Icon(Icons.train,size: 20),title: Text('出行',style: TextStyle(fontSize: 14))),
-          BottomNavigationBarItem(icon: Image.asset("images/alove.png",width: 20,height: 20,),activeIcon:Image.asset("images/love.png",width: 20,height: 20,),title: Text('相亲',style: TextStyle(fontSize: 14))),
-          BottomNavigationBarItem(icon: Image.asset("images/msg.png",width: 20,height: 20,),activeIcon:Image.asset("images/amsg.png",width: 20,height: 20,),title: Text('信息',style: TextStyle(fontSize: 14))),
-          BottomNavigationBarItem(icon: Icon(Icons.person_outline,size: 20),title: Text('我的',style: TextStyle(fontSize: 14))),
+          BottomNavigationBarItem(icon: Icon(Icons.home_outlined,size: 25),title: Text('首页',style: TextStyle(fontSize: 10)),
+              activeIcon:Icon(Icons.home,size: 25)),
+          BottomNavigationBarItem(icon: Icon(Icons.train_outlined,size: 25),title: Text('出行',style: TextStyle(fontSize: 10)),
+              activeIcon:Icon(Icons.train,size: 25)),
+          BottomNavigationBarItem(icon: Icon(Icons.all_inclusive_outlined,size: 25),title: Text('相亲',style: TextStyle(fontSize: 10)),
+              activeIcon:Icon(Icons.all_inclusive,size: 25)),
+          BottomNavigationBarItem(icon: Icon(Icons.mail_outline,size: 25),title: Text('信息',style: TextStyle(fontSize: 10)),
+              activeIcon:Icon(Icons.mail,size: 25)),
+          BottomNavigationBarItem(icon: Icon(Icons.person_outline,size: 25),title: Text('我的',style: TextStyle(fontSize: 10)),
+              activeIcon:Icon(Icons.person,size: 25)),
         ],
         currentIndex: curIndex,//设置该行会改变指示器的文字图案颜色
         type: BottomNavigationBarType.fixed,
         onTap: onTapClick,
-        selectedItemColor: Colors.black87,
+        selectedItemColor: Colors.black54,
         elevation: 3,
+        selectedFontSize: 10,
+        unselectedFontSize: 10,
+        backgroundColor: Colors.white,
       ),
       /*  pages[curIndex],*/
       body: IndexedStack(
