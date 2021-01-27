@@ -94,10 +94,13 @@ class Net {
         return bean;
     }
 
-    Future<NearDynamic> nearDynamicList(int page,int limit) async {
+    Future<NearDynamic> nearDynamicList(int time,int limit) async {
         var uid = await SpUtils().getString(SpUtils.uid);
         var map = Map<String,dynamic>();
         map["uid"] = uid;
+        map["offsetTime"] = time;
+        map["limit"] = limit;
+
         Response r = await dio.get("index/neardynamic",queryParameters: map);
         print("nearDynamicList-->"+r.data.toString());
         return NearDynamic.fromJson(r.data);

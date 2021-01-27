@@ -1,15 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:littelchat/account_page/account-page.dart';
 import 'package:littelchat/active_page/publish_dynamic.dart';
 import 'package:littelchat/bean/near_nynamic.dart';
 import 'package:littelchat/common/util/Net.dart';
-import 'package:littelchat/common/util/SpUtils.dart';
 import 'package:littelchat/common/util/hex-color.dart';
 import 'package:littelchat/common/util/time-utils.dart';
 import 'package:littelchat/common/widgets/ImageWidget.dart';
+import 'package:littelchat/common/widgets/gallery.dart';
 import 'package:littelchat/common/widgets/icon_widget.dart';
 import 'package:littelchat/main_index_page/dynamic-detail.dart';
 
@@ -23,12 +21,13 @@ class NearDynicPage extends State<NearDynic> {
   bool hideLoading = true;
   var iconKeys = <int,GlobalKey<StateIconWidget>>{};
   var fieldMap = <int,bool>{};
+  EasyRefreshController _controller = EasyRefreshController();
   var dropItems = [DropdownMenuItem(child: Text('谢家滩'),value: "谢家滩")];
 
   DateTime _dateTime;
 
-  int page = 0;
-  int limit = 10;
+  int offsetTime = 0;
+  int limit = 2;
 
   // 获取更多信息
   String get _infoTextStr {
@@ -61,6 +60,9 @@ class NearDynicPage extends State<NearDynic> {
           ]
       ),
       body: EasyRefresh.custom(
+        controller: _controller,
+        enableControlFinishLoad: true,
+        enableControlFinishRefresh: true,
         header: ClassicalHeader(
           refreshedText: "刷新完成",
           refreshingText: "正在刷新..",
@@ -68,14 +70,14 @@ class NearDynicPage extends State<NearDynic> {
           refreshReadyText: "松开刷新",
           infoText: _infoTextStr
         ),
-        /*footer: ClassicalFooter(
+        footer: ClassicalFooter(
           loadText: "上拉加载",
           loadReadyText: "松开加载",
           loadedText: "加载完成",
           loadingText: "正在加载",
           noMoreText: "没有更多内容啦~",
           infoText: _infoTextStr
-        ),*/
+        ),
         firstRefresh: true,
         firstRefreshWidget: Container(
           width: double.infinity,
@@ -89,35 +91,37 @@ class NearDynicPage extends State<NearDynic> {
           ),
         ),
         onRefresh: () async {
-          page = 0;
-          NearDynamic nd = await Net().nearDynamicList(page,limit);
+          offsetTime = 0;
+          NearDynamic nd = await Net().nearDynamicList(offsetTime,limit);
           if (nd != null) {
             setState(() {
               mData.clear();
               mData.addAll(nd.data);
             });
           }
+          _controller.finishRefresh(success: true);
         },
         onLoad: () async {
-          await Future.delayed(Duration(seconds: 2), () {
-            if (mounted) {
-
-            }
-          });
-          /*page ++;
-          NearDynamic nd = await Net().nearDynamicList(page,limit);
-          if (nd != null) {
+          if (mData.length > 0) {
+            offsetTime = mData[mData.length-1].createtime;
+          }
+          NearDynamic nd = await Net().nearDynamicList(offsetTime,limit);
+          if (nd != null && nd.data.length > 0) {
+            print("----------------------------------");
+            print(nd.data[0].title);
             setState(() {
-             // mData.addAll(nd.data);
+              mData.addAll(nd.data);
             });
-          }*/
+
+          }
+          _controller.finishLoad(success: true,noMore: false);
         },
          slivers: [
            SliverList(
                delegate: SliverChildBuilderDelegate((context,index){
                  Widget w;
                  if (mData[index].resimg != null && mData[index].resimg.length > 0){
-                   w = img(mData[index].resimg);
+                   w = img(mData[index].resimg,index);
                  } else {
                    w = empty();
                  }
@@ -152,10 +156,11 @@ class NearDynicPage extends State<NearDynic> {
                          ],
                        ),
                        Container(
-                         margin: EdgeInsets.only(top: 20,left: 5,bottom: 40),
+                         margin: EdgeInsets.only(top: 20,left: 5),
                          child: Text(mData[index].title),
                        ),
                        Container(
+                         margin: EdgeInsets.only(top: 10),
                          child: w,
                        ),
                        Row(
@@ -178,7 +183,7 @@ class NearDynicPage extends State<NearDynic> {
                                  // Navigator.push(context, MaterialPageRoute(builder: (context)=>AccountPage()));
                                },
                              ),
-                             margin: EdgeInsets.only(left: 5,bottom: 10),
+                             margin: EdgeInsets.only(left: 5,bottom: 10,top: 40),
                            ),
                            Container(
                              child: GestureDetector(
@@ -199,7 +204,7 @@ class NearDynicPage extends State<NearDynic> {
                                  // Navigator.push(context, MaterialPageRoute(builder: (context)=>AccountPage()));
                                },
                              ),
-                             margin: EdgeInsets.only(bottom: 10),
+                             margin: EdgeInsets.only(bottom: 10,top: 40),
                            ),
                            Container(
                              child: GestureDetector(
@@ -220,7 +225,7 @@ class NearDynicPage extends State<NearDynic> {
                                  // Navigator.push(context, MaterialPageRoute(builder: (context)=>AccountPage()));
                                },
                              ),
-                             margin: EdgeInsets.only(bottom: 10),
+                             margin: EdgeInsets.only(bottom: 10,top: 40),
                            )
                            /*Container(
                                         child: GestureDetector(
@@ -258,7 +263,7 @@ class NearDynicPage extends State<NearDynic> {
   }
 
 
-  Widget img(List<String> images){
+  Widget img(List<String> images, int index){
     if (images.length == 1) {
       return ClipRRect(
         borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -269,11 +274,404 @@ class NearDynicPage extends State<NearDynic> {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.all(Radius.circular(5)),
-            child: Image.network(images[0],width: 120,height:120),
+            child: GestureDetector(
+              child: Image.network(images[0],width: 120,height:120,fit: BoxFit.cover),
+              onTap: (){
+
+              },
+            ),
           ),
+          Container(
+            child: ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+              child: Image.network(images[1],width: 120,height:120,fit: BoxFit.cover),
+            ),
+            margin: EdgeInsets.only(left: 5),
+          )
+        ],
+      );
+    } else if (images.length == 3) {
+      return Row(
+        children: [
           ClipRRect(
             borderRadius: BorderRadius.all(Radius.circular(5)),
-            child: Image.network(images[1],width: 120,height:120),
+            child: Image.network(images[0],width: 90,height:90,fit: BoxFit.cover,),
+          ),
+          Container(
+            child: ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+              child: Image.network(images[1],width: 90,height:90,fit: BoxFit.cover),
+            ),
+            margin: EdgeInsets.only(left: 5),
+          ),
+          Container(
+            child: ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+              child: Image.network(images[2],width: 90,height:90,fit: BoxFit.cover),
+            ),
+            margin: EdgeInsets.only(left: 5),
+          )
+        ],
+      );
+    } else if (images.length == 4) {
+      return Column(
+        children: [
+          Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(5)),
+                child: Image.network(images[0],width: 120,height:120,fit: BoxFit.cover,),
+              ),
+              Container(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  child: Image.network(images[1],width: 120,height:120,fit: BoxFit.cover),
+                ),
+                margin: EdgeInsets.only(left: 5),
+              )
+            ],
+          ),
+          Container(
+            child: Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  child: Image.network(images[2],width: 120,height:120,fit: BoxFit.cover,),
+                ),
+                Container(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                    child: Image.network(images[3],width: 120,height:120,fit: BoxFit.cover),
+                  ),
+                  margin: EdgeInsets.only(left: 5),
+                )
+              ],
+            ),
+            margin: EdgeInsets.only(top: 5),
+          )
+        ],
+      );
+    } else if (images.length == 5) {
+      return Column(
+        children: [
+          Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(5)),
+                child: Image.network(images[0],width: 90,height:90,fit: BoxFit.cover,),
+              ),
+              Container(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  child: Image.network(images[1],width: 90,height:90,fit: BoxFit.cover),
+                ),
+                margin: EdgeInsets.only(left: 5),
+              ),
+              Container(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  child: Image.network(images[2],width: 90,height:90,fit: BoxFit.cover),
+                ),
+                margin: EdgeInsets.only(left: 5),
+              )
+            ],
+          ),
+          Container(
+            child: Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  child: Image.network(images[3],width: 90,height:90,fit: BoxFit.cover,),
+                ),
+                Container(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                    child: Image.network(images[4],width: 90,height:90,fit: BoxFit.cover),
+                  ),
+                  margin: EdgeInsets.only(left: 5),
+                )
+              ],
+            ),
+            margin: EdgeInsets.only(top: 5),
+          )
+        ],
+      );
+    } else if (images.length == 6) {
+      return Column(
+        children: [
+          Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(5)),
+                child: GestureDetector(
+                  child: Image.network(images[0],width: 90,height:90,fit: BoxFit.cover),
+                  onTap: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Gallery(
+                          pics: images,
+                          backgroundDecoration: const BoxDecoration(
+                            color: Colors.black,
+                          ),
+                          initialIndex: index,
+                          scrollDirection: false ? Axis.vertical : Axis.horizontal,
+                        ),
+                      ),
+                    );
+                  },
+                )
+              ),
+              Container(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  child: Image.network(images[1],width: 90,height:90,fit: BoxFit.cover),
+                ),
+                margin: EdgeInsets.only(left: 5),
+              ),
+              Container(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  child: Image.network(images[2],width: 90,height:90,fit: BoxFit.cover),
+                ),
+                margin: EdgeInsets.only(left: 5),
+              )
+            ],
+          ),
+          Container(
+            child: Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  child: Image.network(images[3],width: 90,height:90,fit: BoxFit.cover,),
+                ),
+                Container(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                    child: Image.network(images[4],width: 90,height:90,fit: BoxFit.cover),
+                  ),
+                  margin: EdgeInsets.only(left: 5),
+                ),
+                Container(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                    child: Image.network(images[5],width: 90,height:90,fit: BoxFit.cover),
+                  ),
+                  margin: EdgeInsets.only(left: 5),
+                )
+              ],
+            ),
+            margin: EdgeInsets.only(top: 5),
+          )
+        ],
+      );
+    } else if (images.length == 7) {
+      return Column(
+        children: [
+          Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(5)),
+                child: Image.network(images[0],width: 90,height:90,fit: BoxFit.cover,),
+              ),
+              Container(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  child: Image.network(images[1],width: 90,height:90,fit: BoxFit.cover),
+                ),
+                margin: EdgeInsets.only(left: 5),
+              ),
+              Container(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  child: Image.network(images[2],width: 90,height:90,fit: BoxFit.cover),
+                ),
+                margin: EdgeInsets.only(left: 5),
+              )
+            ],
+          ),
+          Container(
+            child: Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  child: Image.network(images[3],width: 90,height:90,fit: BoxFit.cover,),
+                ),
+                Container(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                    child: Image.network(images[4],width: 90,height:90,fit: BoxFit.cover),
+                  ),
+                  margin: EdgeInsets.only(left: 5),
+                ),
+                Container(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                    child: Image.network(images[5],width: 90,height:90,fit: BoxFit.cover),
+                  ),
+                  margin: EdgeInsets.only(left: 5),
+                )
+              ],
+            ),
+            margin: EdgeInsets.only(top: 5),
+          ),
+          Container(
+            child: Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  child: Image.network(images[6],width: 90,height:90,fit: BoxFit.cover,),
+                )
+              ],
+            ),
+            margin: EdgeInsets.only(top: 5),
+          )
+        ],
+      );
+    } else if (images.length == 8) {
+      return Column(
+        children: [
+          Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(5)),
+                child: Image.network(images[0],width: 90,height:90,fit: BoxFit.cover,),
+              ),
+              Container(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  child: Image.network(images[1],width: 90,height:90,fit: BoxFit.cover),
+                ),
+                margin: EdgeInsets.only(left: 5),
+              ),
+              Container(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  child: Image.network(images[2],width: 90,height:90,fit: BoxFit.cover),
+                ),
+                margin: EdgeInsets.only(left: 5),
+              )
+            ],
+          ),
+          Container(
+            child: Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  child: Image.network(images[3],width: 90,height:90,fit: BoxFit.cover,),
+                ),
+                Container(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                    child: Image.network(images[4],width: 90,height:90,fit: BoxFit.cover),
+                  ),
+                  margin: EdgeInsets.only(left: 5),
+                ),
+                Container(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                    child: Image.network(images[5],width: 90,height:90,fit: BoxFit.cover),
+                  ),
+                  margin: EdgeInsets.only(left: 5),
+                )
+              ],
+            ),
+            margin: EdgeInsets.only(top: 5),
+          ),
+          Container(
+            child: Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  child: Image.network(images[6],width: 90,height:90,fit: BoxFit.cover,),
+                ),
+                Container(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                    child: Image.network(images[7],width: 90,height:90,fit: BoxFit.cover),
+                  ),
+                  margin: EdgeInsets.only(left: 5),
+                )
+              ],
+            ),
+            margin: EdgeInsets.only(top: 5),
+          )
+        ],
+      );
+    } else if (images.length == 9) {
+      return Column(
+        children: [
+          Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(5)),
+                child: Image.network(images[0],width: 90,height:90,fit: BoxFit.cover,),
+              ),
+              Container(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  child: Image.network(images[1],width: 90,height:90,fit: BoxFit.cover),
+                ),
+                margin: EdgeInsets.only(left: 5),
+              ),
+              Container(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  child: Image.network(images[2],width: 90,height:90,fit: BoxFit.cover),
+                ),
+                margin: EdgeInsets.only(left: 5),
+              )
+            ],
+          ),
+          Container(
+            child: Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  child: Image.network(images[3],width: 90,height:90,fit: BoxFit.cover,),
+                ),
+                Container(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                    child: Image.network(images[4],width: 90,height:90,fit: BoxFit.cover),
+                  ),
+                  margin: EdgeInsets.only(left: 5),
+                ),
+                Container(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                    child: Image.network(images[5],width: 90,height:90,fit: BoxFit.cover),
+                  ),
+                  margin: EdgeInsets.only(left: 5),
+                )
+              ],
+            ),
+            margin: EdgeInsets.only(top: 5),
+          ),
+          Container(
+            child: Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  child: Image.network(images[6],width: 90,height:90,fit: BoxFit.cover,),
+                ),
+                Container(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                    child: Image.network(images[7],width: 90,height:90,fit: BoxFit.cover),
+                  ),
+                  margin: EdgeInsets.only(left: 5),
+                ),
+                Container(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                    child: Image.network(images[8],width: 90,height:90,fit: BoxFit.cover),
+                  ),
+                  margin: EdgeInsets.only(left: 5),
+                )
+              ],
+            ),
+            margin: EdgeInsets.only(top: 5),
           )
         ],
       );
