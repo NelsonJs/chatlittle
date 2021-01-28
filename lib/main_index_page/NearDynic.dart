@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
@@ -27,7 +28,7 @@ class NearDynicPage extends State<NearDynic> {
   DateTime _dateTime;
 
   int offsetTime = 0;
-  int limit = 2;
+  int limit = 8;
 
   // 获取更多信息
   String get _infoTextStr {
@@ -49,9 +50,10 @@ class NearDynicPage extends State<NearDynic> {
                   child: GestureDetector(
                     child: Icon(Icons.add),onTap: () {
                     Navigator.push(context, MaterialPageRoute(builder: (context)=>PublishDynamic())).then((value){
-                      setState(() {
-
-                      });
+                      print(value);
+                      if (value){
+                        _controller.callRefresh();
+                      }
                     });
 
                   },
@@ -121,7 +123,7 @@ class NearDynicPage extends State<NearDynic> {
                delegate: SliverChildBuilderDelegate((context,index){
                  Widget w;
                  if (mData[index].resimg != null && mData[index].resimg.length > 0){
-                   w = img(mData[index].resimg,index);
+                   w = img(mData[index].resimg);
                  } else {
                    w = empty();
                  }
@@ -155,9 +157,12 @@ class NearDynicPage extends State<NearDynic> {
                            )
                          ],
                        ),
-                       Container(
-                         margin: EdgeInsets.only(top: 20,left: 5),
-                         child: Text(mData[index].title),
+                       Offstage(
+                         child: Container(
+                           margin: EdgeInsets.only(top: 20,left: 5),
+                           child: Text(mData[index].title),
+                         ),
+                         offstage: mData[index].title.isEmpty,
                        ),
                        Container(
                          margin: EdgeInsets.only(top: 10),
@@ -263,11 +268,20 @@ class NearDynicPage extends State<NearDynic> {
   }
 
 
-  Widget img(List<String> images, int index){
+  Widget img(List<String> images){
     if (images.length == 1) {
       return ClipRRect(
         borderRadius: BorderRadius.all(Radius.circular(5)),
-        child: ImageWidget(url: images[0]),
+        child: GestureDetector(
+          child: CachedNetworkImage(
+              imageUrl: images[0],width: 300,height: 200,fit: BoxFit.cover,
+              placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+              errorWidget: (context, url, error) => Icon(Icons.error)
+          ),
+          onTap: (){
+              jump(images, 0);
+            }
+        ),
       );
     } else if (images.length == 2) {
       return Row(
@@ -275,16 +289,29 @@ class NearDynicPage extends State<NearDynic> {
           ClipRRect(
             borderRadius: BorderRadius.all(Radius.circular(5)),
             child: GestureDetector(
-              child: Image.network(images[0],width: 120,height:120,fit: BoxFit.cover),
+              child: CachedNetworkImage(
+                  imageUrl: images[0],width: 120,height: 120,fit: BoxFit.cover,
+                  placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                  errorWidget: (context, url, error) => Icon(Icons.error)
+              ),
               onTap: (){
-
+                jump(images, 0);
               },
-            ),
+            )
           ),
           Container(
             child: ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(5)),
-              child: Image.network(images[1],width: 120,height:120,fit: BoxFit.cover),
+              child: GestureDetector(
+                child: CachedNetworkImage(
+                    imageUrl: images[1],width: 120,height: 120,fit: BoxFit.cover,
+                    placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                    errorWidget: (context, url, error) => Icon(Icons.error)
+                ),
+                onTap: (){
+                  jump(images, 1);
+                },
+              )
             ),
             margin: EdgeInsets.only(left: 5),
           )
@@ -295,19 +322,46 @@ class NearDynicPage extends State<NearDynic> {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.all(Radius.circular(5)),
-            child: Image.network(images[0],width: 90,height:90,fit: BoxFit.cover,),
+            child: GestureDetector(
+              child: CachedNetworkImage(
+                  imageUrl: images[0],width: 90,height: 90,fit: BoxFit.cover,
+                  placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                  errorWidget: (context, url, error) => Icon(Icons.error)
+              ),
+              onTap: (){
+                jump(images, 0);
+              },
+            )
           ),
           Container(
             child: ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(5)),
-              child: Image.network(images[1],width: 90,height:90,fit: BoxFit.cover),
+              child: GestureDetector(
+                child: CachedNetworkImage(
+                    imageUrl: images[1],width: 90,height: 90,fit: BoxFit.cover,
+                    placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                    errorWidget: (context, url, error) => Icon(Icons.error)
+                ),
+                onTap: (){
+                  jump(images, 1);
+                },
+              )
             ),
             margin: EdgeInsets.only(left: 5),
           ),
           Container(
             child: ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(5)),
-              child: Image.network(images[2],width: 90,height:90,fit: BoxFit.cover),
+              child: GestureDetector(
+                child: CachedNetworkImage(
+                    imageUrl: images[2],width: 90,height: 90,fit: BoxFit.cover,
+                    placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                    errorWidget: (context, url, error) => Icon(Icons.error)
+                ),
+                onTap: (){
+                  jump(images, 2);
+                },
+              )
             ),
             margin: EdgeInsets.only(left: 5),
           )
@@ -320,12 +374,30 @@ class NearDynicPage extends State<NearDynic> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(5)),
-                child: Image.network(images[0],width: 120,height:120,fit: BoxFit.cover,),
+                child: GestureDetector(
+                  child: CachedNetworkImage(
+                      imageUrl: images[0],width: 90,height: 90,fit: BoxFit.cover,
+                      placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                      errorWidget: (context, url, error) => Icon(Icons.error)
+                  ),
+                  onTap: (){
+                    jump(images, 0);
+                  },
+                )
               ),
               Container(
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
-                  child: Image.network(images[1],width: 120,height:120,fit: BoxFit.cover),
+                  child: GestureDetector(
+                    child: CachedNetworkImage(
+                        imageUrl: images[1],width: 90,height: 90,fit: BoxFit.cover,
+                        placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                        errorWidget: (context, url, error) => Icon(Icons.error)
+                    ),
+                    onTap: (){
+                      jump(images, 1);
+                    },
+                  )
                 ),
                 margin: EdgeInsets.only(left: 5),
               )
@@ -336,12 +408,30 @@ class NearDynicPage extends State<NearDynic> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
-                  child: Image.network(images[2],width: 120,height:120,fit: BoxFit.cover,),
+                  child: GestureDetector(
+                    child: CachedNetworkImage(
+                        imageUrl: images[2],width: 90,height: 90,fit: BoxFit.cover,
+                        placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                        errorWidget: (context, url, error) => Icon(Icons.error)
+                    ),
+                    onTap: (){
+                      jump(images, 2);
+                    },
+                  )
                 ),
                 Container(
                   child: ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(5)),
-                    child: Image.network(images[3],width: 120,height:120,fit: BoxFit.cover),
+                    child: GestureDetector(
+                      child: CachedNetworkImage(
+                          imageUrl: images[3],width: 90,height: 90,fit: BoxFit.cover,
+                          placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                          errorWidget: (context, url, error) => Icon(Icons.error)
+                      ),
+                      onTap: (){
+                        jump(images, 3);
+                      },
+                    )
                   ),
                   margin: EdgeInsets.only(left: 5),
                 )
@@ -358,19 +448,46 @@ class NearDynicPage extends State<NearDynic> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(5)),
-                child: Image.network(images[0],width: 90,height:90,fit: BoxFit.cover,),
+                child: GestureDetector(
+                  child: CachedNetworkImage(
+                      imageUrl: images[0],width: 90,height: 90,fit: BoxFit.cover,
+                      placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                      errorWidget: (context, url, error) => Icon(Icons.error)
+                  ),
+                  onTap: (){
+                    jump(images, 0);
+                  },
+                )
               ),
               Container(
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
-                  child: Image.network(images[1],width: 90,height:90,fit: BoxFit.cover),
+                  child: GestureDetector(
+                    child: CachedNetworkImage(
+                        imageUrl: images[1],width: 90,height: 90,fit: BoxFit.cover,
+                        placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                        errorWidget: (context, url, error) => Icon(Icons.error)
+                    ),
+                    onTap: (){
+                      jump(images, 1);
+                    },
+                  )
                 ),
                 margin: EdgeInsets.only(left: 5),
               ),
               Container(
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
-                  child: Image.network(images[2],width: 90,height:90,fit: BoxFit.cover),
+                  child: GestureDetector(
+                    child: CachedNetworkImage(
+                        imageUrl: images[2],width: 90,height: 90,fit: BoxFit.cover,
+                        placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                        errorWidget: (context, url, error) => Icon(Icons.error)
+                    ),
+                    onTap: (){
+                      jump(images, 2);
+                    },
+                  )
                 ),
                 margin: EdgeInsets.only(left: 5),
               )
@@ -381,12 +498,30 @@ class NearDynicPage extends State<NearDynic> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
-                  child: Image.network(images[3],width: 90,height:90,fit: BoxFit.cover,),
+                  child: GestureDetector(
+                    child: CachedNetworkImage(
+                        imageUrl: images[3],width: 90,height: 90,fit: BoxFit.cover,
+                        placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                        errorWidget: (context, url, error) => Icon(Icons.error)
+                    ),
+                    onTap: (){
+                      jump(images, 3);
+                    },
+                  )
                 ),
                 Container(
                   child: ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(5)),
-                    child: Image.network(images[4],width: 90,height:90,fit: BoxFit.cover),
+                    child: GestureDetector(
+                      child: CachedNetworkImage(
+                          imageUrl: images[4],width: 90,height: 90,fit: BoxFit.cover,
+                          placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                          errorWidget: (context, url, error) => Icon(Icons.error)
+                      ),
+                      onTap: (){
+                        jump(images,4);
+                      },
+                    )
                   ),
                   margin: EdgeInsets.only(left: 5),
                 )
@@ -404,35 +539,46 @@ class NearDynicPage extends State<NearDynic> {
               ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(5)),
                 child: GestureDetector(
-                  child: Image.network(images[0],width: 90,height:90,fit: BoxFit.cover),
+                  //child: Image.network(images[0],width: 90,height:90,fit: BoxFit.cover),
+                  child: CachedNetworkImage(
+                    imageUrl: images[0],width: 90,height: 90,fit: BoxFit.cover,
+                      placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                      errorWidget: (context, url, error) => Icon(Icons.error)
+                  ),
                   onTap: (){
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Gallery(
-                          pics: images,
-                          backgroundDecoration: const BoxDecoration(
-                            color: Colors.black,
-                          ),
-                          initialIndex: index,
-                          scrollDirection: false ? Axis.vertical : Axis.horizontal,
-                        ),
-                      ),
-                    );
+                    jump(images, 0);
                   },
                 )
               ),
               Container(
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
-                  child: Image.network(images[1],width: 90,height:90,fit: BoxFit.cover),
+                  child: GestureDetector(
+                    child: CachedNetworkImage(
+                        imageUrl: images[1],width: 90,height: 90,fit: BoxFit.cover,
+                        placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                        errorWidget: (context, url, error) => Icon(Icons.error)
+                    ),
+                    onTap: (){
+                      jump(images, 1);
+                    },
+                  ),
                 ),
                 margin: EdgeInsets.only(left: 5),
               ),
               Container(
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
-                  child: Image.network(images[2],width: 90,height:90,fit: BoxFit.cover),
+                  child: GestureDetector(
+                    child: CachedNetworkImage(
+                        imageUrl: images[2],width: 90,height: 90,fit: BoxFit.cover,
+                        placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                        errorWidget: (context, url, error) => Icon(Icons.error)
+                    ),
+                    onTap: (){
+                      jump(images, 2);
+                    },
+                  )
                 ),
                 margin: EdgeInsets.only(left: 5),
               )
@@ -443,19 +589,46 @@ class NearDynicPage extends State<NearDynic> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
-                  child: Image.network(images[3],width: 90,height:90,fit: BoxFit.cover,),
+                  child: GestureDetector(
+                    child: CachedNetworkImage(
+                        imageUrl: images[3],width: 90,height: 90,fit: BoxFit.cover,
+                        placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                        errorWidget: (context, url, error) => Icon(Icons.error)
+                    ),
+                    onTap: (){
+                      jump(images, 3);
+                    },
+                  )
                 ),
                 Container(
                   child: ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(5)),
-                    child: Image.network(images[4],width: 90,height:90,fit: BoxFit.cover),
+                    child: GestureDetector(
+                      child: CachedNetworkImage(
+                          imageUrl: images[4],width: 90,height: 90,fit: BoxFit.cover,
+                          placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                          errorWidget: (context, url, error) => Icon(Icons.error)
+                      ),
+                      onTap: (){
+                        jump(images, 4);
+                      },
+                    )
                   ),
                   margin: EdgeInsets.only(left: 5),
                 ),
                 Container(
                   child: ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(5)),
-                    child: Image.network(images[5],width: 90,height:90,fit: BoxFit.cover),
+                    child: GestureDetector(
+                      child: CachedNetworkImage(
+                          imageUrl: images[5],width: 90,height: 90,fit: BoxFit.cover,
+                          placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                          errorWidget: (context, url, error) => Icon(Icons.error)
+                      ),
+                      onTap: (){
+                        jump(images, 5);
+                      },
+                    )
                   ),
                   margin: EdgeInsets.only(left: 5),
                 )
@@ -472,19 +645,46 @@ class NearDynicPage extends State<NearDynic> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(5)),
-                child: Image.network(images[0],width: 90,height:90,fit: BoxFit.cover,),
+                child: GestureDetector(
+                  child: CachedNetworkImage(
+                      imageUrl: images[0],width: 90,height: 90,fit: BoxFit.cover,
+                      placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                      errorWidget: (context, url, error) => Icon(Icons.error)
+                  ),
+                  onTap: (){
+                    jump(images, 0);
+                  },
+                )
               ),
               Container(
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
-                  child: Image.network(images[1],width: 90,height:90,fit: BoxFit.cover),
+                  child: GestureDetector(
+                    child: CachedNetworkImage(
+                        imageUrl: images[1],width: 90,height: 90,fit: BoxFit.cover,
+                        placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                        errorWidget: (context, url, error) => Icon(Icons.error)
+                    ),
+                    onTap: (){
+                      jump(images, 1);
+                    },
+                  )
                 ),
                 margin: EdgeInsets.only(left: 5),
               ),
               Container(
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
-                  child: Image.network(images[2],width: 90,height:90,fit: BoxFit.cover),
+                  child: GestureDetector(
+                    child: CachedNetworkImage(
+                        imageUrl: images[2],width: 90,height: 90,fit: BoxFit.cover,
+                        placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                        errorWidget: (context, url, error) => Icon(Icons.error)
+                    ),
+                    onTap: (){
+                      jump(images, 2);
+                    },
+                  )
                 ),
                 margin: EdgeInsets.only(left: 5),
               )
@@ -495,19 +695,46 @@ class NearDynicPage extends State<NearDynic> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
-                  child: Image.network(images[3],width: 90,height:90,fit: BoxFit.cover,),
+                  child: GestureDetector(
+                    child: CachedNetworkImage(
+                        imageUrl: images[3],width: 90,height: 90,fit: BoxFit.cover,
+                        placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                        errorWidget: (context, url, error) => Icon(Icons.error)
+                    ),
+                    onTap: (){
+                      jump(images, 3);
+                    },
+                  )
                 ),
                 Container(
                   child: ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(5)),
-                    child: Image.network(images[4],width: 90,height:90,fit: BoxFit.cover),
+                    child: GestureDetector(
+                      child: CachedNetworkImage(
+                          imageUrl: images[4],width: 90,height: 90,fit: BoxFit.cover,
+                          placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                          errorWidget: (context, url, error) => Icon(Icons.error)
+                      ),
+                      onTap: (){
+                        jump(images, 4);
+                      },
+                    )
                   ),
                   margin: EdgeInsets.only(left: 5),
                 ),
                 Container(
                   child: ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(5)),
-                    child: Image.network(images[5],width: 90,height:90,fit: BoxFit.cover),
+                    child: GestureDetector(
+                      child: CachedNetworkImage(
+                          imageUrl: images[5],width: 90,height: 90,fit: BoxFit.cover,
+                          placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                          errorWidget: (context, url, error) => Icon(Icons.error)
+                      ),
+                      onTap: (){
+                        jump(images, 5);
+                      },
+                    )
                   ),
                   margin: EdgeInsets.only(left: 5),
                 )
@@ -520,7 +747,16 @@ class NearDynicPage extends State<NearDynic> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
-                  child: Image.network(images[6],width: 90,height:90,fit: BoxFit.cover,),
+                  child: GestureDetector(
+                    child: CachedNetworkImage(
+                        imageUrl: images[6],width: 90,height: 90,fit: BoxFit.cover,
+                        placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                        errorWidget: (context, url, error) => Icon(Icons.error)
+                    ),
+                    onTap: (){
+                      jump(images, 6);
+                    },
+                  )
                 )
               ],
             ),
@@ -535,19 +771,46 @@ class NearDynicPage extends State<NearDynic> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(5)),
-                child: Image.network(images[0],width: 90,height:90,fit: BoxFit.cover,),
+                child: GestureDetector(
+                  child: CachedNetworkImage(
+                      imageUrl: images[0],width: 90,height: 90,fit: BoxFit.cover,
+                      placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                      errorWidget: (context, url, error) => Icon(Icons.error)
+                  ),
+                  onTap: (){
+                    jump(images, 0);
+                  },
+                )
               ),
               Container(
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
-                  child: Image.network(images[1],width: 90,height:90,fit: BoxFit.cover),
+                  child: GestureDetector(
+                    child: CachedNetworkImage(
+                        imageUrl: images[1],width: 90,height: 90,fit: BoxFit.cover,
+                        placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                        errorWidget: (context, url, error) => Icon(Icons.error)
+                    ),
+                    onTap: (){
+                      jump(images, 1);
+                    },
+                  )
                 ),
                 margin: EdgeInsets.only(left: 5),
               ),
               Container(
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
-                  child: Image.network(images[2],width: 90,height:90,fit: BoxFit.cover),
+                  child: GestureDetector(
+                    child: CachedNetworkImage(
+                        imageUrl: images[2],width: 90,height: 90,fit: BoxFit.cover,
+                        placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                        errorWidget: (context, url, error) => Icon(Icons.error)
+                    ),
+                    onTap: (){
+                      jump(images, 2);
+                    },
+                  )
                 ),
                 margin: EdgeInsets.only(left: 5),
               )
@@ -558,19 +821,46 @@ class NearDynicPage extends State<NearDynic> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
-                  child: Image.network(images[3],width: 90,height:90,fit: BoxFit.cover,),
+                  child: GestureDetector(
+                    child: CachedNetworkImage(
+                        imageUrl: images[3],width: 90,height: 90,fit: BoxFit.cover,
+                        placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                        errorWidget: (context, url, error) => Icon(Icons.error)
+                    ),
+                    onTap: (){
+                      jump(images, 3);
+                    },
+                  )
                 ),
                 Container(
                   child: ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(5)),
-                    child: Image.network(images[4],width: 90,height:90,fit: BoxFit.cover),
+                    child: GestureDetector(
+                      child: CachedNetworkImage(
+                          imageUrl: images[4],width: 90,height: 90,fit: BoxFit.cover,
+                          placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                          errorWidget: (context, url, error) => Icon(Icons.error)
+                      ),
+                      onTap: (){
+                        jump(images, 4);
+                      },
+                    )
                   ),
                   margin: EdgeInsets.only(left: 5),
                 ),
                 Container(
                   child: ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(5)),
-                    child: Image.network(images[5],width: 90,height:90,fit: BoxFit.cover),
+                    child: GestureDetector(
+                      child: CachedNetworkImage(
+                          imageUrl: images[5],width: 90,height: 90,fit: BoxFit.cover,
+                          placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                          errorWidget: (context, url, error) => Icon(Icons.error)
+                      ),
+                      onTap: (){
+                        jump(images, 5);
+                      },
+                    )
                   ),
                   margin: EdgeInsets.only(left: 5),
                 )
@@ -583,12 +873,30 @@ class NearDynicPage extends State<NearDynic> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
-                  child: Image.network(images[6],width: 90,height:90,fit: BoxFit.cover,),
+                  child: GestureDetector(
+                    child: CachedNetworkImage(
+                        imageUrl: images[6],width: 90,height: 90,fit: BoxFit.cover,
+                        placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                        errorWidget: (context, url, error) => Icon(Icons.error)
+                    ),
+                    onTap: (){
+                      jump(images, 6);
+                    },
+                  )
                 ),
                 Container(
                   child: ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(5)),
-                    child: Image.network(images[7],width: 90,height:90,fit: BoxFit.cover),
+                    child: GestureDetector(
+                      child: CachedNetworkImage(
+                          imageUrl: images[7],width: 90,height: 90,fit: BoxFit.cover,
+                          placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                          errorWidget: (context, url, error) => Icon(Icons.error)
+                      ),
+                      onTap: (){
+                        jump(images, 7);
+                      },
+                    )
                   ),
                   margin: EdgeInsets.only(left: 5),
                 )
@@ -605,19 +913,46 @@ class NearDynicPage extends State<NearDynic> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(5)),
-                child: Image.network(images[0],width: 90,height:90,fit: BoxFit.cover,),
+                child: GestureDetector(
+                  child: CachedNetworkImage(
+                      imageUrl: images[0],width: 90,height: 90,fit: BoxFit.cover,
+                      placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                      errorWidget: (context, url, error) => Icon(Icons.error)
+                  ),
+                  onTap: (){
+                    jump(images, 0);
+                  },
+                )
               ),
               Container(
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
-                  child: Image.network(images[1],width: 90,height:90,fit: BoxFit.cover),
+                  child: GestureDetector(
+                    child: CachedNetworkImage(
+                        imageUrl: images[1],width: 90,height: 90,fit: BoxFit.cover,
+                        placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                        errorWidget: (context, url, error) => Icon(Icons.error)
+                    ),
+                    onTap: (){
+                      jump(images, 1);
+                    },
+                  )
                 ),
                 margin: EdgeInsets.only(left: 5),
               ),
               Container(
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
-                  child: Image.network(images[2],width: 90,height:90,fit: BoxFit.cover),
+                  child: GestureDetector(
+                    child: CachedNetworkImage(
+                        imageUrl: images[2],width: 90,height: 90,fit: BoxFit.cover,
+                        placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                        errorWidget: (context, url, error) => Icon(Icons.error)
+                    ),
+                    onTap: (){
+                      jump(images, 2);
+                    },
+                  )
                 ),
                 margin: EdgeInsets.only(left: 5),
               )
@@ -628,19 +963,46 @@ class NearDynicPage extends State<NearDynic> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
-                  child: Image.network(images[3],width: 90,height:90,fit: BoxFit.cover,),
+                  child: GestureDetector(
+                    child: CachedNetworkImage(
+                        imageUrl: images[3],width: 90,height: 90,fit: BoxFit.cover,
+                        placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                        errorWidget: (context, url, error) => Icon(Icons.error)
+                    ),
+                    onTap: (){
+                      jump(images, 3);
+                    },
+                  )
                 ),
                 Container(
                   child: ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(5)),
-                    child: Image.network(images[4],width: 90,height:90,fit: BoxFit.cover),
+                    child: GestureDetector(
+                      child: CachedNetworkImage(
+                          imageUrl: images[4],width: 90,height: 90,fit: BoxFit.cover,
+                          placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                          errorWidget: (context, url, error) => Icon(Icons.error)
+                      ),
+                      onTap: (){
+                        jump(images, 4);
+                      },
+                    )
                   ),
                   margin: EdgeInsets.only(left: 5),
                 ),
                 Container(
                   child: ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(5)),
-                    child: Image.network(images[5],width: 90,height:90,fit: BoxFit.cover),
+                    child: GestureDetector(
+                      child: CachedNetworkImage(
+                          imageUrl: images[5],width: 90,height: 90,fit: BoxFit.cover,
+                          placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                          errorWidget: (context, url, error) => Icon(Icons.error)
+                      ),
+                      onTap: (){
+                        jump(images, 5);
+                      },
+                    )
                   ),
                   margin: EdgeInsets.only(left: 5),
                 )
@@ -653,19 +1015,46 @@ class NearDynicPage extends State<NearDynic> {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(5)),
-                  child: Image.network(images[6],width: 90,height:90,fit: BoxFit.cover,),
+                  child: GestureDetector(
+                    child: CachedNetworkImage(
+                        imageUrl: images[6],width: 90,height: 90,fit: BoxFit.cover,
+                        placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                        errorWidget: (context, url, error) => Icon(Icons.error)
+                    ),
+                    onTap: (){
+                      jump(images, 6);
+                    },
+                  )
                 ),
                 Container(
                   child: ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(5)),
-                    child: Image.network(images[7],width: 90,height:90,fit: BoxFit.cover),
+                    child: GestureDetector(
+                      child: CachedNetworkImage(
+                          imageUrl: images[7],width: 90,height: 90,fit: BoxFit.cover,
+                          placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                          errorWidget: (context, url, error) => Icon(Icons.error)
+                      ),
+                      onTap: (){
+                        jump(images, 7);
+                      },
+                    )
                   ),
                   margin: EdgeInsets.only(left: 5),
                 ),
                 Container(
                   child: ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(5)),
-                    child: Image.network(images[8],width: 90,height:90,fit: BoxFit.cover),
+                    child: GestureDetector(
+                      child: CachedNetworkImage(
+                          imageUrl: images[8],width: 90,height: 90,fit: BoxFit.cover,
+                          placeholder: (context, url) => CupertinoActivityIndicator(radius: 10),
+                          errorWidget: (context, url, error) => Icon(Icons.error)
+                      ),
+                      onTap: (){
+                        jump(images, 8);
+                      },
+                    )
                   ),
                   margin: EdgeInsets.only(left: 5),
                 )
@@ -679,6 +1068,22 @@ class NearDynicPage extends State<NearDynic> {
       return Container();
     }
 
+  }
+
+  jump(List<String> images,int index) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Gallery(
+          pics: images,
+          backgroundDecoration: const BoxDecoration(
+            color: Colors.black,
+          ),
+          initialIndex: index,
+          scrollDirection: false ? Axis.vertical : Axis.horizontal,
+        ),
+      ),
+    );
   }
 
   Widget empty() {

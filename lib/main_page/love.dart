@@ -50,7 +50,7 @@ class _StateIndex extends State<Love> {
                   borderRadius: BorderRadius.all(Radius.circular(4)),
                   child: Column(
                     children: [
-                      Stack(
+                      /*Stack(
                         fit: StackFit.expand,
                         children: <Widget>[
                           Expanded(child: Image.network("https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1600929328&di=e6992e3467bb87f3e9d163c1c16018a9&src=http://gss0.baidu.com/94o3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/14ce36d3d539b6002ac5706de850352ac75cb7e4.jpg",
@@ -95,7 +95,7 @@ class _StateIndex extends State<Love> {
                             left: 10,
                           )
                         ],
-                      ),
+                      ),*/
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [

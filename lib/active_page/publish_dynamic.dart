@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:littelchat/common/util/Net.dart';
+import 'package:littelchat/common/util/hex-color.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 
 class PublishDynamic extends StatefulWidget {
@@ -42,23 +44,18 @@ class DynamicState extends State<PublishDynamic> {
             ),
           );
         } else {
-          print(images[index].name+"  "+images[index].identifier);
           Asset asset = images[index];
-          return Container(
-
-            child: AssetThumb(
-              asset: asset,
-              width: 50,
-              height: 50,
-            ),
+          return ClipRRect(
+            child: AssetThumb(asset: asset, width: 300, height: 300),
+            borderRadius:  BorderRadius.all(Radius.circular(3)),
           );
           }
       }),
     );
   }
-
+  List<Asset> resultList = List<Asset>();
   Future<void> loadAssets() async {
-    List<Asset> resultList = List<Asset>();
+
 
     try {
       resultList = await MultiImagePicker.pickImages(
@@ -93,33 +90,62 @@ class DynamicState extends State<PublishDynamic> {
     }
     Net().dynamicImage(byts).then((value){
         if (value.code == 1){
-          Net().publishDynamic(value.data,titleController.text.toString(), editingController.text.toString()).then((value) {
+          Net().publishDynamic(value.data,titleController.text.toString()).then((value) {
             if (value.code > 0) {
-              Navigator.pop(context);
+              Navigator.pop(context,true);
+            } else {
+              if (value.msg.isNotEmpty){
+                  Fluttertoast.showToast(msg: value.msg);
+              }
+              setState(() {
+                canClick = true;
+              });
             }
           });
+        } else {
+         setState(() {
+           canClick = true;
+         });
         }
     });
   }
 
+  bool canClick = true;
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
       appBar: AppBar(
+        leading: GestureDetector(
+          child: Padding(
+            child: Icon(Icons.arrow_back_ios,size: 18,),
+            padding: EdgeInsets.only(top: 7),
+          ),
+          onTap: (){
+            Navigator.pop(context);
+          },
+        ),
         elevation: 0.5,
         actions: <Widget>[
           Center(
             child: Container(
               margin: EdgeInsets.only(right: 16),
-              child: GestureDetector(
-                child: Text('发表',style: TextStyle(fontSize: 14)),
-                onTap: (){
-                  setState(() {
-                    showLoading = true;
-                  });
-                  commit();
-                },
-              ),
+              child: SizedBox(
+                child: RaisedButton(
+                  child: Text('发表',style: TextStyle(fontSize: 14)),
+                  color: HexColor("3299cc"),
+                  textColor: Colors.white,
+                  disabledColor: Colors.grey[300],
+                  onPressed: canClick ? (){
+                    setState(() {
+                      showLoading = true;
+                      canClick = false;
+                    });
+                    commit();
+                  } : null,
+                ),
+                width: 65,
+                height: 32,
+              )
             ),
           )
         ],
@@ -129,18 +155,6 @@ class DynamicState extends State<PublishDynamic> {
           color: Colors.white,
           child: Column(
             children: <Widget>[
-              Padding(
-                  padding: EdgeInsets.fromLTRB(16, 3, 16, 3),
-                  child: TextField(
-                    controller: titleController,
-                    maxLines: null,
-                    keyboardType: TextInputType.multiline,
-                    decoration: InputDecoration(
-                        hintText: '标题',
-                        border: InputBorder.none
-                    ),
-                  )),
-              Divider(height: 1,color: Colors.grey[300]),
               Center(
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
@@ -150,11 +164,12 @@ class DynamicState extends State<PublishDynamic> {
                   child: Padding(
                       padding: EdgeInsets.fromLTRB(16, 3, 16, 3),
                       child: TextField(
-                        controller: editingController,
+                        controller: titleController,
                         maxLines: null,
                         keyboardType: TextInputType.multiline,
                         decoration: InputDecoration(
-                            hintText: '这一刻的想法',
+                            hintText: '这一刻的想法...',
+                            hintStyle: TextStyle(fontSize: 14,color: HexColor("3e3e3e")),
                             border: InputBorder.none
                         ),
                       )),
@@ -162,6 +177,7 @@ class DynamicState extends State<PublishDynamic> {
               ),
               Divider(height: 1,color: Colors.grey[300]),
               Container(
+                margin: EdgeInsets.only(left: 16,right: 16,top: 10,bottom: 10),
                 child: buildGridView(),
               ),
             ],
