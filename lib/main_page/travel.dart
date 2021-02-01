@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:littelchat/active_page/publish-travel.dart';
 import 'package:littelchat/bean/ConversationBean.dart';
 import 'package:littelchat/bean/constants.dart';
 import 'package:littelchat/bean/travel.dart';
-import 'file:///D:/SelfWork/littlechat/lib/active_page/publish-travel.dart';
 import 'package:littelchat/common/util/EventBus.dart';
 import 'package:littelchat/common/util/Net.dart';
 import 'package:littelchat/common/util/SpUtils.dart';
@@ -60,7 +60,8 @@ class TravelPage extends State<Travel> {
               child: Padding(padding: EdgeInsets.only(right: 14),child: Text('发布'),),
             ),
             onTap: () async {
-              var result = await Navigator.push(context,MaterialPageRoute(builder: (context)=>PublishTravel()));
+              var result = await Navigator.push(context,MaterialPageRoute(builder: (context)=>
+                  PublishTravel()));
               if (result == Constants.SUCCESSFUL) {
                 _requestData();
               }

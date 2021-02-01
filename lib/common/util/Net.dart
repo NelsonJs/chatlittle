@@ -29,7 +29,7 @@ class Net {
     Options _options;
 
     static Dio dio = Dio(BaseOptions(
-      baseUrl: 'http://192.168.1.2:8080/',
+      baseUrl: 'http://192.168.0.108:8080/',
         connectTimeout: 5000,
         responseType: ResponseType.json
     ));
