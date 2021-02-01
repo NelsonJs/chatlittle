@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:littelchat/account_page/forget_pw.dart';
 import 'package:littelchat/account_page/register-page.dart';
 import 'package:littelchat/common/Global.dart';
@@ -22,12 +23,6 @@ class LoginPage extends State<Login> {
   TextEditingController _controllerName = TextEditingController();
   TextEditingController _controllerPwd = TextEditingController();
 
-  _showSnackBar(BuildContext context,String msg) {
-    Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text(msg),
-        duration: Duration(seconds: 1),
-    ));
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -146,7 +141,7 @@ class LoginPage extends State<Login> {
                                                   print("value-->${value.msg}");
                                                   if (value == null) return;
                                                   if (value.code == -1) {
-                                                    _showSnackBar(c,value.msg);
+                                                    Fluttertoast.showToast(msg: value.msg);
                                                   } else if (value.data.uid != null && value.data.uid.isNotEmpty) {
                                                     SpUtils().saveString(SpUtils.uid, value.data.uid);
                                                     SpUtils().saveString(SpUtils.userName, value.data.nickname);

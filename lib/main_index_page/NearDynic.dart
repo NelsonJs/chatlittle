@@ -51,7 +51,7 @@ class NearDynicPage extends State<NearDynic> {
                     child: Icon(Icons.add),onTap: () {
                     Navigator.push(context, MaterialPageRoute(builder: (context)=>PublishDynamic())).then((value){
                       print(value);
-                      if (value){
+                      if (value != null && value){
                         _controller.callRefresh();
                       }
                     });
@@ -95,7 +95,7 @@ class NearDynicPage extends State<NearDynic> {
         onRefresh: () async {
           offsetTime = 0;
           NearDynamic nd = await Net().nearDynamicList(offsetTime,limit);
-          if (nd != null) {
+          if (nd != null && nd.data != null) {
             setState(() {
               mData.clear();
               mData.addAll(nd.data);

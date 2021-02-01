@@ -67,7 +67,7 @@ class MinePage extends State<Mine> {
   void initState() {
     SpUtils().getString(SpUtils.userName).then((value){
       setState(() {
-        if (value.isNotEmpty) {
+        if (value != null && value.isNotEmpty) {
           name = value;
         }
       });
