@@ -212,19 +212,16 @@ class Net {
         return ResourceBean.fromJson(res.data);
     }
 
-    Future<ResourceBean> publishDynamic(List<String> ids,String title,String desc) async {
+    Future<ResourceBean> publishDynamic(List<String> ids,String title) async {
         var map = Map<String,dynamic>();
-        print("图片：$ids");
-        map["uid"] = "100";
+        var uid = await SpUtils().getString(SpUtils.uid);
+        if (!uid.isNotEmpty){
+            ResourceBean rb = ResourceBean(code: -1,msg: "uid为空");
+            return rb;
+        }
+        map["uid"] = uid;
         map["title"] = title;
-        map["desc"] = desc;
         map["resImg"] = ids;
-       /* SpUtils().getInt(SpUtils.uid).then((value) {
-           map["uid"] = value.toString();
-           map["title"] = title;
-           map["desc"] = desc;
-           //map["ids"] = ids;
-        });*/
         var res = await dio.post("index/dynamic",data: map);
         print("提交数据->${res.data.toString()}");
         return ResourceBean.fromJson(res.data);
