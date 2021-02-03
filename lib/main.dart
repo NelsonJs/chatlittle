@@ -128,30 +128,7 @@ class HomePageState extends State<HomePage> {
     );
   }
 
-  void showUpdateDialog(){
-    showCupertinoDialog(context: context, builder: (context){
-      return CupertinoAlertDialog(
-        title: Text("新版本更新"),
-        content: Text("1.更新首页\n2.更新我的界面"),
-        actions: [
-          CupertinoDialogAction(
-              child: Text("取消"),
-              isDestructiveAction: true,
-              onPressed: (){
-                Navigator.of(context).pop();
-              }
-          ),
-          CupertinoDialogAction(
-            child: Text("更新"),
-            isDefaultAction: true,
-            onPressed: (){
-              Navigator.of(context).pop();
-            },
-          )
-        ],
-      );
-    });
-  }
+  
 
   void onTapClick(int index) {
       setState(() {
