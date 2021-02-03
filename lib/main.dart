@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -96,7 +97,6 @@ class HomePageState extends State<HomePage> {
   int mIndex = 0;
   @override
   Widget build(BuildContext context) {
-    //getData();
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
@@ -127,6 +127,8 @@ class HomePageState extends State<HomePage> {
       )
     );
   }
+
+
 
   void onTapClick(int index) {
       setState(() {

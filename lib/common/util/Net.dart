@@ -21,25 +21,40 @@ import 'package:littelchat/common/Global.dart';
 import 'package:littelchat/common/util/SpUtils.dart';
 
 class Net {
-    Net([this.context]){
-        _options = Options(extra: {"context":context});
+
+    factory Net() => _getInstance();
+    static Net _instance;
+
+    Net._();
+
+    static Net _getInstance(){
+        if (_instance == null){
+            _instance = Net._();
+        }
+        return _instance;
     }
+
+    /*Net([this.context]){
+        _options = Options(extra: {"context":context});
+    }*/
+
+    static String _baseUrl = "http://192.168.0.108:8080/";
 
     BuildContext context;
     Options _options;
 
     static Dio dio = Dio(BaseOptions(
-      baseUrl: 'http://192.168.0.108:8080/',
+      baseUrl: _baseUrl,
         connectTimeout: 5000,
         responseType: ResponseType.json
     ));
 
     static void init() {
-
       //设置header
+    }
 
-
-
+    void setBaseUrl(String url){
+        _baseUrl = url;
     }
 
     Future<AccountBean> register(String name,String pwd) async {
