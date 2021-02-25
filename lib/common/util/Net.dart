@@ -57,6 +57,8 @@ class Net {
         _baseUrl = url;
     }
 
+    
+
     Future<AccountBean> register(String name,String pwd) async {
         print("名称：$name 密码：$pwd");
         var map = Map<String,dynamic>();

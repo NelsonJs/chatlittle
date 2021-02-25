@@ -14,6 +14,7 @@ import 'package:littelchat/common/util/SpUtils.dart';
 import 'package:littelchat/main_index_page/NearDynic.dart';
 import 'package:littelchat/main_page/love.dart';
 import 'package:littelchat/main_page/mine.dart';
+import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'main_page/find.dart';
@@ -64,6 +65,12 @@ class HomePageState extends State<HomePage> {
   final data = <String>[];
   final pages = <Widget>[NearDynic(),Travel(),Love(),ChatMain(),Mine()];
   int curIndex = 0;
+  PackageInfo _packageInfo = PackageInfo(
+    appName: 'Unknown',
+    packageName: 'Unknown',
+    version: 'Unknown',
+    buildNumber: 'Unknown',
+  );
 
 
   @override
@@ -85,6 +92,43 @@ class HomePageState extends State<HomePage> {
       //print(event);
       Map<String,dynamic> d = jsonDecode(event);
       bus.emit("msg",MessageBean.fromJson(d));
+    });
+    _initPackageInfo();
+    // 延时1s执行返回
+    Future.delayed(Duration(seconds: 1), (){
+      _showCallPhoneDialog("");
+    });
+
+  }
+
+  void _showCallPhoneDialog(String phone){
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('新版本更新'),
+            content: Text('1.更新首页\n2.更新我的界面'),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () {},
+                child: Text('取消'),
+              ),
+              FlatButton(
+                onPressed: (){
+                },
+                textColor: Colors.red,
+                child: Text('更新'),
+              ),
+            ],
+          );
+        });
+  }
+
+  Future<void> _initPackageInfo() async {
+    final PackageInfo info = await PackageInfo.fromPlatform();
+    setState(() {
+      _packageInfo = info;
     });
   }
 
