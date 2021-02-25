@@ -17,6 +17,7 @@ import 'package:littelchat/bean/resource_bean.dart';
 import 'package:littelchat/bean/respont_parent.dart';
 import 'package:littelchat/bean/send-comment.dart';
 import 'package:littelchat/bean/travel.dart';
+import 'package:littelchat/bean/update-apk.dart';
 import 'package:littelchat/common/Global.dart';
 import 'package:littelchat/common/util/SpUtils.dart';
 
@@ -56,6 +57,16 @@ class Net {
     void setBaseUrl(String url){
         _baseUrl = url;
     }
+
+    Future<UpdateBean> getApkUpdate(int version) async {
+        Dio d = Dio(BaseOptions(
+            connectTimeout: 5000,
+            responseType: ResponseType.json
+        ));
+        var r = await d.get("http://www.9394.cool:5885/api/apk/query?version=${version+1}&channel=android");
+        return UpdateBean.fromJson(r.data);
+    }
+
 
     Future<AccountBean> register(String name,String pwd) async {
         print("名称：$name 密码：$pwd");

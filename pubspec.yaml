@@ -39,6 +39,7 @@ dependencies:
   cached_network_image: ^2.5.0
   fluttertoast: ^7.1.6
   flutter_local_notifications: ^3.0.3
+  package_info: ^0.4.3+4
 
 
 module:

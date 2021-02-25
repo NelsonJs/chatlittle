@@ -4,16 +4,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:littelchat/account_page/Login.dart';
 import 'package:littelchat/bean/MessageBean.dart';
 import 'package:littelchat/chat/chat_main.dart';
 import 'package:littelchat/common/util/EventBus.dart';
 import 'package:littelchat/common/util/LoginModel.dart';
+import 'package:littelchat/common/util/Net.dart';
 import 'package:littelchat/common/util/SocketNet.dart';
 import 'package:littelchat/common/util/SpUtils.dart';
 import 'package:littelchat/main_index_page/NearDynic.dart';
 import 'package:littelchat/main_page/love.dart';
 import 'package:littelchat/main_page/mine.dart';
+import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'main_page/find.dart';
@@ -64,6 +67,12 @@ class HomePageState extends State<HomePage> {
   final data = <String>[];
   final pages = <Widget>[NearDynic(),Travel(),Love(),ChatMain(),Mine()];
   int curIndex = 0;
+  PackageInfo _packageInfo = PackageInfo(
+    appName: 'Unknown',
+    packageName: 'Unknown',
+    version: '0',
+    buildNumber: 'Unknown',
+  );
 
 
   @override
@@ -86,6 +95,45 @@ class HomePageState extends State<HomePage> {
       Map<String,dynamic> d = jsonDecode(event);
       bus.emit("msg",MessageBean.fromJson(d));
     });
+    _initPackageInfo();
+
+
+  }
+
+  void _showCallPhoneDialog(String phone){
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('新版本更新'),
+            content: Text('1.更新首页\n2.更新我的界面'),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () {},
+                child: Text('取消'),
+              ),
+              FlatButton(
+                onPressed: (){
+                },
+                textColor: Colors.red,
+                child: Text('更新'),
+              ),
+            ],
+          );
+        });
+  }
+
+  _initPackageInfo() async {
+    PackageInfo info = await PackageInfo.fromPlatform();
+    print("版本号：${info.version}");
+    if (info.version == "0"){
+      Fluttertoast.showToast(msg: "版本号获取不正确");
+    } else {
+      Net().getApkUpdate(int.parse(info.version)).then((value){
+        _showCallPhoneDialog(value.data.description);
+      });
+    }
   }
 
   @override
