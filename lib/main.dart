@@ -4,11 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:littelchat/account_page/Login.dart';
 import 'package:littelchat/bean/MessageBean.dart';
 import 'package:littelchat/chat/chat_main.dart';
 import 'package:littelchat/common/util/EventBus.dart';
 import 'package:littelchat/common/util/LoginModel.dart';
+import 'package:littelchat/common/util/Net.dart';
 import 'package:littelchat/common/util/SocketNet.dart';
 import 'package:littelchat/common/util/SpUtils.dart';
 import 'package:littelchat/main_index_page/NearDynic.dart';
@@ -68,7 +70,7 @@ class HomePageState extends State<HomePage> {
   PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
     packageName: 'Unknown',
-    version: 'Unknown',
+    version: '0',
     buildNumber: 'Unknown',
   );
 
@@ -94,10 +96,7 @@ class HomePageState extends State<HomePage> {
       bus.emit("msg",MessageBean.fromJson(d));
     });
     _initPackageInfo();
-    // 延时1s执行返回
-    Future.delayed(Duration(seconds: 1), (){
-      _showCallPhoneDialog("");
-    });
+
 
   }
 
@@ -125,11 +124,16 @@ class HomePageState extends State<HomePage> {
         });
   }
 
-  Future<void> _initPackageInfo() async {
-    final PackageInfo info = await PackageInfo.fromPlatform();
-    setState(() {
-      _packageInfo = info;
-    });
+  _initPackageInfo() async {
+    PackageInfo info = await PackageInfo.fromPlatform();
+    print("版本号：${info.version}");
+    if (info.version == "0"){
+      Fluttertoast.showToast(msg: "版本号获取不正确");
+    } else {
+      Net().getApkUpdate(int.parse(info.version)).then((value){
+        _showCallPhoneDialog(value.data.description);
+      });
+    }
   }
 
   @override

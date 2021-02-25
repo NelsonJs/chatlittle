@@ -1,11 +1,11 @@
-class Apdate {
+class UpdateBean {
   int code;
   String msg;
   Data data;
 
-  Apdate({this.code,this.msg, this.data});
+  UpdateBean({this.code,this.msg, this.data});
 
-  Apdate.fromJson(Map<String, dynamic> json) {
+  UpdateBean.fromJson(Map<String, dynamic> json) {
     code = json['code'];
     msg = json['msg'];
     data = json['data'] != null ? new Data.fromJson(json['data']) : null;
