@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
@@ -20,6 +21,7 @@ import 'package:littelchat/bean/travel.dart';
 import 'package:littelchat/bean/update-apk.dart';
 import 'package:littelchat/common/Global.dart';
 import 'package:littelchat/common/util/SpUtils.dart';
+import 'package:path_provider/path_provider.dart';
 
 class Net {
 
@@ -39,7 +41,7 @@ class Net {
         _options = Options(extra: {"context":context});
     }*/
 
-    static String _baseUrl = "http://192.168.0.108:8080/";
+    static String _baseUrl = "http://192.168.1.5:8080/";
 
     BuildContext context;
     Options _options;
@@ -58,7 +60,7 @@ class Net {
         _baseUrl = url;
     }
 
-    Future<UpdateBean> getApkUpdate(int version) async {
+    Future<UpdateBean> getApkUpdate(int version,String channel) async {
         Dio d = Dio(BaseOptions(
             connectTimeout: 5000,
             responseType: ResponseType.json
@@ -66,6 +68,8 @@ class Net {
         var r = await d.get("http://www.9394.cool:5885/api/apk/query?version=${version+1}&channel=android");
         return UpdateBean.fromJson(r.data);
     }
+
+
 
 
     Future<AccountBean> register(String name,String pwd) async {

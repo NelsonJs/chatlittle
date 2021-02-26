@@ -40,6 +40,10 @@ dependencies:
   fluttertoast: ^7.1.6
   flutter_local_notifications: ^3.0.3
   package_info: ^0.4.3+4
+  device_info: ^1.0.0
+  permission_handler: ^5.1.0+2
+  path_provider: ^1.6.27 #获取存储目录
+  install_plugin: ^2.0.1
 
 
 module:
